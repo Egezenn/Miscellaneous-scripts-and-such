@@ -49,4 +49,4 @@ This is just here for archival purposes.
 
 [All-In-One Config](Miscellaneous/autoexec.cfg)
 
-Config file for Dota2
+Config file for Dota2 that encompasses most of what you'd need or want.
