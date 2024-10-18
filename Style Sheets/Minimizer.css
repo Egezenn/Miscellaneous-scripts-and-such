@@ -21,19 +21,12 @@ FAQ or QETBA (Questions Expected To Be Asked™)
   no, i'd be happy to help you do it yourself though
 
 > what was the motivation?
-  my laptop screen's too small to juggle all the stuff i have active most of the time
+  my laptop screen's too small to house all the stuff i have active most of the time
 */
 
 
 /* the layout is expected to be:
-left directory listing
-left first split search
-right-top calendar
-right first split quiet-outline
-
-or
-
-left directory listing
+left directory listing | vertical tabs
 right-top calendar
 right first split quiet-outline
 right second split search
@@ -42,14 +35,17 @@ if not, some elements may get nested somewhere else that this doesn't expect and
 */
 
 :root {
-  --minimizer-color-dir-l1: rgba(32, 178, 170, .1);
-  --minimizer-color-dir-l1-hover: rgba(32, 178, 170, .2);
-  --minimizer-color-dir-l2: rgba(32, 178, 170, .3);
-  --minimizer-color-dir-l2-hover: rgba(32, 178, 170, .4);
+  --minimizer-color-dir-l1: rgba(138, 92, 245, .1);
+  --minimizer-color-dir-l1-hover: rgba(138, 92, 245, .2);
+  --minimizer-color-dir-l2: rgba(138, 92, 245, .3);
+  --minimizer-color-dir-l2-hover: rgba(138, 92, 245, .4);
+  --minimizer-color-dir-file-tag: rgba(138, 92, 245, .5);
+  --minimizer-color-vt-file: rgba(138, 92, 245, 1);
+  --minimizer-color-vt-file-hidden: rgba(138, 92, 245, .6);
 }
 
 /* i don't plan on porting this to mobile */
-@media only screen and (min-width: 1200px) {
+@media only screen and (min-width: 960px) {
 
   /* useless buttons & headers (imo) */
   .view-header,
@@ -113,6 +109,76 @@ if not, some elements may get nested somewhere else that this doesn't expect and
 
 
 
+  /* Vertical tabs plugin */
+  /* Trying it out for the forever growing workspace layouts, hopefully it solves that */
+  .obsidian-vertical-tabs-container,
+  .obsidian-vertical-tabs-container>div {
+    height: 100% !important;
+  }
+
+  .obsidian-vertical-tabs-container {
+    padding: 0px !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group,
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children {
+    margin: 0px !important;
+    border: 0px !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-self.is-clickable {
+    margin: 0px !important;
+    padding: 0px 0px 0px 24px !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab {
+    margin: 0px !important;
+    border: 0px !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab>.tree-item-self.is-clickable {
+    padding: 0px 0px 0px 24px !important;
+    margin: 0px !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab>.tree-item-children {
+    display: none !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-self.is-clickable {
+    background-color: var(--minimizer-color-dir-l2) !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-self.is-clickable:hover {
+    background-color: var(--minimizer-color-dir-l2-hover) !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab.is-highlighted {
+    background-color: var(--minimizer-color-vt-file) !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab>.tree-item-self.is-clickable.is-active {
+    background-color: var(--minimizer-color-vt-file-hidden) !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-self.is-clickable>.tree-item-flair-outer>.clickable-icon.action-button.action-eye>svg {
+    color: #000000 !important;
+    background-color: #FF0000;
+    border-radius: 8px !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-self.is-clickable>.tree-item-flair-outer>.clickable-icon.action-button.action-eye-off>svg {
+    color: #000000 !important;
+    background-color: #00FF00 !important;
+    border-radius: 8px !important;
+  }
+
+  .workspace-split.mod-vertical.mod-root {
+    background: radial-gradient(rgba(0, 255, 255, .05), rgba(255, 0, 255, .05)) !important;
+  }
+
+
+
   /* folder views */
   .tree-item-self.mod-collapsible.nav-folder-title,
   .tree-item-self.nav-file-title {
@@ -126,7 +192,7 @@ if not, some elements may get nested somewhere else that this doesn't expect and
   }
 
   /* directory hierarchy coloring
-    only supports a hierarchy that extends to dir>dir
+    only supports a hierarchy that extends to 2 nests,
     that seems distinguishable enough */
   .nav-files-container.node-insert-event.show-unsupported>div>.tree-item.nav-folder>.tree-item-self.is-clickable.mod-collapsible.nav-folder-title {
     background-color: var(--minimizer-color-dir-l1) !important;
@@ -142,6 +208,10 @@ if not, some elements may get nested somewhere else that this doesn't expect and
 
   .nav-files-container.node-insert-event.show-unsupported>div>.tree-item.nav-folder>.tree-item-children.nav-folder-children>.tree-item.nav-folder>.tree-item-self.is-clickable.nav-folder-title:hover {
     background-color: var(--minimizer-color-dir-l2-hover) !important;
+  }
+
+  .nav-file-tag {
+    background-color: var(--minimizer-color-dir-file-tag) !important;
   }
 
 
@@ -169,10 +239,17 @@ if not, some elements may get nested somewhere else that this doesn't expect and
     width: 100px !important;
   }
 
+  /* calculates the main box bigger and it overflows, causing a scrollbar to render
+  TODO modify the variable used to calculate its size */
   .view-content>.markdown-source-view>.cm-editor>div.cm-scroller {
-    padding: 0px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    /* padding: 0px !important; */
   }
 
+  /* .cm-scroller::-webkit-scrollbar {
+    height: 0px !important;
+  } */
 
   /* misc */
   /* positioning latex blocks to left instead of center */
@@ -184,6 +261,7 @@ if not, some elements may get nested somewhere else that this doesn't expect and
   /* .view-content>.markdown-source-view>.cm-editor>div.cm-scroller>.cm-sizer {
     margin: 0px 300px !important;
   } */
+
 
   /* bigger math */
   /* mjx-math {
