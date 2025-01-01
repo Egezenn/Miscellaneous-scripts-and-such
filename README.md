@@ -2,7 +2,7 @@
 
 Repo of scripts and such that in itself isn't repo worthy.
 
-## [AutoHotkey](https://www.autohotkey.com/) V1
+## [AutoHotkey V1](AutoHotkey%20V1)
 
 ### [AutoCAD binds](AutoHotkey%20V1/AutoCAD%20binds.ahk)
 
@@ -36,13 +36,13 @@ Media control using Tauon's HTTP API, also shows tooltips to mitigate the app no
 
 A simple always on top, resettable timer.
 
-## Miscellaneous
+## [Miscellaneous](Miscellaneous)
 
 [All-In-One Config](Miscellaneous/autoexec.cfg)
 
 Config file for Dota2 that encompasses most of what you'd need or want.
 
-## Style Sheets
+## [Style Sheets](Style%20Sheets)
 
 ### [Clean DU](Style%20Sheets/Clean%20DU.styl)
 
