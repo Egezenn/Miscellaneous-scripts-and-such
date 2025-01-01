@@ -1,12 +1,12 @@
 /* ==UserStyle==
 @name           No Unnecessary Scroll For Free Games
 @namespace      github.com/openstyles/stylus
-@version        1
+@version        1.0.1
 @description    Tired of scrolling to find the free games? How about putting them RIGHT ON TOP of the store page?
 @author         Egezenn
 @preprocessor   stylus
 ==/UserStyle== */
-@-moz-document regexp("https:\\/\\/store\\.epicgames\\.com\\/.*?\\/")
+@-moz-document regexp("https:\\/\\/store\\.epicgames\\.com\\/.*?\\/?")
 	i = !important
 
 	div[data-testid='discover-page-0']>div>span:nth-of-type(7)// might break

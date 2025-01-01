@@ -46,10 +46,14 @@ Config file for Dota2 that encompasses most of what you'd need or want.
 
 ### [Clean DU](Style%20Sheets/Clean%20DU.styl)
 
-Style written in Stylus style sheet language, aiming to fix what's broken and improve on in [Duzce University](https://duzce.edu.tr/) pages.
+Style written in Stylus style sheet language, aiming to fix what's broken and improve on in [Duzce University](https://duzce.edu.tr) pages.
 
 I'd recommend you to get it through [here](https://userstyles.world/style/18174/clean-du) using a userstyles add-on (e.g [Stylus](https://github.com/openstyles/stylus)).
 This is just here for archival purposes.
+
+### [No Unnecessary Scroll For Free Games](Style%20Sheets/No%20Unnecessary%20Scroll%20For%20Free%20Games.styl)
+
+Removes Epic Games scroll nuisance.
 
 ### [Minimizer](Style%20Sheets/Minimizer.css)
 
