@@ -8,31 +8,39 @@ Repo of scripts and such that in itself isn't repo worthy.
 
 Bind keys to specific commands that are used 90% of the time for 2D sketching on AutoCAD.
 
-#### [BoxDwgChars](AutoHotkey%20V1/BoxDwgChars.ahk)
+### [BoxDwgChars](AutoHotkey%20V1/BoxDwgChars.ahk)
 
 Type box drawing characters using numpad.
 
-#### [ChaoticKeyboard](AutoHotkey%20V1/ChaoticKeyboard.ahk)
+### [ChaoticKeyboard](AutoHotkey%20V1/ChaoticKeyboard.ahk)
 
 Typing with random letterlike symbols.
 
-#### [Drawing](AutoHotkey%20V1/Drawing.ahk)
+### [controllerDesktopInput](Autohotkey%20V1/controllerDesktopInput.ahk)
 
-Template script to use [gInk](https://github.com/geovens/gInk) with a mouse or a drawing tablet and binding hotkeys for specific programs when using a drawing tablet (because UI's aren't that great and simply coding what I want is easier).
+Middleware to control your desktop with a controller
 
-#### [LaTeX shortcuts](AutoHotkey%20V1/LaTeX%20shortcuts.ahk)
+### [Drawing](AutoHotkey%20V1/Drawing.ahk)
+
+Template script to use [gInk](https://github.com/geovens/gInk) with a mouse or a drawing tablet and binding hotkeys for specific programs when using a drawing tablet.
+
+### [getKeyInfo](AutoHotkey%20V1/getKeyInfo.ahk)
+
+Tool to get information about your next keystroke.
+
+### [LaTeX shortcuts](AutoHotkey%20V1/LaTeX%20shortcuts.ahk)
 
 Keybinds to insert general LaTeX symbols&commands.
 
-#### [mousePosColorTooltip](AutoHotkey%20V1/mousePosColorTooltip.ahk)
+### [mousePosColorTooltip](AutoHotkey%20V1/mousePosColorTooltip.ahk)
 
 Handy script to see which pixels your cursor is at, color of the pixel and copy those into the clipboard.
 
-#### [TauonGlobalHotkeys](AutoHotkey%20V1/TauonGlobalHotkeys.ahk)
+### [TauonGlobalHotkeys](AutoHotkey%20V1/TauonGlobalHotkeys.ahk)
 
 Media control using Tauon's HTTP API, also shows tooltips to mitigate the app not having notifications.
 
-#### [timer](AutoHotkey%20V1/timer.ahk)
+### [timer](AutoHotkey%20V1/timer.ahk)
 
 A simple always on top, resettable timer.
 
