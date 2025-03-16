@@ -1,6 +1,6 @@
 /* ==UserStyle==
 @name         Clean DU
-@version      2024-11-16_0035
+@version      2025-02-13_1328
 @namespace    https://userstyles.world/user/egezenn
 @description  Clean utility websites, quickfixes for some stuff and theme consistency.
 @author       egezenn
@@ -9,9 +9,8 @@
 @var checkbox force-dark-mode "force dark mode" 0
 @var checkbox force-light-mode "force light mode" 0
 @var checkbox obs-clutter-removal "clutter removal for obs login page. breaks announcements, use with caution" 0
-@var checkbox show-announcement-images "show unnecessarily big & incomprehensible images in announcement pages" 0
 ==/UserStyle== */
-/* ([^:])/ /.* -> $1 */
+/* ([^:])/ /.* */
 i = !important
 
 handle-mode()
@@ -30,9 +29,9 @@ handle-mode()
 
 @-moz-document url-prefix("https://akademik.duzce.edu.tr")
 	/* util - akademik */
-	.orta-panel > img,
-	.orta-panel > h3,
-	.stats-container,
+	.orta-panel > img
+	.orta-panel > h3
+	.stats-container
 	.footer
 		display none i
 
@@ -41,11 +40,10 @@ handle-mode()
 
 	.img-container
 		border none i
-	/* idk why this doesn't work */
 
-	a > .profil,
-	.k-ad,
-	.k-birim,
+	a > .profil
+	.k-ad
+	.k-birim
 	.k-unvan
 		text-decoration none i
 
@@ -58,13 +56,13 @@ handle-mode()
 @-moz-document url-prefix("https://kablosuzerisim.duzce.edu.tr")
 	/* util - wireless network auth */
 	/* yoinked */
-	.portalButton,
+	.portalButton
 	.formValue > input
 		width 100px i
 		height 100px i
 		scale 1 i
 
-	#regLoginTable,
+	#regLoginTable
 	.formDiv
 		margin-top 15% i
 		scale 3 i
@@ -75,16 +73,33 @@ handle-mode()
 	#footerBar
 		background rgba(20, 20, 20, 1) i
 
-	#menubars,
-	.topContent > p,
-	#footer,
-	iframe,
-	.bottomContent > br,
-	.submitMessageDiv,
+	#menubars
+	.topContent > p
+	#footer
+	iframe
+	.bottomContent > br
+	.submitMessageDiv
 	.requiredField
 		display none i
 
-@-moz-document url-prefix("https://obs.duzce.edu.tr/account")
+@-moz-document regexp("https?://duzce\\.edu\\.tr/sayfa/1B29/yemek-menusu")
+	/* proper alignment of table food menu */
+	.content-container > .xl-container > .content > table
+		width 100% i
+
+	.xl-container
+		margin 0 i
+		width 100% i
+		border none i
+
+	.content-container
+		margin 0 i
+		width 100% i
+
+	.content
+		padding 0 i
+
+@-moz-document regexp("https://obs\\.duzce\\.edu\\.tr/[Aa]ccount/[Ll]ogin.*")
 	/* obs login */
 	.d-flex.flex-column.flex-lg-row-fluid.py-10
 		background-image none i
@@ -94,11 +109,14 @@ handle-mode()
 
 	if (obs-clutter-removal)
 		/* this also disables announcements on the left ¯\_(ツ)_/¯ */
-		.d-flex.flex-column.flex-lg-row-auto.w-xl-400px.positon-xl-relative,
+		.d-flex.flex-column.flex-lg-row-auto.w-xl-400px.positon-xl-relative
 		.d-flex.flex-center.flex-wrap.fs-6.p-5.pb-0
+		.container
+		#myModal
+		.modal-backdrop
 			display none i
 
-@-moz-document url-prefix("https://obs.duzce.edu.tr/student")
+@-moz-document url-prefix("https://obs.duzce.edu.tr/student"), url-prefix("https://obs.duzce.edu.tr/transcript"), url-prefix("https://obs.duzce.edu.tr/message"), regexp("https://obs\\.duzce\\.edu\\.tr/[Aa]ccount/([Ee]dit)")
 	/* obs pages */
 	/* https://obs.duzce.edu.tr/student */
 	/* info about the student */
@@ -109,7 +127,7 @@ handle-mode()
 		font-size 1.5rem i
 
 	/* no */
-	.dropdown.dropdown-user.dropdown-dark > .dropdown-toggle > img
+	.img-circle
 		display none i
 
 	/* readable exam results */
@@ -119,124 +137,6 @@ handle-mode()
 
 	#confirmationReport-list > .row > div > .portlet > .portlet-title > .caption > .caption-helper > span > b
 		color #3598DC
-
-	.portlet-body > div > table > tbody > tr > td
-		font-size 1.5rem i
-
-@-moz-document regexp("https?://(haber\\.)?duzce\\.edu\\.tr/tum-duyurular(/.*)?"), regexp("https?://(haber\\.)?duzce\\.edu\\.tr/duyuru/.*/.*")
-	/* announcement pages */
-	dark-style()
-		body
-			background-color #000000 i
-
-		.box-content-inner.clearfix,
-		.widget-main
-			background-color #202020 i
-
-	light-style()
-		body
-			background-color #FFFFFF i
-
-		.box-content-inner.clearfix,
-		.widget-main
-			background-color #EFEFEF i
-
-	handle-mode() /* fix overflow, corners */
-
-	.head-bar
-		width auto
-
-	.head-menu
-		border-radius 0px 0px 30px 30px i
-
-	/* a bit messy on mobile */
-	.head-menu,
-	.head-menu > ul,
-	.head-logo
-		width 70vw i
-
-	.head-menu > ul
-		display flex i
-		justify-content space-evenly i
-
-	/* corner fix */
-	.box-content-inner.clearfix,
-	.widget-main
-		border-radius 30px i
-
-	/* fix for content page amount listing thingy */
-	div.container > div.row:nth-of-type(2) > div.col-md-8 > div.text-center > ul > li
-		display inline i
-
-	/* properly centering content */
-	body > .out-container
-		margin 0 auto
-		width 70vw
-
-	/* useless elements */
-	.out-container > .container > .page-title.clearfix,
-	.widget-main-title,
-	.view-details
-		display none i
-
-	/* spreading of categories */
-	.widget-inner > .blog-categories > .row > ul
-		padding 0 40px i
-		display flex
-		justify-content space-evenly i
-
-	.widget-inner > .blog-categories > .row > ul > li
-		display inline-block i
-		text-align center i
-
-	if (show-announcement-images)
-		div.list-event-thumb > a > img
-			max-height 120px i
-			max-width 210px i
-
-	else
-		div.list-event-thumb,
-		div.list-event-thumb > a > img
-			display none i
-
-@-moz-document regexp("https://w3\\.api\\.duzce\\.edu\\.tr/akademik/(fakulte|merkez)/(.*/)?tum-duyurular/?"), regexp("https://w3\\.api\\.duzce\\.edu\\.tr/akademik/(fakulte|merkez)/(.*/)?duyurular/.*"), regexp("https://w3\\.api\\.duzce\\.edu\\.tr/idari/.*/tum-duyurular/?"), regexp("https://w3\\.api\\.duzce\\.edu\\.tr/idari(/.*)*/duyuru/.*"), regexp("https://w3\\.api\\.duzce\\.edu\\.tr/tum-duyurular/?"), regexp("https://w3\\.api\\.duzce\\.edu\\.tr/duyuru/.*")
-	/* old announcement pages */
-	dark-style()
-		.du-header > .bar,
-		.top-bar .nav > li a
-			background #181A1B i
-
-	light-style()
-		.du-header > .bar,
-		.top-bar .nav > li a
-			background #FFFFFF i
-			color #000000 i
-
-	handle-mode()
-
-	nav.dn
-		display flow i
-
-	nav > .event-nav
-		display flex i
-		flex-wrap wrap i
-		justify-content space-evenly i
-		width 75vw i
-
-	.events > .wrapper.flex.container > .content
-		width 75vw i
-
-	/* better filtration inputs */
-	#filter
-		width 30% i
-		display inline-flex i
-
-	.pull-right
-		width 10% i
-		display inline-flex i
-
-	.bar-headline
-		display none i
 
 @-moz-document url-prefix("https://duzce.edu.tr")
 	/* homepage */
@@ -257,12 +157,12 @@ handle-mode()
 @-moz-document url-prefix("https://akademik.duzce.edu.tr"), url-prefix("https://kablosuzerisim.duzce.edu.tr")
 	/* background replacement */
 	dark-style()
-		html,
+		html
 		body
 			background black i
 
 	light-style()
-		html,
+		html
 		body
 			background white i
 
@@ -271,17 +171,17 @@ handle-mode()
 @-moz-document url-prefix("https://ogr.duzce.edu.tr")
 	/* student mail bg rm */
 	.cont
-		background-image none i// ogr.duzce.edu.tr")
+		background-image none i
 
-@-moz-document url-prefix("https://ebs.duzce.edu.tr/")
+@-moz-document url-prefix("https://ebs.duzce.edu.tr/"), url-prefix("https://bbs.duzce.edu.tr/")
 	/* ebs bg rm */
 	body
-		background-image none i// ebs.duzce.edu.tr/")
+		background-image none i
 
 @-moz-document regexp("https?://(.*\\.)?duzce\\.edu\\.tr/?(.*)?")
 	/* scrollbar(s) */
 	dark-style()
-		html,
+		html
 		body
 			scrollbar-width thin i
 			scrollbar-color #33CCCC #2C2C2C i
@@ -301,7 +201,7 @@ handle-mode()
 			background #0FA6A6 i
 
 	light-style()
-		html,
+		html
 		body
 			scrollbar-width thin i
 			scrollbar-color #33CCCC lightgray i

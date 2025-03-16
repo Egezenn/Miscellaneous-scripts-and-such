@@ -1,0 +1,63 @@
+
+/* ==UserStyle==
+@name           Fullwindow theatre
+@namespace      https://userstyles.world/user/egezenn
+@version        1.0.1
+@description    Use up all the window in theatre mode!
+A derivation of:
+"Auto-Hide YouTube Search Bar" - Satoru 0
+"YouTube: Fullscreen-ish Theatre Mode" - chrishazfun
+@preprocessor   stylus
+@author         Egezenn
+@var            checkbox rmEnd       "remove endscreen video suggestions" 0
+@var            checkbox rmScrollBar "remove scrollbars"                  0
+@var            checkbox rmShorts    "remove shorts from feeds"           0
+==/UserStyle== */
+i = !important
+
+@-moz-document url-prefix("https://www.youtube.com/watch?v=")
+	ytd-watch-flexy[theater]:not([fullscreen]) #player-full-bleed-container.ytd-watch-flexy
+	ytd-watch-flexy[theater]:not([fullscreen]) #full-bleed-container.ytd-watch-flexy
+		height calc(100vh)
+		max-height calc(100vh)
+
+	ytd-watch[theater] #player.ytd-watch
+		padding-top 15px i
+
+	#masthead-container
+		z-index 1000
+		top 0px i
+		opacity 0
+		left 10%
+		right 0
+		width 80% i
+		position relative
+		margin-right -50%
+		transform translate(-50%, 0%)
+
+	#masthead-container:hover
+		top 0 i
+		right 0
+		left 10%
+		opacity .9
+		width 80% i
+
+	ytd-page-manager
+		margin-top -6px i
+
+	#contents.ytd-section-list-renderer > .ytd-section-list-renderer:not(:last-child):not(ytd-page-introduction-renderer):not([item-dismissed]).ytd-section-list-renderer
+		border-color transparent
+
+	if (rmEnd)
+		.ytp-ce-video
+			display none i
+
+	if (rmScrollBar)
+		body
+			overflow hidden i
+
+@-moz-document url-prefix("https://www.youtube.com")
+	if (rmShorts)
+		ytd-rich-section-renderer
+		ytd-reel-shelf-renderer
+			display none i

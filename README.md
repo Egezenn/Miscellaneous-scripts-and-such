@@ -46,18 +46,21 @@ A simple always on top, resettable timer.
 
 ## [Miscellaneous](Miscellaneous)
 
-[All-In-One Config](Miscellaneous/autoexec.cfg)
+### [All-In-One Config](Miscellaneous/autoexec.cfg)
 
 Config file for Dota2 that encompasses most of what you'd need or want.
 
 ## [Style Sheets](Style%20Sheets)
 
+I'd recommend you to get userstyles through [here](https://userstyles.world/user/egezenn) using a userstyles add-on (e.g [Stylus](https://github.com/openstyles/stylus)).
+
 ### [Clean DU](Style%20Sheets/Clean%20DU.styl)
 
 Style written in Stylus style sheet language, aiming to fix what's broken and improve on in [Duzce University](https://duzce.edu.tr) pages.
 
-I'd recommend you to get it through [here](https://userstyles.world/style/18174/clean-du) using a userstyles add-on (e.g [Stylus](https://github.com/openstyles/stylus)).
-This is just here for archival purposes.
+### [Fullwindow Theatre](Style%20Sheets/Fullwindow%20theatre.styl)
+
+Makes the Youtube player as big as possible in theatre mode.
 
 ### [No Unnecessary Scroll For Free Games](Style%20Sheets/No%20Unnecessary%20Scroll%20For%20Free%20Games.styl)
 
