@@ -7,44 +7,55 @@ SetBatchLines, -1
 SetWorkingDir, %A_ScriptDir%
 
 HttpObj := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-TauonBaseURL := "http://localhost:7814/api1/"
+TauonAPI := "http://localhost:7814/api1/"
+TauonOverride := 1
+
+; Make sure to turn off the timer or exit the script
+If (ProcessExist("tauon.exe")) {
+    TauonKeepAlive()
+    SetTimer, TauonKeepAlive, 1000
+}
 
 #If, ProcessExist("tauon.exe")
-    ; Global hotkeys for media control (Has some overhead to initialize after some time)
-
-    $Media_Prev::
-        TauonSendCommand("back")
-        TauonDisplaySongInfo()
+    !NumLock::
+        TauonOverride := !TauonOverride
+        ToolTip("Tauon override: " . TauonOverride, A_ScreenWidth, A_ScreenHeight, , 5000)
     Return
-    $CapsLock::
-        TauonDisplaySongInfo()
-    Return
+#If
 
-    $Media_Next::
-        TauonSendCommand("next")
-        TauonDisplaySongInfo()
-    Return
+; #If, ProcessExist("tauon.exe") && TauonOverride
+;     $CapsLock::TauonDisplaySongInfo()
 
-    $Volume_Down::
-        TauonSendCommand("setvolumerel/-5")
-        TauonDisplayVolumeInfo("-")
-    Return
+;     $Media_Prev::
+;         TauonSendCommand("back")
+;         TauonDisplaySongInfo()
+;     Return
 
-    $Volume_Up::
-        TauonSendCommand("setvolumerel/5")
-        TauonDisplayVolumeInfo("+")
-    Return
+;     $Media_Next::
+;         TauonSendCommand("next")
+;         TauonDisplaySongInfo()
+;     Return
 
-    $Media_Play_Pause::TauonSwitchPlayState()
-#IfWinActive
+;     $Volume_Down::
+;         TauonSendCommand("setvolumerel/-5")
+;         TauonDisplayVolumeInfo("-")
+;     Return
+
+;     $Volume_Up::
+;         TauonSendCommand("setvolumerel/5")
+;         TauonDisplayVolumeInfo("+")
+;     Return
+
+;     $Media_Play_Pause::TauonSwitchPlayState()
+; #If
 
 ToolTip(Text := "", X := "", Y := "", WhichToolTip := 1, Timeout := "") {
     ; https://www.autohotkey.com/boards/viewtopic.php?t=65494
-    ToolTip, %Text, X, Y, WhichToolTip
+    ToolTip, % Text, X, Y, WhichToolTip
 
     if (Timeout) {
         RemoveToolTip := Func("ToolTip").Bind(, , , WhichToolTip)
-        SetTimer, %RemoveToolTip, % -Timeout
+        SetTimer, % RemoveToolTip, % -Timeout
     }
 }
 
@@ -54,23 +65,24 @@ ProcessExist(Name) {
 }
 
 TauonSendCommand(command) {
-    global HttpObj, TauonBaseURL
-    URL := TauonBaseURL . command
-    HttpObj.Open("GET", URL, false)
+    global HttpObj, TauonAPI
+    HttpObj.Open("GET", TauonAPI . command, false)
     HttpObj.Send()
 }
 
-TauonGetStatus(command) {
-    global HttpObj, TauonBaseURL
-    URL := TauonBaseURL . "status"
-    HttpObj.Open("GET", URL, false)
+TauonKeepAlive() {
+    TauonSendCommand("version")
+}
+
+TauonGetStatus() {
+    global HttpObj, TauonAPI
+    HttpObj.Open("GET", TauonAPI . "status", false)
     HttpObj.Send()
     HttpObj.WaitForResponse()
     Return HttpObj.ResponseText
 }
 
 TauonDisplaySongInfo() {
-    global HttpObj, TauonBaseURL
     pattern1 := """artist"": ""(.*?)"","
     pattern2 := """title"": ""(.*?)"","
     ResponseText := TauonGetStatus()
@@ -80,7 +92,6 @@ TauonDisplaySongInfo() {
 }
 
 TauonDisplayVolumeInfo(change) {
-    global HttpObj, TauonBaseURL
     pattern := """volume"": (.*?),"
     ResponseText := TauonGetStatus()
     RegExMatch(ResponseText, pattern, volume)
@@ -88,17 +99,36 @@ TauonDisplayVolumeInfo(change) {
 }
 
 TauonSwitchPlayState() {
-    global HttpObj, TauonBaseURL
     pattern := """status"": ""(.*?)"","
+    pattern1 := """artist"": ""(.*?)"","
+    pattern2 := """title"": ""(.*?)"","
     ResponseText := TauonGetStatus()
     RegExMatch(ResponseText, pattern, playState)
-
+    RegExMatch(ResponseText, pattern1, artist)
+    RegExMatch(ResponseText, pattern2, title)
     If (playState1 = "paused" || playState1 = "stopped") {
         TauonSendCommand("play")
-        ToolTip("Playing", A_ScreenWidth, A_ScreenHeight, , 2000)
+        ToolTip("Playing`n" . artist1 . "`n" . title1, A_ScreenWidth, A_ScreenHeight, , 5000)
     }
     Else {
         TauonSendCommand("pause")
-        ToolTip("Paused", A_ScreenWidth, A_ScreenHeight, , 2000)
+        ToolTip("Paused`n" . artist1 . "`n" . title1, A_ScreenWidth, A_ScreenHeight, , 5000)
     }
+    ;
 }
+
+; TODO implement seek
+; TODO get duration and progress from status and display it in tooltips
+; TODO make class (tried but encountered issues with comobj)
+
+; unicode chars show up as raw, tried to escape them to no avail
+; ReplaceUnicodeEscapes(inputString) {
+;     return RegExReplace(inputString, "\\u([0-9A-Fa-f]{4})", Func("UnicodeToChar"))
+; }
+
+; UnicodeToChar(hex) {
+;     return Chr("0x" . hex)
+; }
+$^!CapsLock::
+    ObjRelease(HttpObj)
+ExitApp
