@@ -8,7 +8,7 @@ SetWorkingDir, %A_ScriptDir%
 
 defaultVariable := "x"
 
-#If (WinActive("ahk_exe Obsidian.exe") || WinActive("ahk_exe Code.exe"))
+#If (WinActive("ahk_exe VSCodium.exe"))
     "::$
     !"::\
     ^"::
@@ -263,24 +263,6 @@ defaultVariable := "x"
 ; !^Right::Send, {Right 7}
 ; !^Left::Send, {Left 7}
 #If
-
-#IfWinActive, ahk_exe Obsidian.exe
-    !+q::
-        a = ````````
-        Send, %a%{BackSpace}slide-note
-        Send, {Enter 2}{Down}{End}{Enter}{Up 3}
-        Send, file:{Space}%Clipboard%.pdf{Down}
-        Send, page:{Space}{End}
-        KeyWait, LAlt
-        KeyWait, LShift
-    Return
-    AppsKey::
-        Send, ^v
-        Send, {Enter}
-        KeyWait, LWin
-        Send, !{Tab}
-    Return
-#IfWinActive
 
 #If, WinActive("ahk_exe mpc-hc64.exe") Or WinActive("ahk_exe okular.exe")
     "::#+s

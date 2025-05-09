@@ -10,24 +10,25 @@ SetWorkingDir, %A_ScriptDir%
 TauonAPI := new Tauon()
 
 ; ComObj idle fix
-If (ProcessExist("tauon.exe")) {
+If (ProcessExist("Tauon Music Box.exe")) {
     TauonAPI.KeepAlive()
     ToolTip("Tauon detected", A_ScreenWidth, A_ScreenHeight, , 5000)
-    SetTimer, TauonKeepAlive, 60000
+    SetTimer, TauonKeepAlive, 30000
 }
+
 TauonKeepAlive:
     TauonAPI.KeepAlive()
 Return
 
 ; Override toggle
-#If, ProcessExist("tauon.exe")
+#If, ProcessExist("Tauon Music Box.exe")
     !NumLock::
         TauonAPI.Override := !TauonAPI.Override
         ToolTip("Tauon override: " . TauonAPI.Override, A_ScreenWidth, A_ScreenHeight, , 5000)
     Return
 #If
 
-#If, ProcessExist("tauon.exe") && TauonAPI.Override
+#If, ProcessExist("Tauon Music Box.exe") && TauonAPI.Override
     $CapsLock::TauonAPI.DisplaySongInfo()
 
     $Media_Prev::
@@ -129,11 +130,12 @@ ToolTip(Text := "", X := "", Y := "", WhichToolTip := 1, Timeout := "") {
 $!CapsLock::Reload
 $^!CapsLock::
     ObjRelease(TauonAPI.HttpObj)
+    SetTimer, TauonKeepAlive, Off
+    Process, Close, Tauon Music Box.exe
 ExitApp
 
 ; TODO implement seek
 ; TODO get duration and progress from status and display it in tooltips
-; TODO make class (tried but encountered issues with comobj)
 
 ; unicode chars show up as raw, tried to escape them to no avail
 ; ReplaceUnicodeEscapes(inputString) {

@@ -24,6 +24,8 @@ KEYBIND(key)
     Return
 }
 
+; To enable menubar, click the pesky downwards triangle icon
+; on the left and click on "Show Menu Bar"
 ; Menubar selector with 2 keys
 menubarSelectorTwo(menubarKey, keyOne)
 {
@@ -53,7 +55,7 @@ quickSelect()
     Return
 }
 
-; -----------------------------------------------------
+;~ -----------------------------------------------------
 #IfWinActive, Autodesk AutoCAD
     ; Measurement, miscellaneous commands
 
@@ -127,7 +129,7 @@ quickSelect()
         KEYBIND("F4")
     Return
 
-    ; -----------------------------------------------------
+    ;~ -----------------------------------------------------
     ; Drawing commands
 
     $a:: ; Line
@@ -174,7 +176,7 @@ quickSelect()
         menubarSelectorThree("D", "C", "A")
     Return
 
-    ; -----------------------------------------------------
+    ;~ -----------------------------------------------------
     ; Object manipulation
 
     $z:: ; Move
@@ -223,7 +225,7 @@ quickSelect()
     Return
 
 #IfWinActive
-; -----------------------------------------------------
+;~ -----------------------------------------------------
 ; Other
 
 $!x:: ; Windows Screen Snap

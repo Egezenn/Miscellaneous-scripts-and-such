@@ -165,7 +165,7 @@ Return
 ; ---------------------------------------------------------------
 
 $!CapsLock::Reload
-$<^>!CapsLock::
+$^!CapsLock::
   Process, Close, gInk.exe
   DllCall("SystemParametersInfo", UInt, 0x71, UInt, 0, UInt, defaultPointerSpeed, UInt, 0)
 ExitApp
