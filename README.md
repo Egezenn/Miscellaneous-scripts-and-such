@@ -120,6 +120,13 @@ Style written in Stylus style sheet language, aiming to fix what's broken and im
 </details>
 
 <details>
+<summary><h3>- <a href="Style Sheets/Discord Declutter.css">Discord Declutter</a></h3></summary>
+
+Fixes discord.
+
+</details>
+
+<details>
 <summary><h3>- <a href="Style Sheets/Fullwindow theatre.styl">Fullwindow Theatre</a></h3></summary>
 
 Makes the Youtube player as big as possible in theatre mode.
@@ -134,7 +141,7 @@ Removes Epic Games scroll nuisance.
 </details>
 
 <details>
-<summary><h3>- <a href="Style Sheets/Minimizer.css">Minimizer</a></h3></summary>
+<summary><h3>- <a href="Style Sheets/Obsidian Minimizer.css">Obsidian Minimizer</a></h3></summary>
 
 [Obsidian](https://obsidian.md) snippet that tries to minimize & simplify every single aspect of the editor UI, in a hacky way.
 

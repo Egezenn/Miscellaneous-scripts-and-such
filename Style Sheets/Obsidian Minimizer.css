@@ -1,0 +1,267 @@
+:root {
+  --minimizer-color-dir-l1: rgba(138, 92, 245, .1);
+  --minimizer-color-dir-l1-hover: rgba(138, 92, 245, .2);
+  --minimizer-color-dir-l2: rgba(138, 92, 245, .3);
+  --minimizer-color-dir-l2-hover: rgba(138, 92, 245, .4);
+  --minimizer-color-dir-file-tag: rgba(138, 92, 245, .5);
+  --minimizer-color-vt-file: rgba(245, 92, 138, 1);
+  --minimizer-color-vt-file-hidden: rgba(138, 92, 245, .6);
+}
+
+/* i don't plan on porting this to mobile */
+@media only screen and (device-aspect-ratio: 16/9) {
+
+  /* useless buttons & headers (imo) */
+  .view-header,
+  .workspace-sidedock-vault-profile,
+  /* .nav-header, */
+  .sidebar-toggle-button.mod-left,
+  .workspace-tab-header-tab-list,
+  .sidebar-toggle-button.mod-right,
+  .workspace-tab-header.tappable[data-type="tag"],
+  .workspace-tab-header.tappable[data-type="bookmarks"],
+  .workspace-tab-header.tappable[data-type="all-properties"],
+  .workspace-tab-header.tappable[data-type="outline"],
+  .prompt-instructions,
+  .workspace-split.mod-horizontal.mod-sidedock.mod-left-split>div:nth-of-type(3)>.workspace-tab-header-container,
+  /* left side top header */
+  .workspace-split.mod-horizontal.mod-sidedock.mod-left-split>div:nth-of-type(4)>.workspace-tab-header-container,
+  /* left side first split header */
+  .workspace-split.mod-horizontal.mod-sidedock.mod-right-split>div:nth-of-type(3)>.workspace-tab-header-container,
+  /* right side first split header */
+  .workspace-split.mod-horizontal.mod-sidedock.mod-right-split>div:nth-of-type(4)>.workspace-tab-header-container,
+  /* right side second split header */
+  .search-empty-state,
+  .status-bar {
+    display: none !important;
+  }
+
+
+
+  /* widgets */
+  .nav-header,
+  .quiet-outline,
+  #calendar-container,
+  #calendar-container>.nav {
+    padding: 0px !important;
+    margin: 0px !important;
+  }
+
+  /* widget containers */
+  .workspace-leaf-content .view-content,
+  .nav-files-container.node-insert-event.show-unsupported {
+    padding: 0px !important;
+  }
+
+  /* search widget */
+  .search-row,
+  .search-results-info,
+  .search-result-container.mod-global-search.node-insert-event,
+  .suggestion-container.mod-search-suggestion>div {
+    margin: 0px !important;
+    padding: 0px !important;
+  }
+
+  .search-result-file-match {
+    padding: 5px 0px !important;
+  }
+
+  /* i'm not **that** precise cmon */
+  .tree-item-icon.collapse-icon {
+    width: 32px !important;
+  }
+
+
+
+  /* Vertical tabs plugin */
+  .obsidian-vertical-tabs-container,
+  .obsidian-vertical-tabs-container>div {
+    height: 100% !important;
+  }
+
+  .obsidian-vertical-tabs-container {
+    padding: 0px !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group,
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children {
+    margin: 0px !important;
+    border: 0px !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-self.is-clickable {
+    margin: 0px !important;
+    padding: 0px 0px 0px 24px !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab {
+    margin: 0px !important;
+    border: 0px !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab>.tree-item-self.is-clickable {
+    padding: 0px 0px 0px 24px !important;
+    margin: 0px !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab>.tree-item-children {
+    display: none !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-self.is-clickable {
+    background-color: var(--minimizer-color-dir-l2) !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-self.is-clickable:hover {
+    background-color: var(--minimizer-color-dir-l2-hover) !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab.is-highlighted {
+    background-color: var(--minimizer-color-vt-file) !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab>.tree-item-self.is-clickable.is-active {
+    background-color: var(--minimizer-color-vt-file-hidden) !important;
+  }
+
+  /* permanent collapse until remembrance of collapse state  */
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab>.tree-item-self.is-clickable {
+    display: none;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-self.is-clickable>.tree-item-flair-outer>.clickable-icon.action-button.action-eye>svg {
+    color: #000000 !important;
+    background-color: #FF0000;
+    border-radius: 8px !important;
+  }
+
+  .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-self.is-clickable>.tree-item-flair-outer>.clickable-icon.action-button.action-eye-off>svg {
+    color: #000000 !important;
+    background-color: #00FF00 !important;
+    border-radius: 8px !important;
+  }
+
+  .workspace-split.mod-vertical.mod-root {
+    background: radial-gradient(rgba(0, 255, 255, .05), rgba(255, 0, 255, .05)) !important;
+  }
+
+  /* slide note */
+  .block-language-slide-note {
+    max-width: 500px !important;
+  }
+
+  /* admonition */
+  .admonition-parent>.callout.admonition-plugin {
+    padding: 0 !important;
+  }
+
+  .admonition-parent>.admonition-plugin>.callout-content.admonition-content {
+    margin: 0 !important;
+  }
+
+  /* HyperMD codeblocks disable backtick lines */
+  /* can still edit them if you use right & left instead of up & down,
+  makes it whole lot easier to actually type imho */
+  .HyperMD-codeblock-begin,
+  .HyperMD-codeblock-end {
+    height: 2px !important;
+  }
+
+  .HyperMD-codeblock-begin.cm-active,
+  .HyperMD-codeblock-end.cm-active {
+    height: 22.3125px !important;
+  }
+
+  /* folder views */
+  .tree-item-self.mod-collapsible.nav-folder-title,
+  .tree-item-self.nav-file-title {
+    margin: 0px !important;
+    padding: 0px !important;
+  }
+
+  .tree-item-children.nav-folder-children {
+    margin-left: 6px !important;
+    border: 0px !important;
+  }
+
+  /* directory hierarchy coloring
+    only supports a hierarchy that extends to dir>dir
+    that seems distinguishable enough */
+  .nav-files-container.node-insert-event.show-unsupported>div>.tree-item.nav-folder>.tree-item-self.is-clickable.mod-collapsible.nav-folder-title {
+    background-color: var(--minimizer-color-dir-l1) !important;
+  }
+
+  .nav-files-container.node-insert-event.show-unsupported>div>.tree-item.nav-folder>.tree-item-self.is-clickable.mod-collapsible.nav-folder-title:hover {
+    background-color: var(--minimizer-color-dir-l1-hover) !important;
+  }
+
+  .nav-files-container.node-insert-event.show-unsupported>div>.tree-item.nav-folder>.tree-item-children.nav-folder-children>.tree-item.nav-folder>.tree-item-self.is-clickable.nav-folder-title {
+    background-color: var(--minimizer-color-dir-l2) !important;
+  }
+
+  .nav-files-container.node-insert-event.show-unsupported>div>.tree-item.nav-folder>.tree-item-children.nav-folder-children>.tree-item.nav-folder>.tree-item-self.is-clickable.nav-folder-title:hover {
+    background-color: var(--minimizer-color-dir-l2-hover) !important;
+  }
+
+  .nav-file-tag {
+    background-color: var(--minimizer-color-dir-file-tag) !important;
+  }
+
+
+
+  /* main editor tabs, view etc */
+  .workspace-tab-header-container {
+    height: 20px !important;
+  }
+
+  .workspace-tab-header-container {
+    padding-left: 0px !important;
+  }
+
+  .workspace-tab-header-container>.workspace-tab-header-container-inner,
+  .workspace-tab-header-new-tab {
+    padding: 0px !important;
+    margin: 0px !important;
+  }
+
+  .workspace-tab-header-container>.workspace-tab-header-container-inner>.workspace-tab-header.tappable {
+    padding: 0px !important;
+  }
+
+  .workspace-tab-header {
+    width: 100px !important;
+  }
+
+  /* calculates the main box bigger and it overflows, modify the variable used to calculate its size */
+  .view-content>.markdown-source-view>.cm-editor>div.cm-scroller {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    /* padding: 0px !important; */
+  }
+
+  /* .cm-scroller::-webkit-scrollbar {
+    height: 0px !important;
+  } */
+
+  /* misc */
+  /* positioning latex blocks to left instead of center */
+  mjx-container[jax="CHTML"][display="true"] {
+    text-align: left !important;
+  }
+
+  .cm-preview-code-block {
+    width: 500px !important;
+  }
+
+  /* readable line length, doesn't account sidebars */
+  /* .view-content>.markdown-source-view>.cm-editor>div.cm-scroller>.cm-sizer {
+    margin: 0px 300px !important;
+  } */
+
+
+  /* bigger math */
+  /* mjx-math {
+    font-size: 130% !important;
+    font-weight: normal !important;
+} */
+}
