@@ -1,9 +1,8 @@
-
 /* ==UserStyle==
 @name           Fullwindow theatre
 @namespace      https://userstyles.world/user/egezenn
 @version        1.0.1
-@description    Use up all the window in theatre mode!
+@description    Use up all the window in theatre mode with hoverable header!
 A derivation of:
 "Auto-Hide YouTube Search Bar" - Satoru 0
 "YouTube: Fullscreen-ish Theatre Mode" - chrishazfun
@@ -14,6 +13,12 @@ A derivation of:
 @var            checkbox rmShorts    "remove shorts from feeds"           0
 ==/UserStyle== */
 i = !important
+
+@-moz-document url-prefix("https://www.youtube.com")
+	if (rmShorts)
+		ytd-rich-section-renderer
+		ytd-reel-shelf-renderer
+			display none i
 
 @-moz-document url-prefix("https://www.youtube.com/watch?v=")
 	ytd-watch-flexy[theater]:not([fullscreen]) #player-full-bleed-container.ytd-watch-flexy
@@ -55,9 +60,3 @@ i = !important
 	if (rmScrollBar)
 		body
 			overflow hidden i
-
-@-moz-document url-prefix("https://www.youtube.com")
-	if (rmShorts)
-		ytd-rich-section-renderer
-		ytd-reel-shelf-renderer
-			display none i

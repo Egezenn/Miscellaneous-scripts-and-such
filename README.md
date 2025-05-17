@@ -2,74 +2,141 @@
 
 Repo of scripts and such that in itself isn't repo worthy.
 
-## [AutoHotkey V1](AutoHotkey%20V1)
+Everything is licensed under MIT, unless specified otherwise in the file or a directory that contains a LICENSE file.
 
-### [AutoCAD binds](AutoHotkey%20V1/AutoCAD%20binds.ahk)
+<details>
+<summary><h2><a href="AutoHotkey V1">AutoHotkey V1</a></h3></summary>
+
+<details>
+<summary><h3>- <a href="AutoHotkey V1/AutoCAD binds.ahk">AutoCAD binds</a></h3></summary>
 
 Bind keys to specific commands that are used 90% of the time for 2D sketching on AutoCAD.
 
-### [BoxDwgChars](AutoHotkey%20V1/BoxDwgChars.ahk)
+</details>
+
+<details>
+<summary><h3>- <a href="AutoHotkey V1/BoxDwgChars.ahk">BoxDwgChars</a></h3></summary>
 
 Type box drawing characters using numpad.
 
-### [ChaoticKeyboard](AutoHotkey%20V1/ChaoticKeyboard.ahk)
+</details>
+
+<details>
+<summary><h3>- <a href="AutoHotkey V1/ChaoticKeyboard.ahk">ChaoticKeyboard</a></h3></summary>
 
 Typing with random letterlike symbols.
 
-### [controllerDesktopInput](Autohotkey%20V1/controllerDesktopInput.ahk)
+</details>
+
+<details>
+<summary><h3>- <a href="Autohotkey V1/controllerDesktopInput.ahk">controllerDesktopInput</a></h3></summary>
 
 Middleware to control your desktop with a controller
 
-### [Drawing](AutoHotkey%20V1/Drawing.ahk)
+</details>
 
-Template script to use [gInk](https://github.com/geovens/gInk) with a mouse or a drawing tablet and binding hotkeys for specific programs when using a drawing tablet.
+<details>
+<summary><h3>- <a href="AutoHotkey V1/Drawing.ahk">Drawing</a></h3></summary>
 
-### [getKeyInfo](AutoHotkey%20V1/getKeyInfo.ahk)
+Template script to use <a href="https://github.com/geovens/gInk">gInk></a> with a mouse or a drawing tablet and binding hotkeys for specific programs when using a drawing tablet.
+
+</details>
+
+<details>
+<summary><h3>- <a href="AutoHotkey V1/getKeyInfo.ahk">getKeyInfo</a></h3></summary>
 
 Tool to get information about your next keystroke.
 
-### [LaTeX shortcuts](AutoHotkey%20V1/LaTeX%20shortcuts.ahk)
+</details>
+
+<details>
+<summary><h3>- <a href="AutoHotkey V1/LaTeX shortcuts.ahk">LaTeX shortcuts</a></h3></summary>
 
 Keybinds to insert general LaTeX symbols&commands.
 
-### [mousePosColorTooltip](AutoHotkey%20V1/mousePosColorTooltip.ahk)
+</details>
+
+<details>
+<summary><h3>- <a href="AutoHotkey V1/mousePosColorTooltip.ahk">mousePosColorTooltip</a></h3></summary>
 
 Handy script to see which pixels your cursor is at, color of the pixel and copy those into the clipboard.
 
-### [TauonGlobalHotkeys](AutoHotkey%20V1/TauonGlobalHotkeys.ahk)
+</details>
+
+<details>
+<summary><h3>- <a href="AutoHotkey V1/TauonGlobalHotkeys.ahk">TauonGlobalHotkeys</a></h3></summary>
 
 Media control using Tauon's HTTP API, also shows tooltips to mitigate the app not having notifications.
 
-### [timer](AutoHotkey%20V1/timer.ahk)
+</details>
+
+<details>
+<summary><h3>- <a href="AutoHotkey V1/timer.ahk">timer</a></h3></summary>
 
 A simple always on top, resettable timer.
 
-## [Miscellaneous](Miscellaneous)
+</details>
+</details>
 
-### [All-In-One Config](Miscellaneous/autoexec.cfg)
+<details>
+<summary><h2><a href="Miscellaneous">Miscellaneous</a></h2></summary>
+
+<details>
+<summary><h3>- <a href="Miscellaneous/autoexec.cfg">All-In-One Config</a></h3></summary>
 
 Config file for Dota2 that encompasses most of what you'd need or want.
 
-## [Python](Python)
+</details>
+</details>
 
-### [embedclipimgasbase64md](Python/embedclipimgasbase64md)
+<details>
+<summary><h2><a href="Python">Python</a></h2></summary>
 
-## [Style Sheets](Style%20Sheets)
+<details>
+<summary><h3>- <a href="Python/AutoHotkey-Layout-Visualizer/">AutoHotkey-Layout-Visualizer</a></h3></summary>
+
+[Details](Python/AutoHotkey-Layout-Visualizer/reaDme.md)
+
+</details>
+
+<details>
+<summary><h3>- <a href="Python/embedclipimgasbase64md">embedclipimgasbase64md</a></h3></summary>
+
+[Details](Python/embedclipimgasbase64md/readme.md)
+
+</details>
+</details>
+
+<details>
+<summary><h2><a href="Style Sheets">Style Sheets</a></h2></summary>
 
 I'd recommend you to get userstyles through [here](https://userstyles.world/user/egezenn) using a userstyles add-on (e.g [Stylus](https://github.com/openstyles/stylus)).
 
-### [Clean DU](Style%20Sheets/Clean%20DU.styl)
+<details>
+<summary><h3>- <a href="Style Sheets/Clean DU.styl">Clean DU</a></h3></summary>
 
 Style written in Stylus style sheet language, aiming to fix what's broken and improve on in [Duzce University](https://duzce.edu.tr) pages.
 
-### [Fullwindow Theatre](Style%20Sheets/Fullwindow%20theatre.styl)
+</details>
+
+<details>
+<summary><h3>- <a href="Style Sheets/Fullwindow theatre.styl">Fullwindow Theatre</a></h3></summary>
 
 Makes the Youtube player as big as possible in theatre mode.
 
-### [No Unnecessary Scroll For Free Games](Style%20Sheets/No%20Unnecessary%20Scroll%20For%20Free%20Games.styl)
+</details>
+
+<details>
+<summary><h3>- <a href="Style Sheets/No Unnecessary Scroll For Free Games.styl">No Unnecessary Scroll For Free Games</a></h3></summary>
 
 Removes Epic Games scroll nuisance.
 
-### [Minimizer](Style%20Sheets/Minimizer.css)
+</details>
 
-[Obsidian](https://obsidian.md/) snippet that tries to minimize & simplify every single aspect of the editor UI, in a hacky way.
+<details>
+<summary><h3>- <a href="Style Sheets/Minimizer.css">Minimizer</a></h3></summary>
+
+[Obsidian](https://obsidian.md) snippet that tries to minimize & simplify every single aspect of the editor UI, in a hacky way.
+
+</details>
+</details>

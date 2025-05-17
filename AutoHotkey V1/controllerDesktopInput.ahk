@@ -23,6 +23,18 @@ NormalSleepTime := 100
 TurboSleepTime := 20
 OSK_State := 0
 
+#If, WinActive("ahk_exe retroarch.exe")
+	Joy8:: ; START
+		Send, p
+		Sleep, 50
+		Send, {LWin down}
+		Sleep, 10
+		Send, d
+		Sleep, 10
+		Send, {LWin up}
+	Return
+#If
+
 #If, !WinActive("ahk_exe retroarch.exe")
 	Joy1:: ; A
 		Send, {LWin down}
