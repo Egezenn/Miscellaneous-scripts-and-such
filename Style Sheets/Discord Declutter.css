@@ -1,12 +1,10 @@
-/* remove all visual vomit */
-
+/* # remove all visual vomit */
 a[href="https://support.discord.com"],
 /* remove paid stuff */
 a[href="/store"],
 a[href="/shop"],
 /* ??? why */
 div[class^="nowPlayingColumn"],
-/* normalise member list */
 /* channel banner & boost stuff */
 div[class^="animatedContainer"],
 ul[aria-label="Channels"]>div[style="height: 84px;"],
@@ -26,7 +24,62 @@ div[class^="newMemberBadge"],
 svg[aria-label^="Server boosting"],
 /* statuses */
 div[class^="memberInner"]>div[class^="content"]>div[class^="subText"],
-/* background */
+/* backgrounds */
 div[class^="member"]>div[class*="nameplated"]>div[style] {
     display: none;
+}
+
+/* # i have eyes (removes annoying "new unread!", "someone's on vc!") */
+div[class^="container"][class*="bottom"],
+div[class^="newMessagesBar"] {
+    display: none;
+}
+
+/* # i can see channels now! (condenses channels, a lot [leads to wrong height calculations]) */
+/* dividers and spacing */
+div[class^="sectionDivider"],
+div[style="height: 16px;"],
+/* text icon removal */
+div[aria-label="Announcements icon"],
+div[aria-label="Announcements (Limited) icon"],
+div[aria-label="Announcements (Age-Restricted) icon"],
+div[aria-label="Forum icon"],
+div[aria-label="Forum (Limited) icon"],
+div[aria-label="Forum (Age-Restricted) icon"],
+div[aria-label="Rules icon"],
+div[aria-label="Rules (Limited) icon"],
+div[aria-label="Rules (Age-Restricted) icon"],
+div[aria-label="Text icon"],
+div[aria-label="Text (Limited) icon"],
+div[aria-label="Text (Age-Restricted) icon"] {
+    display: none;
+}
+
+/* readjust text positions */
+div[class^="linkTop"]>div[class^="name"] {
+    left: -4px;
+}
+
+/* # remove pads&margins from channel&member lists */
+ul[aria-label="Channels"]>*,
+ul[aria-label="Channels"]>li>div>*,
+ul[aria-label="Channels"]>li>div>*>*,
+ul[aria-label="Channels"]>li>div>*>*>*,
+div[data-list-item-id^="channels"],
+div[role="list"][aria-label="Members"]>*,
+div[role="list"][aria-label="Members"]>*>* {
+    padding: 0;
+    margin: 0;
+}
+
+/* # adjust member list */
+div[class^="chat"][data-has-border]>div[class^="content"]>div[class^="container"]:not([data-member-list-open]),
+div[role="list"][aria-label="Members"] {
+    width: 200px;
+}
+
+/* # remove headers */
+header[class^="header"],
+div[class^="iconVisibility"][class*="wrapper"][class*="wrapperCommon"][class*="clickable"] {
+    display: none !important;
 }
