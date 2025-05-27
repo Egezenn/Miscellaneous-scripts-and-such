@@ -22,10 +22,19 @@ img[aria-label^="Role icon"],
 div[class^="newMemberBadge"],
 /* nitro */
 svg[aria-label^="Server boosting"],
+div[class^="profileEffects"],
+header>svg>foreignObject,
+/* oh so special badges */
+div[aria-label="User Badges"],
 /* statuses */
 div[class^="memberInner"]>div[class^="content"]>div[class^="subText"],
 /* backgrounds */
-div[class^="member"]>div[class*="nameplated"]>div[style] {
+div[class^="member"]>div[class*="nameplated"]>div[style],
+div.app-launcher-entrypoint,
+/* chat buttons */
+button[aria-label="Open sticker picker"],
+button[aria-label="Open GIF picker"],
+button[aria-label="Send a gift"] {
     display: none;
 }
 
@@ -55,15 +64,11 @@ div[aria-label="Text (Age-Restricted) icon"] {
     display: none;
 }
 
-/* readjust text positions */
-div[class^="linkTop"]>div[class^="name"] {
-    left: -4px;
-}
-
-/* # remove pads&margins from channel&member lists */
+/* remove pads&margins from channel&member lists */
+div[class^="channelTextArea"],
 ul[aria-label="Channels"]>*,
 ul[aria-label="Channels"]>li>div>*,
-ul[aria-label="Channels"]>li>div>*>*,
+/* ul[aria-label="Channels"]>li>div>*>*, */
 ul[aria-label="Channels"]>li>div>*>*>*,
 div[data-list-item-id^="channels"],
 div[role="list"][aria-label="Members"]>*,
@@ -72,14 +77,39 @@ div[role="list"][aria-label="Members"]>*>* {
     margin: 0;
 }
 
-/* # adjust member list */
-div[class^="chat"][data-has-border]>div[class^="content"]>div[class^="container"]:not([data-member-list-open]),
-div[role="list"][aria-label="Members"] {
-    width: 200px;
-}
-
-/* # remove headers */
+/* remove headers */
 header[class^="header"],
 div[class^="iconVisibility"][class*="wrapper"][class*="wrapperCommon"][class*="clickable"] {
     display: none !important;
+}
+
+/* # adjust member&channel list */
+div[class^="chat"][data-has-border]>div[class^="content"]>div[class^="container"]:not([data-member-list-open]),
+div[role="list"][aria-label="Members"],
+div[class^="sidebarList"][class*="sidebarListRounded"] {
+    width: 175px;
+}
+
+/* # scuffed edition */
+:root {
+    --space-0: 0px;
+    --space-4: 0px;
+    --space-6: 0px;
+    --space-8: 0px;
+    --space-10: 0px;
+    --space-12: 0px;
+    --space-16: 0px;
+    --space-20: 0px;
+    --space-24: 0px;
+    --space-26: 0px;
+    --space-30: 0px;
+    --space-32: 32px;
+    --space-40: 0px;
+    --space-48: 0px;
+    --space-64: 0px;
+    --space-80: 0px;
+    --space-96: 0px;
+    --space-128: 0px;
+    --space-160: 0px;
+    --space-192: 0px;
 }
