@@ -1,62 +1,132 @@
 /* ==UserStyle==
 @name           Fullwindow theatre
 @namespace      https://userstyles.world/user/egezenn
-@version        1.0.1
+@version        1.1.5.1
 @description    Use up all the window in theatre mode with hoverable header!
-A derivation of:
-"Auto-Hide YouTube Search Bar" - Satoru 0
-"YouTube: Fullscreen-ish Theatre Mode" - chrishazfun
+Along with lots of optional removals 
 @preprocessor   stylus
 @author         Egezenn
-@var            checkbox rmEnd       "remove endscreen video suggestions" 0
-@var            checkbox rmScrollBar "remove scrollbars"                  0
-@var            checkbox rmShorts    "remove shorts from feeds"           0
+@var            checkbox rmPreviews              "Remove video previews"                     0
+@var            checkbox rmChips                 "Remove chips (filters on homepage)"        0
+@var            checkbox rmShorts                "Remove shorts from feeds"                  0
+@var            checkbox transparentHeader       "Transparent header"                        0
+@var            checkbox rmGradient              "Remove gradient"                           0
+@var            checkbox rmEnd                   "Remove endscreen video suggestions"        0
+@var            checkbox rmBranding              "Remove branding (channel icons)"           0
+@var            checkbox rmVoice                 "Remove voice button"                       0
+@var            checkbox rmSurvey                "Remove surveys"                            0
+@var            checkbox rmSign                  "Remove sign-in"                            0
+@var            checkbox rmExplore               "Remove explore on sidebar"                 0
+@var            checkbox rmChannelsOnVidList     "Remove channels from video suggestions"    0
 ==/UserStyle== */
 i = !important
 
 @-moz-document url-prefix("https://www.youtube.com")
-	if (rmShorts)
-		ytd-rich-section-renderer
-		ytd-reel-shelf-renderer
-			display none i
+    if rmShorts
+        ytd-rich-section-renderer
+        ytd-reel-shelf-renderer
+        ytd-mini-guide-entry-renderer[aria-label='Shorts']
+            display none i
+
+    if rmPreviews
+        #video-preview
+        #mouseover-overlay
+        #hover-overlays
+            display none i
+
+    if rmVoice
+        #voice-search-button
+        button.ytSearchboxComponentSearchButton.ytSearchboxComponentSearchButtonDark
+            display none i
+
+        .ytSearchboxComponentInputBox.ytSearchboxComponentInputBoxDark
+            border-radius 40px i
+
+    if transparentHeader
+        #background.ytd-masthead
+        #masthead-container
+        .ytSearchboxComponentInputBox.ytSearchboxComponentInputBoxDark
+            background rgba(0,0,0,.3) i
+
+        .ytSearchboxComponentSuggestionsContainer.ytSearchboxComponentSuggestionsContainerDark.ytSearchboxComponentSuggestionsContainerScrollable
+            background rgba(0,0,0,.6) i
+
+        #frosted-glass
+            display none i
+
+    if rmSurvey
+        #attached-survey
+            display none i
+
+    if rmSign
+        a[aria-label='Sign in']
+        ytd-guide-signin-promo-renderer
+            display none i
+
+    if rmExplore
+        #sections > ytd-guide-section-renderer:nth-of-type(3)
+            display none i
+
+@-moz-document url(https :// www . youtube . com)
+    if rmChips
+        ytd-rich-grid-renderer > #header
+        #chips
+            display none i
 
 @-moz-document url-prefix("https://www.youtube.com/watch?v=")
-	ytd-watch-flexy[theater]:not([fullscreen]) #player-full-bleed-container.ytd-watch-flexy
-	ytd-watch-flexy[theater]:not([fullscreen]) #full-bleed-container.ytd-watch-flexy
-		height calc(100vh)
-		max-height calc(100vh)
+    ytd-watch-flexy[theater]:not([fullscreen]) #full-bleed-container.ytd-watch-flexy
+    ytd-watch-flexy[theater]:not([fullscreen]) #player-full-bleed-container.ytd-watch-flexy
+        height calc(100vh)
+        max-height calc(100vh)
 
-	ytd-watch[theater] #player.ytd-watch
-		padding-top 15px i
+    ytd-watch[theater] #player.ytd-watch
+        padding-top 15px i
 
-	#masthead-container
-		z-index 1000
-		top 0px i
-		opacity 0
-		left 10%
-		right 0
-		width 80% i
-		position relative
-		margin-right -50%
-		transform translate(-50%, 0%)
+    #masthead-container
+        z-index 1000
+        top 0 i
+        opacity 0
+        left 10%
+        right 0
+        width 80% i
+        position relative
+        margin-right -50%
+        transform translate(-50%,0)
 
-	#masthead-container:hover
-		top 0 i
-		right 0
-		left 10%
-		opacity .9
-		width 80% i
+    #masthead-container:hover
+        top 0 i
+        right 0
+        left 10%
+        opacity .9
+        width 80% i
 
-	ytd-page-manager
-		margin-top -6px i
+    ytd-page-manager
+        margin-top -6px i
 
-	#contents.ytd-section-list-renderer > .ytd-section-list-renderer:not(:last-child):not(ytd-page-introduction-renderer):not([item-dismissed]).ytd-section-list-renderer
-		border-color transparent
+    #contents.ytd-section-list-renderer > .ytd-section-list-renderer:not(:last-child):not(ytd-page-introduction-renderer):not([item-dismissed]).ytd-section-list-renderer
+        border-color transparent
 
-	if (rmEnd)
-		.ytp-ce-video
-			display none i
+    if rmEnd
+        .ytp-ce-video
+        .ytp-ce-channel
+            display none i
 
-	if (rmScrollBar)
-		body
-			overflow hidden i
+    if rmGradient
+        .ytp-gradient-bottom
+            display none i
+
+    if rmAnimationHovers
+        .ytp-chrome-bottom
+            transition none i
+
+    if rmBranding
+        .iv-branding
+            display none i
+
+    if rmChannelsOnVidList
+        #contents > ytd-channel-renderer
+            display none i
+
+@-moz-document url-prefix("https://music.youtube.com/watch?v=")
+    ytmusic-mealbar-promo-renderer
+        display none i

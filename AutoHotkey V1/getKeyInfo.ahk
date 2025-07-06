@@ -1,5 +1,12 @@
 ﻿#Requires AutoHotkey v1
 
+#Warn
+#NoEnv
+#SingleInstance, Force
+SendMode, Input
+SetBatchLines, -1
+SetWorkingDir, %A_ScriptDir%
+
 key := ""
 Input, key, V L1
 

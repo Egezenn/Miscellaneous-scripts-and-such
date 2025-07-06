@@ -1,6 +1,6 @@
 #Requires AutoHotkey v1
+#NoTrayIcon
 
-#Warn
 #NoEnv
 #SingleInstance, Force
 SendMode, Input

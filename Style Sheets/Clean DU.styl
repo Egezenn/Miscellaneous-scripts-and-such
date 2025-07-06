@@ -1,6 +1,6 @@
 /* ==UserStyle==
 @name         Clean DU
-@version      2025-02-13_1328
+@version      2025-07-04_1057
 @namespace    https://userstyles.world/user/egezenn
 @description  Clean utility websites, quickfixes for some stuff and theme consistency.
 @author       egezenn
@@ -14,12 +14,10 @@
 i = !important
 
 handle-mode()
-	if (force-dark-mode)
+	if force-dark-mode
 		dark-style()
-
-	else if (force-light-mode)
+	else if force-light-mode
 		light-style()
-
 	else
 		@media (prefers-color-scheme dark)
 			dark-style()
@@ -68,10 +66,10 @@ handle-mode()
 		scale 3 i
 
 	#copyright
-		color rgba(220, 220, 220, 1) i
+		color rgba(220,220,220,1) i
 
 	#footerBar
-		background rgba(20, 20, 20, 1) i
+		background rgba(20,20,20,1) i
 
 	#menubars
 	.topContent > p
@@ -80,6 +78,7 @@ handle-mode()
 	.bottomContent > br
 	.submitMessageDiv
 	.requiredField
+	#acceptableUse
 		display none i
 
 @-moz-document regexp("https?://duzce\\.edu\\.tr/sayfa/1B29/yemek-menusu")
@@ -107,7 +106,7 @@ handle-mode()
 	.d-flex.flex-column.flex-lg-row-fluid.py-10
 		padding 0 i
 
-	if (obs-clutter-removal)
+	if obs-clutter-removal
 		/* this also disables announcements on the left ¯\_(ツ)_/¯ */
 		.d-flex.flex-column.flex-lg-row-auto.w-xl-400px.positon-xl-relative
 		.d-flex.flex-center.flex-wrap.fs-6.p-5.pb-0
@@ -144,7 +143,7 @@ handle-mode()
 		margin 0 i
 
 	.out-container
-		border 0px i
+		border 0 i
 
 	.head-bar.gb-lr
 		display none i

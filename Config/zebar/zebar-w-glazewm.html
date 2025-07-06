@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Custom styles. -->
+    <link rel="stylesheet" type="text/css" href="./styles.css" />
+
+    <!-- Allows React to be run buildless via "text/babel" script below. -->
+    <script src="https://unpkg.com/@babel/standalone@7.25.6/babel.min.js" integrity="sha256-aS0B0wnsaDByLfE16h4MDCP1fQFccysd1YWOcV+gbBo=" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+      import React, { useState, useEffect } from "https://esm.sh/react@18?dev";
+      import { createRoot } from "https://esm.sh/react-dom@18/client?dev";
+      import * as zebar from "https://esm.sh/zebar@2";
+
+      const providers = zebar.createProviderGroup({
+        audio: { type: "audio" },
+        battery: { type: "battery", refreshInterval: 5000 },
+        cpu: { type: "cpu", refreshInterval: 500 },
+        date: { type: "date", formatting: "yyyy-MM-dd HH:mm:ss" },
+        disk: { type: "disk", refreshInterval: 60000 },
+        glazewm: { type: "glazewm" },
+        media: { type: "media" },
+        /* ip: { type: "ip", refreshInterval: 3600000 }, */
+        memory: { type: "memory", refreshInterval: 2000 },
+        network: { type: "network", refreshInterval: 500 },
+      });
+
+      createRoot(document.getElementById("root")).render(<App />);
+
+      function truncateAt(str, num) {
+        if (str.length >= num) return str.substring(0, num).trimEnd() + "..";
+        else return str;
+      }
+
+      function App() {
+        const [output, setOutput] = useState(providers.outputMap);
+
+        useEffect(() => {
+          providers.onOutput(() => setOutput(providers.outputMap));
+        }, []);
+
+        return (
+          <div className="app">
+            <div className="left">
+              <div className="date">{output.date?.formatted}</div>
+              {output.glazewm && (
+                <div className="workspaces">
+                  {output.glazewm.currentWorkspaces.map((workspace) => (
+                    <button className={`workspace ${workspace.hasFocus && "focused"} ${workspace.isDisplayed && "displayed"}`} onClick={() => output.glazewm.runCommand(`focus --workspace ${workspace.name}`)} key={workspace.name}>
+                      {workspace.displayName ?? workspace.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {output.glazewm && (
+                <div>
+                  {output.glazewm.isPaused && (
+                    <button className="paused-button" onClick={() => glazewm.runCommand("wm-toggle-pause")}>
+                      PAUSED
+                    </button>
+                  )}
+                  {output.glazewm.bindingModes.map((bindingMode) => (
+                    <button className="binding-mode" key={bindingMode.name} onClick={() => output.glazewm.runCommand(`wm-disable-binding-mode --name ${bindingMode.name}`)}>
+                      {bindingMode.displayName ?? bindingMode.name}
+                    </button>
+                  ))}
+
+                  <button className={`tiling-direction nf ${output.glazewm.tilingDirection === "horizontal" ? "nf-md-swap_horizontal" : "nf-md-swap_vertical"}`} onClick={() => output.glazewm.runCommand("toggle-tiling-direction")}></button>
+                </div>
+              )}
+              {output.media?.currentSession?.title && (
+                <div className="media">
+                  {output.media?.currentSession?.isPlaying ? <i className="nf-md-play"></i> : <i className="nf-md-pause"></i>}
+                  {output.media?.currentSession?.title ? <div className="title">{truncateAt(output.media?.currentSession?.title, 100)}</div> : ""}
+                  {output.media?.currentSession?.artist ? <div className="artist">{truncateAt(output.media?.currentSession?.artist, 30)}</div> : ""}
+                </div>
+              )}
+            </div>
+
+            <div className="right">
+              {output.network && (
+                <div className="network">
+                  <div className="received">
+                    R:{output.network?.traffic?.received.siValue}
+                    {output.network?.traffic?.received.siUnit}
+                  </div>
+                  <div className="transmitted">
+                    T:{output.network.traffic?.transmitted.siValue}
+                    {output.network.traffic?.transmitted.siUnit}
+                  </div>
+                </div>
+              )}
+              {output.cpu && (
+                <div className="cpu">
+                  <span className={output.cpu.usage > 85 ? "high-usage" : ""}>CPU:{Math.round(output.cpu.usage)}%</span>
+                </div>
+              )}
+              {output.memory && <div className="memory">MEM:{Math.round(output.memory.usage)}%</div>}
+              {output.audio?.defaultPlaybackDevice && (
+                <div className="audio">
+                  {/* output.audio.defaultPlaybackDevice.name*/}
+                  VOL:{output.audio.defaultPlaybackDevice.volume}%
+                </div>
+              )}
+              {output.battery && (
+                <div className="battery">
+                  <div className="percentage">BAT:{Math.round(output.battery.chargePercent)}%</div>
+                  <div className="state">{output.battery.state}</div>
+                </div>
+              )}
+              {/* output.ip && <div className="ip">IP:{output.ip?.address}&nbsp;</div> */}
+              {output.disk && (
+                <div className="disk">
+                  <div className="first">
+                    {output.disk.disks[1].mountPoint.slice(0, -1)}
+                    {Math.round(output.disk.disks[1].totalSpace.iecValue - output.disk.disks[1].availableSpace.iecValue)}/{Math.round(output.disk.disks[1].totalSpace.iecValue)}
+                    {output.disk.disks[1].totalSpace.iecUnit}
+                  </div>
+                  <div className="second">
+                    {output.disk.disks[0].mountPoint.slice(0, -1)}
+                    {Math.round(output.disk.disks[0].totalSpace.iecValue - output.disk.disks[0].availableSpace.iecValue)}/{Math.round(output.disk.disks[0].totalSpace.iecValue)}
+                    {output.disk.disks[0].totalSpace.iecUnit}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+    </script>
+  </body>
+</html>

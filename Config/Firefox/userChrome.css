@@ -1,0 +1,45 @@
+#urlbar-background,
+#navigator-toolbox,
+.urlbar-input-container {
+  max-height: 24px !important;
+}
+
+#tabbrowser-tabs:not([expanded]),
+toolbarbutton#back-button[disabled],
+toolbarbutton#forward-button[disabled],
+moz-button[view="viewHistorySidebar"],
+moz-button[view="viewCustomizeSidebar"],
+toolbarbutton#sidebar-button {
+  display: none !important;
+}
+
+#urlbar-container,
+hbox.urlbar-input-container,
+#tabs-newtab-button,
+hbox.tab-content,
+vbox.tab-background,
+vbox.tab-content {
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: unset !important;
+  border: 0 !important;
+}
+
+#tabs-newtab-button,
+vbox.tab-background,
+hbox.tab-content,
+stack.tab-stack {
+  height: 1rem !important;
+}
+
+toolbarbutton#PanelUI-menu-button,
+stack.toolbarbutton-badge-stack,
+toolbarbutton.titlebar-button.titlebar-min,
+toolbarbutton.titlebar-button.titlebar-max,
+toolbarbutton.titlebar-button.titlebar-close {
+  padding: 0 2px !important;
+}
+
+#urlbar {
+  top: 0px !important;
+}

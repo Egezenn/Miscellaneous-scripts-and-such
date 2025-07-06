@@ -1,20 +1,15 @@
 /* ==UserStyle==
 @name           No Unnecessary Scroll For Free Games
 @namespace      github.com/openstyles/stylus
-@version        1.0.3
+@version        1.0.4
 @description    Tired of scrolling to find the free games? How about putting them RIGHT ON TOP of the store page?
 @author         Egezenn
 @preprocessor   stylus
-@var            checkbox rmLanding "Remove landing that blocks free section to load" 1
 ==/UserStyle== */
 @-moz-document regexp("https:\\/\\/store\\.epicgames\\.com\\/.*?\\/?")
 	i = !important
 
-	if (rmLanding)
-		div[data-testid='discover-page-0']
-			display none i
-
-	div[data-testid='discover-page-1']>div:nth-of-type(2)>span:nth-of-type(1)
+	div[data-testid='discover-page-0']>div:nth-of-type(2)>span:last-of-type
 		// might break
 		width 60vw
 		padding 16px i
@@ -24,10 +19,10 @@
 		z-index 9999 i
 
 		*
-			background rgba(0, 0, 0, .3) i
+			background rgba(0,0,0,.3) i
 
 			:hover
-				background rgba(0, 0, 0, 1) i
+				background rgba(0,0,0,1) i
 
 		img
 			opacity .5
