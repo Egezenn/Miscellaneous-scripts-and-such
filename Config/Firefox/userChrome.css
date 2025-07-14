@@ -1,16 +1,11 @@
 #urlbar-background,
 #navigator-toolbox,
 .urlbar-input-container {
-  max-height: 24px !important;
+	max-height: 2rem !important;
 }
 
-#tabbrowser-tabs:not([expanded]),
-toolbarbutton#back-button[disabled],
-toolbarbutton#forward-button[disabled],
-moz-button[view="viewHistorySidebar"],
-moz-button[view="viewCustomizeSidebar"],
-toolbarbutton#sidebar-button {
-  display: none !important;
+#urlbar {
+	top: 0px !important;
 }
 
 #urlbar-container,
@@ -19,17 +14,17 @@ hbox.urlbar-input-container,
 hbox.tab-content,
 vbox.tab-background,
 vbox.tab-content {
-  margin: 0 !important;
-  padding: 0 !important;
-  border-radius: unset !important;
-  border: 0 !important;
+	border-radius: unset !important;
+	border: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
 }
 
 #tabs-newtab-button,
 vbox.tab-background,
 hbox.tab-content,
 stack.tab-stack {
-  height: 1rem !important;
+	height: 1rem !important;
 }
 
 toolbarbutton#PanelUI-menu-button,
@@ -37,9 +32,48 @@ stack.toolbarbutton-badge-stack,
 toolbarbutton.titlebar-button.titlebar-min,
 toolbarbutton.titlebar-button.titlebar-max,
 toolbarbutton.titlebar-button.titlebar-close {
-  padding: 0 2px !important;
+	padding: 0 2px !important;
 }
 
-#urlbar {
-  top: 0px !important;
+#sidebar-main {
+	background: rgba(0, 0, 0, 0.5);
+	border-radius: 0.25rem;
+	bottom: 3%;
+	overflow: hidden !important;
+	position: fixed;
+	scrollbar-width: none !important;
+	width: 150px !important;
+	z-index: 2147483647;
+}
+
+#tabbrowser-tabs:not([expanded]),
+toolbarbutton#back-button[disabled],
+toolbarbutton#forward-button[disabled],
+moz-button[view="viewHistorySidebar"],
+moz-button[view="viewCustomizeSidebar"],
+toolbarbutton#sidebar-button,
+button[aria-label="Mute tab"],
+#vertical-spacer,
+image.tab-close-button,
+#tabs-newtab-button {
+	display: none !important;
+}
+
+:root {
+	--tab-min-height: unset !important;
+}
+#tabbrowser-arrowscrollbox[orient="vertical"] {
+	min-height: unset !important;
+}
+
+.tabbrowser-tab {
+	padding-top: 0 !important;
+}
+
+#nav-bar {
+	padding: 0 5% !important;
+}
+
+.toolbarbutton-badge {
+	margin-top: 10px !important;
 }

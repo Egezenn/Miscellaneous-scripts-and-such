@@ -1,5 +1,5 @@
 general:
-  startup_commands: ["shell-exec zebar"]
+  startup_commands: ["shell-exec zebar", "focus --workspace 1"]
   shutdown_commands: ["shell-exec taskkill /IM zebar.exe /F"]
   config_reload_commands: []
   focus_follows_cursor: false
@@ -49,7 +49,7 @@ window_effects:
       enabled: false
       style: "square"
     transparency:
-      enabled: true
+      enabled: false
       opacity: "95%"
 
 window_behavior:
@@ -64,8 +64,11 @@ window_behavior:
       maximized: false
       shown_on_top: false
 
+#################################################################
+
 workspaces:
   - name: "browser"
+  - name: "editor"
   - name: "1"
   - name: "2"
   - name: "3"
@@ -75,8 +78,10 @@ workspaces:
   - name: "7"
   - name: "8"
   - name: "9"
+  - name: "game"
   - name: "comms"
   - name: "media"
+  - name: "dialog"
   - name: "leaveopen1"
     display_name: "lO1"
   - name: "leaveopen2"
@@ -86,35 +91,30 @@ workspaces:
   - name: "leaveopen4"
     display_name: "lO4"
 
+#################################################################
+
 window_rules:
   - commands: ["ignore"]
     match:
       - window_process: { equals: "zebar" }
-
       - window_title: { regex: "[Pp]icture.in.[Pp]icture" }
         window_class: { regex: "Chrome_WidgetWin_1|MozillaDialogClass" }
 
   - commands: ["move --workspace browser"]
     match:
       - window_process: { equals: "chrome" }
+      - window_process: { equals: "librewolf" }
+      - window_process: { equals: "Hollama" }
 
-  - commands: ["set-floating --centered"]
+  - commands: ["move --workspace editor"]
     match:
-      - window_process: { equals: "explorer" }
-        window_class: { equals: "OperationStatusWindow" }
-      - window_process: { equals: "AutoHotkeyUX" }
-        window_title: { equals: "Window Spy for AHKv2" }
-      - window_process: { equals: "okular" }
-        window_title: { equals: "Go to Page - Okular" }
-      - window_process: { equals: "Taskmgr" }
+      - window_process: { equals: "VSCodium" }
+      - window_process: { equals: "notepad++" }
 
-  - commands: ["set-floating --centered"]
-    match:
-      - window_process: { equals: "mpc-hc64" }
-        window_class: { equals: "MediaPlayerClassicW" }
   - commands: ["move --workspace media"]
     match:
       - window_process: { equals: "mpv" }
+      - window_process: { equals: "mpc-hc64" }
 
   - commands: ["move --workspace comms"]
     match:
@@ -123,6 +123,68 @@ window_rules:
       - window_process: { equals: "Telegram" }
       - window_process: { equals: "ApplicationFrameHost" }
         window_title: { equals: "WhatsApp" }
+
+  - commands: ["move --workspace game"]
+    match:
+      - window_process: { equals: "javaw" }
+        window_class: { regex: "GLFW30|LWJGL" }
+      - window_process: { equals: "prismlauncher" }
+
+  #################################################################
+
+  # throw any setup windows & unnecessary dialogs away
+  - commands:
+      ["move --workspace dialog", "set-floating --centered --shown-on-top=true", "set-transparency --opacity 0.4"]
+    match:
+      - window_process: { regex: "msiexec" }
+      - window_process: { regex: ".*[Ss][Ee][Tt][Uu][Pp].*" }
+      - window_class: { regex: ".*[Ss][Ee][Tt][Uu][Pp].*" }
+      # - window_title: { regex: ".*[Ss][Ee][Tt][Uu][Pp].*" }
+      # - window_process: { equals: "explorer" }
+      #   window_class: { equals: "OperationStatusWindow" }
+      - window_process: { equals: "ProtonVPN" }
+      - window_process: { equals: "steam" }
+        window_class: { equals: "BootstrapUpdateUIClass" }
+      - window_process: { equals: "VSIXInstaller" }
+
+  # contextual dialogs
+  - commands: ["set-floating --centered --shown-on-top=true", "set-transparency --opacity 0.5"]
+    match:
+      - window_process: { equals: "AutoHotkeyUX" }
+        window_title: { equals: "Window Spy for AHKv2" }
+      - window_process: { equals: "explorer" }
+        window_class: { equals: "OperationStatusWindow" }
+      - window_process: { equals: "mpc-hc64" }
+        window_class: { equals: "MediaPlayerClassicW" }
+      - window_process: { equals: "okular" }
+        window_title: { equals: "Go to Page - Okular" }
+      - window_process: { equals: "Taskmgr" }
+      - window_process: { equals: "prismlauncher" }
+        window_title: { regex: "Please wait.*" }
+      - window_process: { equals: "perfmon" }
+
+  - commands: ["set-tiling"]
+    match:
+      - window_process: { equals: "ProtonVPN" }
+
+  - commands: ["set-title-bar-visibility hidden"]
+    match:
+      - window_process: { equals: "javaw" }
+        window_class: { regex: "GLFW30|LWJGL" }
+      - window_process: { equals: "mpv" }
+      - window_process: { equals: "soffice" }
+
+  # workaround for windows that resize themselves/don't respect initial states
+  - commands: ["wm-redraw"]
+    match:
+      - window_process: { equals: "librewolf" }
+        window_class: { equals: "MozillaWindowClass" }
+      - window_process: { equals: "qView" }
+      - window_process: { equals: "soffice" }
+      - window_process: { equals: "javaw" }
+        window_class: { regex: "GLFW30|LWJGL" }
+
+#################################################################
 
 keybindings:
   - commands: ["focus --direction left"]
@@ -195,18 +257,24 @@ keybindings:
     bindings: ["alt+9"]
   - commands: ["focus --workspace browser"]
     bindings: ["alt+f1"]
-  - commands: ["focus --workspace comms"]
+  - commands: ["focus --workspace editor"]
     bindings: ["alt+f2"]
-  - commands: ["focus --workspace media"]
+  - commands: ["focus --workspace comms"]
     bindings: ["alt+f3"]
-  - commands: ["focus --workspace leaveopen1"]
+  - commands: ["focus --workspace media"]
     bindings: ["alt+f5"]
-  - commands: ["focus --workspace leaveopen2"]
+  - commands: ["focus --workspace leaveopen1"]
     bindings: ["alt+f6"]
-  - commands: ["focus --workspace leaveopen3"]
+  - commands: ["focus --workspace leaveopen2"]
     bindings: ["alt+f7"]
-  - commands: ["focus --workspace leaveopen4"]
+  - commands: ["focus --workspace leaveopen3"]
     bindings: ["alt+f8"]
+  - commands: ["focus --workspace leaveopen4"]
+    bindings: ["alt+f9"]
+  - commands: ["focus --workspace game"]
+    bindings: ["alt+f11"]
+  - commands: ["focus --workspace dialog"]
+    bindings: ["alt+f12"]
 
   - commands: ["move --workspace 1", "focus --workspace 1"]
     bindings: ["alt+shift+1"]
@@ -228,15 +296,21 @@ keybindings:
     bindings: ["alt+shift+9"]
   - commands: ["move --workspace browser", "focus --workspace browser"]
     bindings: ["alt+shift+f1"]
-  - commands: ["move --workspace comms", "focus --workspace comms"]
+  - commands: ["move --workspace editor", "focus --workspace editor"]
     bindings: ["alt+shift+f2"]
-  - commands: ["move --workspace media", "focus --workspace media"]
+  - commands: ["move --workspace comms", "focus --workspace comms"]
     bindings: ["alt+shift+f3"]
-  - commands: ["move --workspace leaveopen1", "focus --workspace leaveopen1"]
+  - commands: ["move --workspace media", "focus --workspace media"]
     bindings: ["alt+shift+f5"]
-  - commands: ["move --workspace leaveopen2", "focus --workspace leaveopen2"]
+  - commands: ["move --workspace leaveopen1", "focus --workspace leaveopen1"]
     bindings: ["alt+shift+f6"]
-  - commands: ["move --workspace leaveopen3", "focus --workspace leaveopen3"]
+  - commands: ["move --workspace leaveopen2", "focus --workspace leaveopen2"]
     bindings: ["alt+shift+f7"]
-  - commands: ["move --workspace leaveopen4", "focus --workspace leaveopen4"]
+  - commands: ["move --workspace leaveopen3", "focus --workspace leaveopen3"]
     bindings: ["alt+shift+f8"]
+  - commands: ["move --workspace leaveopen4", "focus --workspace leaveopen4"]
+    bindings: ["alt+shift+f9"]
+  - commands: ["move --workspace game", "focus --workspace game"]
+    bindings: ["alt+shift+ff11"]
+  - commands: ["move --workspace dialog", "focus --workspace dialog"]
+    bindings: ["alt+shift+f12"]

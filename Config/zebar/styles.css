@@ -7,7 +7,7 @@
 body {
   color: rgb(255 255 255 / 90%);
   font-family: "MesloLGM Nerd Font Mono", ui-monospace, monospace;
-  font-size: 12px;
+  font-size: 10px;
   overflow: hidden;
 }
 
@@ -57,7 +57,7 @@ body,
 .cpu,
 .battery,
 .audio {
-  margin-right: 8px;
+  margin-right: 4px;
 }
 
 .workspaces {
@@ -68,10 +68,10 @@ body,
 .workspace {
   background: inherit;
   margin-right: 4px;
-  padding: 4px 8px;
+  padding: 1px 6px 0px 6px;
   color: rgb(255 255 255 / 90%);
   border: 1px solid rgb(255 255 255 / 15%);
-  border-radius: 6px;
+  /* border-radius: 6px; */
   cursor: pointer;
 
   &.displayed {
@@ -91,8 +91,8 @@ body,
 .paused-button {
   background: inherit;
   color: rgb(255 255 255 / 90%);
-  border-radius: 6px;
-  padding: 4px 8px;
+  /* border-radius: 6px; */
+  padding: 1px 8px 0px 8px;
   cursor: pointer;
   border: 1px solid rgb(255 255 255 / 15%);
 }
@@ -104,24 +104,24 @@ body,
 .date {
   color: rgb(255 255 255 / 90%);
   /* border: 1px solid rgb(255 255 255 / 90%);
-  padding: 4px 8px 2px 8px;
+  padding: 1px 8px 0px 8px;
   border-radius: 6px; */
-  padding: 4px 8px 2px 8px;
+  padding: 1px 8px 0px 8px;
 }
 
 .media {
   color: #cbd35e;
   display: inline;
-  border: 1px solid #cbd35e;
-  padding: 0 8px 0 8px;
-  border-radius: 6px;
+  border: 1px solid rgb(203 211 94 / 30%);
+  padding: 0 6px 0 6px;
+  /* border-radius: 6px; */
 }
 
 .media > * {
   display: inline;
   height: 100%;
-  padding: 4px 8px 2px 8px;
-  border-right: 1px solid #cbd35e;
+  padding: 1px 6px 0px 6px;
+  border-right: 1px solid rgb(203 211 94 / 30%);
 
   &:first-child {
     padding-left: 0px;
@@ -135,69 +135,68 @@ body,
 
 .network > .received {
   color: #a865e7;
-  border: 1px solid #a865e7;
-  padding: 4px 8px 2px 8px;
-  border-radius: 6px 0 0 6px;
+  border: 1px solid rgb(168 101 231 / 30%);
+  padding: 1px 6px 0px 6px;
+  /* border-radius: 6px 0 0 6px; */
   margin-right: 1px;
 }
 
 .network > .transmitted {
   color: #4ac54a;
-  border: 1px solid #4ac54a;
-  padding: 4px 8px 2px 8px;
-  border-radius: 0 6px 6px 0;
+  border: 1px solid rgb(74 197 74 / 30%);
+  padding: 1px 6px 0px 6px;
+  /* border-radius: 0 6px 6px 0; */
 }
 
 .cpu {
   color: #e2673b;
-  border: 1px solid #e2673b;
-  padding: 4px 8px 2px 8px;
-  border-radius: 6px;
+  border: 1px solid rgb(226 103 59 / 30%);
+  padding: 1px 6px 0px 6px;
+  /* border-radius: 6px; */
 }
 
 .cpu .high-usage {
   color: #ff0000;
-  background-color: #000000;
 }
 
 .memory {
   color: #dda0dd;
-  border: 1px solid #dda0dd;
-  padding: 4px 8px 2px 8px;
-  border-radius: 6px;
+  border: 1px solid rgb(221 160 221 / 30%);
+  padding: 1px 6px 0px 6px;
+  /* border-radius: 6px; */
 }
 
 .audio {
   color: #7fffd4;
-  border: 1px solid #7fffd4;
-  padding: 4px 8px 2px 8px;
-  border-radius: 6px;
+  border: 1px solid rgb(127 255 212 / 30%);
+  padding: 1px 6px 0px 6px;
+  /* border-radius: 6px; */
 }
 
 .battery > .percentage {
   color: #f0469b;
-  border: 1px solid #f0469b;
-  padding: 4px 8px 2px 8px;
-  border-radius: 6px 0 0 6px;
+  border: 1px solid rgb(240 70 155 / 30%);
+  padding: 1px 6px 0px 6px;
+  /* border-radius: 6px 0 0 6px; */
 }
 
 .battery > .state {
   color: #f0469b;
-  border: 1px solid #f0469b;
-  padding: 4px 8px 2px 8px;
-  border-radius: 0 6px 6px 0;
+  border: 1px solid rgb(240 70 155 / 30%);
+  padding: 1px 6px 0px 6px;
+  /* border-radius: 0 6px 6px 0; */
 }
 .disk > .first {
   color: #6495ed;
-  border: 1px solid #6495ed;
-  padding: 4px 8px 2px 8px;
-  border-radius: 6px 0 0 6px;
+  border: 1px solid rgb(100 149 237 / 30%);
+  padding: 1px 6px 0px 6px;
+  /* border-radius: 6px 0 0 6px; */
   margin-right: 1px;
 }
 
 .disk > .second {
   color: #4169e1;
-  border: 1px solid #4169e1;
-  padding: 4px 8px 2px 8px;
-  border-radius: 0 6px 6px 0;
+  border: 1px solid rgb(65 105 225 / 30%);
+  padding: 1px 6px 0px 6px;
+  /* border-radius: 0 6px 6px 0; */
 }

@@ -1,8 +1,13 @@
-/* # remove all visual vomit */
+/* remove all visual vomit */
 a[href="https://support.discord.com"],
 /* remove paid stuff */
 a[href="/store"],
 a[href="/shop"],
+div[class*="colorPremium"],
+div[aria-controls="discord-nitro-tab"],
+div[aria-label="Gift Inventory"],
+div[aria-label="Subscriptions"],
+div[aria-label="Billing"],
 /* ??? why */
 div[class^="nowPlayingColumn"],
 /* channel banner & boost stuff */
@@ -14,6 +19,7 @@ div[data-list-item-id^="channels___boosts"],
 div[class^="container"][class*="openOnHover"],
 /* guild tags */
 span[class^="chipletContainer"],
+span[class^="clanTagChiplet"],
 /* avatar decos */
 img[class^="avatarDecoration"],
 svg[class^="avatarDecoration"],
@@ -35,16 +41,16 @@ div.app-launcher-entrypoint,
 button[aria-label="Open sticker picker"],
 button[aria-label="Open GIF picker"],
 button[aria-label="Send a gift"] {
-    display: none;
+  display: none !important;
 }
 
-/* # i have eyes (removes annoying "new unread!", "someone's on vc!") */
+/* removes "new unread!", "someone's on vc!" */
 div[class^="container"][class*="bottom"],
 div[class^="newMessagesBar"] {
-    display: none;
+  display: none;
 }
 
-/* # i can see channels now! (condenses channels, a lot [leads to wrong height calculations]) */
+/* condenses channels, a lot [leads to wrong height calculations] */
 /* dividers and spacing */
 div[class^="sectionDivider"],
 div[style="height: 16px;"],
@@ -61,11 +67,11 @@ div[aria-label="Rules (Age-Restricted) icon"],
 div[aria-label="Text icon"],
 div[aria-label="Text (Limited) icon"],
 div[aria-label="Text (Age-Restricted) icon"] {
-    display: none;
+  display: none;
 }
 
 /* remove pads&margins from channel&member lists */
-div[class^="channelTextArea"],
+/*div[class^="channelTextArea"],*/
 ul[aria-label="Channels"]>*,
 ul[aria-label="Channels"]>li>div>*,
 /* ul[aria-label="Channels"]>li>div>*>*, */
@@ -73,43 +79,62 @@ ul[aria-label="Channels"]>li>div>*>*>*,
 div[data-list-item-id^="channels"],
 div[role="list"][aria-label="Members"]>*,
 div[role="list"][aria-label="Members"]>*>* {
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
+}
+
+/* adjust member&channel list */
+div[class^="chat"][data-has-border] > div[class^="content"] > div[class^="container"]:not([data-member-list-open]),
+div[role="list"][aria-label="Members"],
+div[class^="sidebarList"][class*="sidebarListRounded"] {
+  width: 175px;
 }
 
 /* remove headers */
 header[class^="header"],
 div[class^="iconVisibility"][class*="wrapper"][class*="wrapperCommon"][class*="clickable"] {
-    display: none !important;
+  display: none !important;
 }
 
-/* # adjust member&channel list */
-div[class^="chat"][data-has-border]>div[class^="content"]>div[class^="container"]:not([data-member-list-open]),
-div[role="list"][aria-label="Members"],
-div[class^="sidebarList"][class*="sidebarListRounded"] {
-    width: 175px;
-}
-
-/* # scuffed edition */
+/* scuffed edition */
 :root {
-    --space-0: 0px;
-    --space-4: 0px;
-    --space-6: 0px;
-    --space-8: 0px;
-    --space-10: 0px;
-    --space-12: 0px;
-    --space-16: 0px;
-    --space-20: 0px;
-    --space-24: 0px;
-    --space-26: 0px;
-    --space-30: 0px;
-    --space-32: 32px;
-    --space-40: 0px;
-    --space-48: 0px;
-    --space-64: 0px;
-    --space-80: 0px;
-    --space-96: 0px;
-    --space-128: 0px;
-    --space-160: 0px;
-    --space-192: 0px;
+  --space-0: 0px;
+  --space-4: 0px;
+  --space-6: 0px;
+  --space-8: 0px;
+  --space-10: 0px;
+  --space-12: 0px;
+  --space-16: 0px;
+  --space-20: 0px;
+  --space-24: 0px;
+  --space-26: 0px;
+  --space-30: 0px;
+  --space-32: 32px;
+  --space-40: 0px;
+  --space-48: 0px;
+  --space-64: 0px;
+  --space-80: 0px;
+  --space-96: 0px;
+  --space-128: 0px;
+  --space-160: 0px;
+  --space-192: 0px;
+}
+
+/* always show message time */
+div[class^="contents"] > span[class*="timestamp"] {
+  display: block !important;
+  float: right !important;
+  width: 100% !important;
+}
+h3 > span[class*="timestamp"] {
+  display: absolute !important;
+}
+
+/* white usernames */
+span[class*="username"] {
+  color: #d0d0d0 !important;
+}
+span[class*="usernameGradient"] {
+  background: none !important;
+  -webkit-text-fill-color: #d0d0d0 !important;
 }

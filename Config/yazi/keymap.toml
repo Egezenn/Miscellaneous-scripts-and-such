@@ -15,8 +15,8 @@ keymap = [
     { on = "<Up>", run = "arrow prev", desc = "Previous file" },
     { on = "<Down>", run = "arrow next", desc = "Next file" },
 
-    { on = "<A-Down>", run = "arrow -50%", desc = "Move cursor up half page" },
-    { on = "<A-Up>", run = "arrow 50%", desc = "Move cursor down half page" },
+    { on = "<A-Up>", run = "arrow -50%", desc = "Move cursor up half page" },
+    { on = "<A-Down>", run = "arrow 50%", desc = "Move cursor down half page" },
     { on = "<A-Left>", run = "arrow -100%", desc = "Move cursor up one page" },
     { on = "<A-Right>", run = "arrow 100%", desc = "Move cursor down one page" },
 
