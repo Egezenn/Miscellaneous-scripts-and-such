@@ -47,11 +47,11 @@ extract = [
 	{ run = 'ya pub extract --list "$@"', desc = "Extract here", for = "unix" },
 	{ run = 'ya pub extract --list %*', desc = "Extract here", for = "windows" },
 ]
-play = [
-	{ run = 'mpv --force-window "$@"', orphan = true, for = "unix" },
-	{ run = 'mpv --force-window %*', orphan = true, for = "windows" },
-	{ run = '''mediainfo "$1"; echo "Press enter to exit"; read _''', block = true, desc = "Show media info", for = "unix" },
-]
+# play = [
+# 	{ run = 'mpv --force-window "$@"', orphan = true, for = "unix" },
+# 	{ run = 'mpv --force-window %*', orphan = true, for = "windows" },
+# 	{ run = '''mediainfo "$1"; echo "Press enter to exit"; read _''', block = true, desc = "Show media info", for = "unix" },
+# ]
 
 [open]
 rules = [
@@ -73,7 +73,8 @@ rules = [
 	] },
 	# Media
 	{ mime = "{audio,video}/*", use = [
-		"play",
+		# "play",
+		"open",
 		"reveal",
 	] },
 	# Archive

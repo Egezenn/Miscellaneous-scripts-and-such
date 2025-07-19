@@ -26,7 +26,7 @@ window_effects:
   focused_window:
     border:
       enabled: true
-      color: "#008000"
+      color: "#004000"
 
     hide_title_bar:
       enabled: false
@@ -42,7 +42,7 @@ window_effects:
   other_windows:
     border:
       enabled: true
-      color: "#800000"
+      color: "#400000"
     hide_title_bar:
       enabled: false
     corner_style:
@@ -78,6 +78,7 @@ workspaces:
   - name: "7"
   - name: "8"
   - name: "9"
+  - name: "gamelauncher"
   - name: "game"
   - name: "comms"
   - name: "media"
@@ -97,6 +98,10 @@ window_rules:
   - commands: ["ignore"]
     match:
       - window_process: { equals: "zebar" }
+      - window_process: { equals: "gInk" }
+
+  - commands: ["set-transparency --opacity 0.95", "ignore"]
+    match:
       - window_title: { regex: "[Pp]icture.in.[Pp]icture" }
         window_class: { regex: "Chrome_WidgetWin_1|MozillaDialogClass" }
 
@@ -109,7 +114,6 @@ window_rules:
   - commands: ["move --workspace editor"]
     match:
       - window_process: { equals: "VSCodium" }
-      - window_process: { equals: "notepad++" }
 
   - commands: ["move --workspace media"]
     match:
@@ -124,11 +128,24 @@ window_rules:
       - window_process: { equals: "ApplicationFrameHost" }
         window_title: { equals: "WhatsApp" }
 
-  - commands: ["move --workspace game"]
+  - commands: ["move --workspace gamelauncher"]
+    match:
+      - window_process: { equals: "prismlauncher" }
+      - window_process: { equals: "steamwebhelper" }
+      - window_process: { equals: "Heroic" }
+
+  - commands: [
+        "move --workspace game",
+        "shell-exec --hide-window setresolution.exe -w 1280 -h 720 -o 0 -noprompt -nopersist",
+        "set-title-bar-visibility hidden",
+        # workaround for zebar toggle
+        # "set-fullscreen --maximized=false",
+        # "set-tiling",
+      ]
     match:
       - window_process: { equals: "javaw" }
         window_class: { regex: "GLFW30|LWJGL" }
-      - window_process: { equals: "prismlauncher" }
+      - window_process: { equals: "dota2" }
 
   #################################################################
 
@@ -146,6 +163,8 @@ window_rules:
       - window_process: { equals: "steam" }
         window_class: { equals: "BootstrapUpdateUIClass" }
       - window_process: { equals: "VSIXInstaller" }
+      - window_process: { equals: "v2rayN" }
+        window_title: { regex: "v2rayN.*" }
 
   # contextual dialogs
   - commands: ["set-floating --centered --shown-on-top=true", "set-transparency --opacity 0.5"]
@@ -162,6 +181,10 @@ window_rules:
       - window_process: { equals: "prismlauncher" }
         window_title: { regex: "Please wait.*" }
       - window_process: { equals: "perfmon" }
+      - window_process: { equals: "notepad++" }
+      - window_process: { equals: "qalculate-qt" }
+      - window_process: { equals: "OpenWith" }
+      - window_process: { equals: "PickerHost" }
 
   - commands: ["set-tiling"]
     match:
@@ -224,7 +247,7 @@ keybindings:
     bindings: ["ctrl+alt+shift+space"]
 
   - commands: ["toggle-tiling"]
-    bindings: ["ctrl+alt+shift+t"]
+    bindings: ['alt+shift+"']
 
   - commands: ["toggle-fullscreen"]
     bindings: ["ctrl+alt+shift+f"]
@@ -236,6 +259,8 @@ keybindings:
     bindings: ["alt+tab", "f20"]
   - commands: ["focus --prev-active-workspace"]
     bindings: ["alt+shift+tab", "f19"]
+
+  #################################################################
 
   - commands: ["focus --workspace 1"]
     bindings: ["alt+1"]
@@ -271,6 +296,8 @@ keybindings:
     bindings: ["alt+f8"]
   - commands: ["focus --workspace leaveopen4"]
     bindings: ["alt+f9"]
+  - commands: ["focus --workspace gamelauncher"]
+    bindings: ["alt+f10"]
   - commands: ["focus --workspace game"]
     bindings: ["alt+f11"]
   - commands: ["focus --workspace dialog"]
@@ -310,7 +337,9 @@ keybindings:
     bindings: ["alt+shift+f8"]
   - commands: ["move --workspace leaveopen4", "focus --workspace leaveopen4"]
     bindings: ["alt+shift+f9"]
+  - commands: ["move --workspace game", "focus --workspace gamelauncher"]
+    bindings: ["alt+shift+f10"]
   - commands: ["move --workspace game", "focus --workspace game"]
-    bindings: ["alt+shift+ff11"]
+    bindings: ["alt+shift+f11"]
   - commands: ["move --workspace dialog", "focus --workspace dialog"]
     bindings: ["alt+shift+f12"]

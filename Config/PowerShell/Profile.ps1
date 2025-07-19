@@ -27,7 +27,21 @@ function ls { lsd $args }
 function lsps { Get-ChildItem $args }
 function lsa { lsd -A $args }
 function lst { lsd --tree $args }
-function cds { Set-Location $args[0] && lsd }
+function cds {
+    Set-Location $args[0]
+    lsd 
+}
+function cdm {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+
+    if (-not (Test-Path -Path $Path -PathType Container)) {
+        New-Item -ItemType Directory -Path $Path -Force | Out-Null
+    }
+    Set-Location -Path $Path
+}
 function cwd { (Get-Location).Path }
 
 # executables
@@ -40,20 +54,42 @@ function updatelist {
 function updateall {
     pacman -Syu --noconfirm
     choco upgrade all -y
+    winget update --all
+}
+function updateallx {
+    pacman -Syu --noconfirm
+    choco upgrade all -y
     pipx upgrade-all
     winget update --all
 }
 
-function gitscommit { git add . && git commit -m $args }
-function gitrecommit { git reset --soft HEAD~1 && git add -A && git commit -m $args }
-function gitrestore { git reset --soft HEAD~1 && git restore --staged . }
+function gitscommit {
+    git add .
+    git commit -m $args 
+}
+function gitrecommit {
+    git reset --soft HEAD~1
+    git add -A
+    git commit -m $args 
+}
+function gitrestore {
+    git reset --soft HEAD~1
+    git restore --staged . 
+}
 
 function markhidden { attrib +h /d .\.* }
 
-function pipreset { pip freeze | xargs pip uninstall -y && pip install pipx }
+function pipreset {
+    pip freeze | xargs pip uninstall -y
+    pip install pipx 
+}
 function acvenv { .\.venv\Scripts\activate }
 function createvenv { python -m venv .venv }
-function createvenvi { python -m venv .venv && acvenv && pip install -r .\requirements.txt }
+function createvenvi {
+    python -m venv .venv
+    acvenv
+    pip install -r .\requirements.txt 
+}
 
 function pkill { taskkill /F /IM $args }
 function whr { & "C:\Windows\System32\where.exe" @args }
