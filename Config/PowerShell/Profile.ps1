@@ -19,6 +19,12 @@ function history {
     }
 }
 
+function cl { Clear-Host }
+function prl {
+    . $PROFILE
+    Clear-Host
+}
+
 function hpure { Get-Content (Get-PSReadlineOption).HistorySavePath }
 function hgrep { Get-Content (Get-PSReadlineOption).HistorySavePath | grep $args }
 
@@ -50,6 +56,8 @@ function updatelist {
     pacman -Qu
     choco outdated
     winget update
+    uv tool upgrade --all
+    dotnet tool update --all -g
 }
 function updateall {
     pacman -Syu --noconfirm
@@ -59,8 +67,9 @@ function updateall {
 function updateallx {
     pacman -Syu --noconfirm
     choco upgrade all -y
-    pipx upgrade-all
     winget update --all
+    uv tool upgrade --all
+    dotnet tool update --all -g
 }
 
 function gitscommit {
@@ -79,10 +88,15 @@ function gitrestore {
 
 function markhidden { attrib +h /d .\.* }
 
-function pipreset {
-    pip freeze | xargs pip uninstall -y
-    pip install pipx 
+function exp {
+    param(
+        [string]$Path = "."
+    )
+    explorer $Path
 }
+
+
+function pipreset { pip freeze | xargs pip uninstall -y }
 function acvenv { .\.venv\Scripts\activate }
 function createvenv { python -m venv .venv }
 function createvenvi {

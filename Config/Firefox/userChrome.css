@@ -35,15 +35,41 @@ toolbarbutton.titlebar-button.titlebar-close {
 	padding: 0 2px !important;
 }
 
+#main-window[sidebar-expand-on-hover] > html:body > #browser > #sidebar-main,
+#sidebar-launcher-splitter {
+	display: none !important;
+}
+
 #sidebar-main {
 	background: rgba(0, 0, 0, 0.5);
 	border-radius: 0.25rem;
-	bottom: 3%;
 	overflow: hidden !important;
 	position: fixed;
 	scrollbar-width: none !important;
-	width: 150px !important;
+	width: 2rem !important;
 	z-index: 2147483647;
+	max-width: unset !important;
+	right: 0;
+	top: 0;
+	/*left: 50%;*/
+	/*transform: translateX(-50%);*/
+	transform: scale(0.7) !important;
+	transform-origin: top right !important;
+}
+
+#sidebar-main:hover {
+	width: 10% !important;
+	padding: 1rem !important;
+}
+
+#sidebar-main > html:sidebar-main > #vertical-tabs > #tabbrowser-tabs > #tabbrowser-arrowscrollbox > tab.tabbrowser-tab > stack.tab-stack > hbox.tab-content > vbox.tab-label-container,
+#sidebar-main > html:sidebar-main > #vertical-tabs > #tabbrowser-tabs > #tabbrowser-arrowscrollbox > tab.tabbrowser-tab > stack.tab-stack > vbox.tab-background {
+	display: none !important;
+}
+
+#sidebar-main:hover > html:sidebar-main > #vertical-tabs > #tabbrowser-tabs > #tabbrowser-arrowscrollbox > tab.tabbrowser-tab > stack.tab-stack > hbox.tab-content > vbox.tab-label-container,
+#sidebar-main:hover > html:sidebar-main > #vertical-tabs > #tabbrowser-tabs > #tabbrowser-arrowscrollbox > tab.tabbrowser-tab > stack.tab-stack > vbox.tab-background {
+	display: flex !important;
 }
 
 #tabbrowser-tabs:not([expanded]),
@@ -54,8 +80,9 @@ moz-button[view="viewCustomizeSidebar"],
 toolbarbutton#sidebar-button,
 button[aria-label="Mute tab"],
 #vertical-spacer,
-image.tab-close-button,
-#tabs-newtab-button {
+/*image.tab-close-button,*/
+#tabs-newtab-button,
+button[title="More tools"] {
 	display: none !important;
 }
 
@@ -71,9 +98,44 @@ image.tab-close-button,
 }
 
 #nav-bar {
-	padding: 0 5% !important;
+	padding: 0 10% !important;
 }
 
 .toolbarbutton-badge {
 	margin-top: 10px !important;
+}
+
+.tab-label-container {
+	mask-image: none !important;
+}
+
+#statuspanel {
+	opacity: 0.7 !important;
+	top: -21px !important;
+	bottom: unset !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	max-width: 10% !important;
+	min-width: unset !important;
+}
+
+findbar {
+	position: absolute !important;
+	bottom: 0 !important;
+	width: 780px !important;
+	left: 50% !important;
+	opacity: 0.7 !important;
+	transform: translate(-50%, -50%) scale(0.85) !important;
+}
+
+#sidebar-box {
+	position: absolute !important;
+	z-index: 999 !important;
+	opacity: .7 !important;
+	height: 100% !important;
+	width: 20% !important;
+}
+
+#sidebar {
+	border-radius: unset !important;
 }

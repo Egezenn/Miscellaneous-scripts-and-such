@@ -71,7 +71,6 @@ body,
   padding: 1px 6px 0px 6px;
   color: rgb(255 255 255 / 90%);
   border: 1px solid rgb(255 255 255 / 15%);
-  /* border-radius: 6px; */
   cursor: pointer;
 
   &.displayed {
@@ -91,7 +90,6 @@ body,
 .paused-button {
   background: inherit;
   color: rgb(255 255 255 / 90%);
-  /* border-radius: 6px; */
   padding: 1px 8px 0px 8px;
   cursor: pointer;
   border: 1px solid rgb(255 255 255 / 15%);
@@ -102,10 +100,9 @@ body,
 }
 
 .date {
+  border: 1px solid rgb(255 255 255 / 15%);
   color: rgb(255 255 255 / 90%);
-  /* border: 1px solid rgb(255 255 255 / 90%);
-  padding: 1px 8px 0px 8px;
-  border-radius: 6px; */
+  margin-right: 4px;
   padding: 1px 8px 0px 8px;
 }
 
@@ -114,7 +111,6 @@ body,
   display: inline;
   border: 1px solid rgb(203 211 94 / 30%);
   padding: 0 6px 0 6px;
-  /* border-radius: 6px; */
 }
 
 .media > * {
@@ -137,7 +133,6 @@ body,
   color: #a865e7;
   border: 1px solid rgb(168 101 231 / 30%);
   padding: 1px 6px 0px 6px;
-  /* border-radius: 6px 0 0 6px; */
   margin-right: 1px;
 }
 
@@ -145,14 +140,12 @@ body,
   color: #4ac54a;
   border: 1px solid rgb(74 197 74 / 30%);
   padding: 1px 6px 0px 6px;
-  /* border-radius: 0 6px 6px 0; */
 }
 
 .cpu {
   color: #e2673b;
   border: 1px solid rgb(226 103 59 / 30%);
   padding: 1px 6px 0px 6px;
-  /* border-radius: 6px; */
 }
 
 .cpu .high-usage {
@@ -163,34 +156,29 @@ body,
   color: #dda0dd;
   border: 1px solid rgb(221 160 221 / 30%);
   padding: 1px 6px 0px 6px;
-  /* border-radius: 6px; */
 }
 
 .audio {
   color: #7fffd4;
   border: 1px solid rgb(127 255 212 / 30%);
   padding: 1px 6px 0px 6px;
-  /* border-radius: 6px; */
 }
 
 .battery > .percentage {
   color: #f0469b;
   border: 1px solid rgb(240 70 155 / 30%);
   padding: 1px 6px 0px 6px;
-  /* border-radius: 6px 0 0 6px; */
 }
 
 .battery > .state {
   color: #f0469b;
   border: 1px solid rgb(240 70 155 / 30%);
   padding: 1px 6px 0px 6px;
-  /* border-radius: 0 6px 6px 0; */
 }
 .disk > .first {
   color: #6495ed;
   border: 1px solid rgb(100 149 237 / 30%);
   padding: 1px 6px 0px 6px;
-  /* border-radius: 6px 0 0 6px; */
   margin-right: 1px;
 }
 
@@ -198,5 +186,20 @@ body,
   color: #4169e1;
   border: 1px solid rgb(65 105 225 / 30%);
   padding: 1px 6px 0px 6px;
-  /* border-radius: 0 6px 6px 0; */
+}
+
+.network > .received,
+.network > .transmitted,
+.cpu,
+.memory,
+.audio,
+.battery > .percentage {
+  width: 4rem;
+  text-align: center;
+  justify-content: center;
+}
+
+.network > .received,
+.network > .transmitted {
+  width: 5rem;
 }

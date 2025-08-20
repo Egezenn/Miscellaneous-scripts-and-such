@@ -1,6 +1,6 @@
 /* ==UserStyle==
 @name         Clean DU
-@version      2025-07-04_1057
+@version      1.0.0
 @namespace    https://userstyles.world/user/egezenn
 @description  Clean utility websites, quickfixes for some stuff and theme consistency.
 @author       egezenn
@@ -14,207 +14,207 @@
 i = !important
 
 handle-mode()
-	if force-dark-mode
-		dark-style()
-	else if force-light-mode
-		light-style()
-	else
-		@media (prefers-color-scheme dark)
-			dark-style()
+    if force-dark-mode
+        dark-style()
+    else if force-light-mode
+        light-style()
+    else
+        @media (prefers-color-scheme dark)
+            dark-style()
 
-		@media (prefers-color-scheme light)
-			light-style()
+        @media (prefers-color-scheme light)
+            light-style()
 
 @-moz-document url-prefix("https://akademik.duzce.edu.tr")
-	/* util - akademik */
-	.orta-panel > img
-	.orta-panel > h3
-	.stats-container
-	.footer
-		display none i
+    /* util - akademik */
+    .orta-panel > img
+    .orta-panel > h3
+    .stats-container
+    .footer
+        display none i
 
-	.orta-panel
-		height 100px i
+    .orta-panel
+        height 100px i
 
-	.img-container
-		border none i
+    .img-container
+        border none i
 
-	a > .profil
-	.k-ad
-	.k-birim
-	.k-unvan
-		text-decoration none i
+    a > .profil
+    .k-ad
+    .k-birim
+    .k-unvan
+        text-decoration none i
 
-	.k-ad
-		font-size 1.2rem i
+    .k-ad
+        font-size 1.2rem i
 
-	.k-birim
-		font-size 1rem i
+    .k-birim
+        font-size 1rem i
 
 @-moz-document url-prefix("https://kablosuzerisim.duzce.edu.tr")
-	/* util - wireless network auth */
-	/* yoinked */
-	.portalButton
-	.formValue > input
-		width 100px i
-		height 100px i
-		scale 1 i
+    /* util - wireless network auth */
+    /* yoinked */
+    .portalButton
+    .formValue > input
+        height 100px i
+        scale 1 i
+        width 100px i
 
-	#regLoginTable
-	.formDiv
-		margin-top 15% i
-		scale 3 i
+    #regLoginTable
+    .formDiv
+        margin-top 15% i
+        scale 3 i
 
-	#copyright
-		color rgba(220,220,220,1) i
+    #copyright
+        color rgba(220, 220, 220, 1) i
 
-	#footerBar
-		background rgba(20,20,20,1) i
+    #footerBar
+        background rgba(20, 20, 20, 1) i
 
-	#menubars
-	.topContent > p
-	#footer
-	iframe
-	.bottomContent > br
-	.submitMessageDiv
-	.requiredField
-	#acceptableUse
-		display none i
+    #menubars
+    .topContent > p
+    #footer
+    iframe
+    .bottomContent > br
+    .submitMessageDiv
+    .requiredField
+    #acceptableUse
+        display none i
 
 @-moz-document regexp("https?://duzce\\.edu\\.tr/sayfa/1B29/yemek-menusu")
-	/* proper alignment of table food menu */
-	.content-container > .xl-container > .content > table
-		width 100% i
+    /* proper alignment of table food menu */
+    .content-container > .xl-container > .content > table
+        width 100% i
 
-	.xl-container
-		margin 0 i
-		width 100% i
-		border none i
+    .xl-container
+        border none i
+        margin 0 i
+        width 100% i
 
-	.content-container
-		margin 0 i
-		width 100% i
+    .content-container
+        margin 0 i
+        width 100% i
 
-	.content
-		padding 0 i
+    .content
+        padding 0 i
 
 @-moz-document regexp("https://obs\\.duzce\\.edu\\.tr/[Aa]ccount/[Ll]ogin.*")
-	/* obs login */
-	.d-flex.flex-column.flex-lg-row-fluid.py-10
-		background-image none i
+    /* obs login */
+    .d-flex.flex-column.flex-lg-row-fluid.py-10
+        background-image none i
 
-	.d-flex.flex-column.flex-lg-row-fluid.py-10
-		padding 0 i
+    .d-flex.flex-column.flex-lg-row-fluid.py-10
+        padding 0 i
 
-	if obs-clutter-removal
-		/* this also disables announcements on the left ¯\_(ツ)_/¯ */
-		.d-flex.flex-column.flex-lg-row-auto.w-xl-400px.positon-xl-relative
-		.d-flex.flex-center.flex-wrap.fs-6.p-5.pb-0
-		.container
-		#myModal
-		.modal-backdrop
-			display none i
+    if obs-clutter-removal
+        /* this also disables announcements on the left ¯\_(ツ)_/¯ */
+        .d-flex.flex-column.flex-lg-row-auto.w-xl-400px.positon-xl-relative
+        .d-flex.flex-center.flex-wrap.fs-6.p-5.pb-0
+        .container
+        #myModal
+        .modal-backdrop
+            display none i
 
 @-moz-document url-prefix("https://obs.duzce.edu.tr/student"), url-prefix("https://obs.duzce.edu.tr/transcript"), url-prefix("https://obs.duzce.edu.tr/message"), regexp("https://obs\\.duzce\\.edu\\.tr/[Aa]ccount/([Ee]dit)")
-	/* obs pages */
-	/* https://obs.duzce.edu.tr/student */
-	/* info about the student */
-	.dropdown-menu.scroller.active-dept
-		width 30vw i
+    /* obs pages */
+    /* https://obs.duzce.edu.tr/student */
+    /* info about the student */
+    .dropdown-menu.scroller.active-dept
+        width 30vw i
 
-	.dropdown-menu.scroller.active-dept > li.selected-dept > a > .row > *
-		font-size 1.5rem i
+    .dropdown-menu.scroller.active-dept > li.selected-dept > a > .row > *
+        font-size 1.5rem i
 
-	/* no */
-	.img-circle
-		display none i
+    /* no */
+    .img-circle
+        display none i
 
-	/* readable exam results */
-	#confirmationReport-list > .row > div > .portlet > .portlet-title > .caption > .caption-helper > span
-		font-size 1.5rem i
-		color #7090a6
+    /* readable exam results */
+    #confirmationReport-list > .row > div > .portlet > .portlet-title > .caption > .caption-helper > span
+        color #7090a6
+        font-size 1.5rem i
 
-	#confirmationReport-list > .row > div > .portlet > .portlet-title > .caption > .caption-helper > span > b
-		color #3598DC
+    #confirmationReport-list > .row > div > .portlet > .portlet-title > .caption > .caption-helper > span > b
+        color #3598DC
 
 @-moz-document url-prefix("https://duzce.edu.tr")
-	/* homepage */
-	body
-		margin 0 i
+    /* homepage */
+    body
+        margin 0 i
 
-	.out-container
-		border 0 i
+    .out-container
+        border 0 i
 
-	.head-bar.gb-lr
-		display none i
+    .head-bar.gb-lr
+        display none i
 
 @-moz-document regexp("https?://duzce\\.edu\\.tr/?(.*)?"), url-prefix("https://haber.duzce.edu.tr/")
-	/* useless search filter inputs */
-	.search
-		display none i
+    /* useless search filter inputs */
+    .search
+        display none i
 
 @-moz-document url-prefix("https://akademik.duzce.edu.tr"), url-prefix("https://kablosuzerisim.duzce.edu.tr")
-	/* background replacement */
-	dark-style()
-		html
-		body
-			background black i
+    /* background replacement */
+    dark-style()
+        html
+        body
+            background black i
 
-	light-style()
-		html
-		body
-			background white i
+    light-style()
+        html
+        body
+            background white i
 
-	handle-mode()
+    handle-mode()
 
 @-moz-document url-prefix("https://ogr.duzce.edu.tr")
-	/* student mail bg rm */
-	.cont
-		background-image none i
+    /* student mail bg rm */
+    .cont
+        background-image none i
 
 @-moz-document url-prefix("https://ebs.duzce.edu.tr/"), url-prefix("https://bbs.duzce.edu.tr/")
-	/* ebs bg rm */
-	body
-		background-image none i
+    /* ebs bg rm */
+    body
+        background-image none i
 
 @-moz-document regexp("https?://(.*\\.)?duzce\\.edu\\.tr/?(.*)?")
-	/* scrollbar(s) */
-	dark-style()
-		html
-		body
-			scrollbar-width thin i
-			scrollbar-color #33CCCC #2C2C2C i
+    /* scrollbar(s) */
+    dark-style()
+        html
+        body
+            scrollbar-color #33CCCC #2C2C2C i
+            scrollbar-width thin i
 
-		/* for non-mozilla */
-		/* not tested, fingers crossed */
-		::-webkit-scrollbar
-			width 6px i
+        /* for non-mozilla */
+        /* not tested, fingers crossed */
+        ::-webkit-scrollbar
+            width 6px i
 
-		::-webkit-scrollbar-track
-			background #2C2C2C i
+        ::-webkit-scrollbar-track
+            background #2C2C2C i
 
-		::-webkit-scrollbar-thumb
-			background #33CCCC i
+        ::-webkit-scrollbar-thumb
+            background #33CCCC i
 
-		::-webkit-scrollbar-thumb:hover
-			background #0FA6A6 i
+        ::-webkit-scrollbar-thumb:hover
+            background #0FA6A6 i
 
-	light-style()
-		html
-		body
-			scrollbar-width thin i
-			scrollbar-color #33CCCC lightgray i
+    light-style()
+        html
+        body
+            scrollbar-color #33CCCC lightgray i
+            scrollbar-width thin i
 
-		::-webkit-scrollbar
-			width 6px i
+        ::-webkit-scrollbar
+            width 6px i
 
-		::-webkit-scrollbar-track
-			background lightgray i
+        ::-webkit-scrollbar-track
+            background lightgray i
 
-		::-webkit-scrollbar-thumb
-			background #33CCCC i
+        ::-webkit-scrollbar-thumb
+            background #33CCCC i
 
-		::-webkit-scrollbar-thumb:hover
-			background #0FA6A6 i
+        ::-webkit-scrollbar-thumb:hover
+            background #0FA6A6 i
 
-	handle-mode()
+    handle-mode()

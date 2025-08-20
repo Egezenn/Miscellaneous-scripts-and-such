@@ -1,28 +1,33 @@
 /* ==UserStyle==
 @name           No Unnecessary Scroll For Free Games
 @namespace      github.com/openstyles/stylus
-@version        1.0.4
+@version        1.0.5
 @description    Tired of scrolling to find the free games? How about putting them RIGHT ON TOP of the store page?
 @author         Egezenn
 @preprocessor   stylus
+@var checkbox rmCarousel "Remove carousel" 0
 ==/UserStyle== */
 @-moz-document regexp("https:\\/\\/store\\.epicgames\\.com\\/.*?\\/?")
-	i = !important
+    i = !important
 
-	div[data-testid='discover-page-0']>div:nth-of-type(2)>span:last-of-type
-		// might break
-		width 60vw
-		padding 16px i
-		position fixed i
-		top 0 i
-		left 0 i
-		z-index 9999 i
+    if rmCarousel
+        div[aria-roledescription='carousel'][data-testid='SaleCarouselDesktop']
+            display none i
 
-		*
-			background rgba(0,0,0,.3) i
+    div[data-testid='discover-page-0']>div:nth-of-type(2)>span:last-of-type
+        left 0 i
+        padding 16px i
+        position fixed i
+        top 0 i
+        // might break
+        width 60vw
+        z-index 9999 i
 
-			:hover
-				background rgba(0,0,0,1) i
+        *
+            background rgba(0, 0, 0, .3) i
 
-		img
-			opacity .5
+            :hover
+                background rgba(0, 0, 0, 1) i
+
+        img
+            opacity .5

@@ -87,20 +87,16 @@
               {output.network && (
                 <div className="network">
                   <div className="received">
-                    R:{output.network?.traffic?.received.siValue}
+                    REC:{output.network?.traffic?.received.siValue}
                     {output.network?.traffic?.received.siUnit}
                   </div>
                   <div className="transmitted">
-                    T:{output.network.traffic?.transmitted.siValue}
+                    TRA:{output.network.traffic?.transmitted.siValue}
                     {output.network.traffic?.transmitted.siUnit}
                   </div>
                 </div>
               )}
-              {output.cpu && (
-                <div className="cpu">
-                  <span className={output.cpu.usage > 85 ? "high-usage" : ""}>CPU:{Math.round(output.cpu.usage)}%</span>
-                </div>
-              )}
+              {output.cpu && <div className={output.cpu.usage > 85 ? "high-usage cpu" : "cpu"}>CPU:{Math.round(output.cpu.usage)}%</div>}
               {output.memory && <div className="memory">MEM:{Math.round(output.memory.usage)}%</div>}
               {output.audio?.defaultPlaybackDevice && (
                 <div className="audio">

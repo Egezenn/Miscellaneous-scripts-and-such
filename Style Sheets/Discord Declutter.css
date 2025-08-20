@@ -65,8 +65,11 @@ div[aria-label="Rules icon"],
 div[aria-label="Rules (Limited) icon"],
 div[aria-label="Rules (Age-Restricted) icon"],
 div[aria-label="Text icon"],
+div[aria-label="Text (Active Threads) icon"],
 div[aria-label="Text (Limited) icon"],
-div[aria-label="Text (Age-Restricted) icon"] {
+div[aria-label="Text (Age-Restricted) icon"],
+div[aria-label="Stage icon"],
+div[aria-label="Stage (Locked) icon"] {
   display: none;
 }
 

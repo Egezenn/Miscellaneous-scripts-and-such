@@ -67,7 +67,8 @@ window_behavior:
 #################################################################
 
 workspaces:
-  - name: "browser"
+  - name: "br0wser"
+  - name: "br1wser"
   - name: "editor"
   - name: "1"
   - name: "2"
@@ -97,57 +98,74 @@ workspaces:
 window_rules:
   - commands: ["ignore"]
     match:
-      - window_process: { equals: "zebar" }
       - window_process: { equals: "gInk" }
+      - window_process: { equals: "zebar" }
 
   - commands: ["set-transparency --opacity 0.95", "ignore"]
     match:
       - window_title: { regex: "[Pp]icture.in.[Pp]icture" }
         window_class: { regex: "Chrome_WidgetWin_1|MozillaDialogClass" }
 
-  - commands: ["move --workspace browser"]
+  - commands: ["move --workspace br0wser"]
+    match:
+      - window_process: { equals: "Hollama" }
+      - window_process: { equals: "librewolf" }
+
+  - commands: ["move --workspace br1wser"]
     match:
       - window_process: { equals: "chrome" }
-      - window_process: { equals: "librewolf" }
-      - window_process: { equals: "Hollama" }
 
   - commands: ["move --workspace editor"]
     match:
       - window_process: { equals: "VSCodium" }
+      - window_process: { equals: "devenv" }
 
   - commands: ["move --workspace media"]
     match:
-      - window_process: { equals: "mpv" }
       - window_process: { equals: "mpc-hc64" }
+      - window_process: { equals: "mpv" }
 
   - commands: ["move --workspace comms"]
     match:
-      - window_process: { equals: "thunderbird" }
-      - window_process: { equals: "Discord" }
-      - window_process: { equals: "Telegram" }
       - window_process: { equals: "ApplicationFrameHost" }
         window_title: { equals: "WhatsApp" }
+      - window_process: { equals: "Discord" }
+      - window_process: { equals: "Telegram" }
+      - window_process: { equals: "thunderbird" }
 
   - commands: ["move --workspace gamelauncher"]
     match:
+      - window_process: { equals: "Heroic" }
       - window_process: { equals: "prismlauncher" }
       - window_process: { equals: "steamwebhelper" }
-      - window_process: { equals: "Heroic" }
 
-  - commands: [
+  - commands:
+      [
         "move --workspace game",
         "shell-exec --hide-window setresolution.exe -w 1280 -h 720 -o 0 -noprompt -nopersist",
         "set-title-bar-visibility hidden",
-        # workaround for zebar toggle
-        # "set-fullscreen --maximized=false",
-        # "set-tiling",
+        "set-fullscreen --maximized=true",
       ]
     match:
+      - window_process: { equals: "dota2" }
       - window_process: { equals: "javaw" }
         window_class: { regex: "GLFW30|LWJGL" }
-      - window_process: { equals: "dota2" }
 
   #################################################################
+
+  - commands: ["set-tiling"]
+    match:
+      - window_process: { equals: "ProtonVPN" }
+
+  - commands: ["set-floating --centered"]
+    match:
+      - window_process: { equals: "devenv" }
+      - window_process: { equals: "qView" }
+
+  - commands: ["set-fullscreen --maximized=false", "set-tiling"]
+    match:
+      - window_process: { equals: "devenv" }
+        window_title: { regex: ".* - Microsoft Visual Studio" }
 
   # throw any setup windows & unnecessary dialogs away
   - commands:
@@ -156,56 +174,49 @@ window_rules:
       - window_process: { regex: "msiexec" }
       - window_process: { regex: ".*[Ss][Ee][Tt][Uu][Pp].*" }
       - window_class: { regex: ".*[Ss][Ee][Tt][Uu][Pp].*" }
+      - window_process: { equals: "VSIXInstaller" }
       # - window_title: { regex: ".*[Ss][Ee][Tt][Uu][Pp].*" }
       # - window_process: { equals: "explorer" }
       #   window_class: { equals: "OperationStatusWindow" }
       - window_process: { equals: "ProtonVPN" }
       - window_process: { equals: "steam" }
         window_class: { equals: "BootstrapUpdateUIClass" }
-      - window_process: { equals: "VSIXInstaller" }
       - window_process: { equals: "v2rayN" }
-        window_title: { regex: "v2rayN.*" }
+        window_title: { regex: "v2rayN - .*" }
 
   # contextual dialogs
-  - commands: ["set-floating --centered --shown-on-top=true", "set-transparency --opacity 0.5"]
+  - commands: ["set-floating --centered --shown-on-top=true", "set-transparency --opacity 0.75"]
     match:
       - window_process: { equals: "AutoHotkeyUX" }
         window_title: { equals: "Window Spy for AHKv2" }
       - window_process: { equals: "explorer" }
         window_class: { equals: "OperationStatusWindow" }
-      - window_process: { equals: "mpc-hc64" }
+      - window_process: { equals: "DllHost" }
         window_class: { equals: "MediaPlayerClassicW" }
+      - window_process: { equals: "notepad++" }
       - window_process: { equals: "okular" }
         window_title: { equals: "Go to Page - Okular" }
-      - window_process: { equals: "Taskmgr" }
+      - window_process: { equals: "OpenWith" }
+      - window_process: { equals: "perfmon" }
+      - window_process: { equals: "PickerHost" }
       - window_process: { equals: "prismlauncher" }
         window_title: { regex: "Please wait.*" }
-      - window_process: { equals: "perfmon" }
-      - window_process: { equals: "notepad++" }
       - window_process: { equals: "qalculate-qt" }
-      - window_process: { equals: "OpenWith" }
-      - window_process: { equals: "PickerHost" }
+      - window_process: { equals: "Taskmgr" }
 
-  - commands: ["set-tiling"]
+  - commands: ["set-transparency --opacity 0.9"]
     match:
-      - window_process: { equals: "ProtonVPN" }
+      - window_process: { equals: "explorer" }
 
-  - commands: ["set-title-bar-visibility hidden"]
-    match:
-      - window_process: { equals: "javaw" }
-        window_class: { regex: "GLFW30|LWJGL" }
-      - window_process: { equals: "mpv" }
-      - window_process: { equals: "soffice" }
-
-  # workaround for windows that resize themselves/don't respect initial states
+  # for windows that resize themselves/don't respect initial states
   - commands: ["wm-redraw"]
     match:
+      - window_process: { equals: "javaw" }
       - window_process: { equals: "librewolf" }
         window_class: { equals: "MozillaWindowClass" }
-      - window_process: { equals: "qView" }
       - window_process: { equals: "soffice" }
-      - window_process: { equals: "javaw" }
         window_class: { regex: "GLFW30|LWJGL" }
+      - window_process: { equals: "qView" }
 
 #################################################################
 
@@ -250,6 +261,9 @@ keybindings:
     bindings: ['alt+shift+"']
 
   - commands: ["toggle-fullscreen"]
+    bindings: ['ctrl+alt+shift+"']
+
+  - commands: ["toggle-fullscreen"]
     bindings: ["ctrl+alt+shift+f"]
 
   - commands: ["wm-reload-config"]
@@ -280,8 +294,10 @@ keybindings:
     bindings: ["alt+8"]
   - commands: ["focus --workspace 9"]
     bindings: ["alt+9"]
-  - commands: ["focus --workspace browser"]
+  - commands: ["focus --workspace br0wser"]
     bindings: ["alt+f1"]
+  - commands: ["focus --workspace br0wser"]
+    bindings: ["ctrl+alt+f1"]
   - commands: ["focus --workspace editor"]
     bindings: ["alt+f2"]
   - commands: ["focus --workspace comms"]
@@ -321,8 +337,10 @@ keybindings:
     bindings: ["alt+shift+8"]
   - commands: ["move --workspace 9", "focus --workspace 9"]
     bindings: ["alt+shift+9"]
-  - commands: ["move --workspace browser", "focus --workspace browser"]
+  - commands: ["move --workspace br0wser", "focus --workspace br0wser"]
     bindings: ["alt+shift+f1"]
+  - commands: ["move --workspace br1wser", "focus --workspace br1wser"]
+    bindings: ["ctrl+alt+shift+f1"]
   - commands: ["move --workspace editor", "focus --workspace editor"]
     bindings: ["alt+shift+f2"]
   - commands: ["move --workspace comms", "focus --workspace comms"]
