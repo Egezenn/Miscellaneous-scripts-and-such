@@ -128,3 +128,14 @@ function yt360 { yt-dlp -f "bv*[height<=360]+ba/b" @args }
 function yt480 { yt-dlp -f "bv*[height<=480]+ba/b" @args }
 function yt720 { yt-dlp -f "bv*[height<=720]+ba/b" @args }
 function ytx { yt-dlp -x @args }
+
+
+function cppyhere {
+    $fileName = "copyparty-en.py"
+    $url = "https://github.com/9001/copyparty/releases/latest/download/copyparty-en.py"
+    if (Test-Path $fileName) {
+        Remove-Item $fileName
+    }
+    Invoke-WebRequest -Uri $url -OutFile $fileName
+    python $fileName
+}

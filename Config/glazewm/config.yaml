@@ -139,17 +139,17 @@ window_rules:
       - window_process: { equals: "prismlauncher" }
       - window_process: { equals: "steamwebhelper" }
 
-  - commands:
-      [
-        "move --workspace game",
-        "shell-exec --hide-window setresolution.exe -w 1280 -h 720 -o 0 -noprompt -nopersist",
-        "set-title-bar-visibility hidden",
-        "set-fullscreen --maximized=true",
-      ]
-    match:
-      - window_process: { equals: "dota2" }
-      - window_process: { equals: "javaw" }
-        window_class: { regex: "GLFW30|LWJGL" }
+  # - commands:
+  #     [
+  #       "move --workspace game",
+  #       "shell-exec --hide-window setresolution.exe -w 1024 -h 768 -o 0 -noprompt -nopersist",
+  #       "set-title-bar-visibility hidden",
+  #       "set-fullscreen --maximized=true",
+  #     ]
+  #   match:
+  #     - window_process: { equals: "dota2" }
+  #     - window_process: { equals: "javaw" }
+  #       window_class: { regex: "GLFW30|LWJGL" }
 
   #################################################################
 
