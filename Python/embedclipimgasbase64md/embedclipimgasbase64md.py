@@ -1,7 +1,9 @@
 import base64
 import io
+import sys
 
 import pyperclip
+
 from PIL import ImageGrab
 
 img = ImageGrab.grabclipboard()
@@ -15,6 +17,6 @@ if img:
     md_img = f"![image](data:image/png;base64,{b64})"
 
     pyperclip.copy(md_img)
-    print(0)
+    sys.exit(0)
 else:
-    print(1)
+    sys.exit(1)

@@ -1,5 +1,10 @@
 Clear-Host
-oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/theme.json" | Invoke-Expression
+Invoke-Expression (& starship init powershell)
+# Buggy
+# function Invoke-Starship-TransientFunction {
+#     &starship module character
+# }
+# Enable-TransientPrompt
 Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
 
 # shorthands & overrides
@@ -19,15 +24,18 @@ function history {
     }
 }
 
-function cl { Clear-Host }
+function c { Clear-Host }
 function prl {
     . $PROFILE
     Clear-Host
 }
 
-function hpure { Get-Content (Get-PSReadlineOption).HistorySavePath }
-function hgrep { Get-Content (Get-PSReadlineOption).HistorySavePath | grep $args }
+$historyPath = (Get-PSReadlineOption).HistorySavePath
+function histfile { Invoke-Item $historyPath }
+function hpure { Get-Content $historyPath }
+function hgrep { Get-Content $historyPath | grep $args }
 
+Set-PSReadLineKeyHandler -Chord "Ctrl+RightArrow" -Function ForwardWord
 Remove-Item Alias:ls -Force
 function ls { lsd $args }
 function lsps { Get-ChildItem $args }
@@ -49,6 +57,8 @@ function cdm {
     Set-Location -Path $Path
 }
 function cwd { (Get-Location).Path }
+
+function editprofile { edit $env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 }
 
 # executables
 function updatelist { 
@@ -74,12 +84,16 @@ function updateallx {
 
 function gitscommit {
     git add .
-    git commit -m $args 
+    git commit -a -m $args 
+}
+function gitscommitp {
+    git add .
+    git commit -a -m $args 
+    git push
 }
 function gitrecommit {
     git reset --soft HEAD~1
-    git add -A
-    git commit -m $args 
+    git commit -a -m $args 
 }
 function gitrestore {
     git reset --soft HEAD~1
@@ -92,7 +106,7 @@ function exp {
     param(
         [string]$Path = "."
     )
-    explorer $Path
+    Explorer++.exe $Path
 }
 
 
