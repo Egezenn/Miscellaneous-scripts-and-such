@@ -1,0 +1,9 @@
+{
+  "clipboard": "internal",
+  "eofnewline": false,
+  "infobar": false,
+  "ruler": false,
+  "statusformatl": "$(filename) $(modified)($(line),$(col)) $(status.paste)",
+  "statusformatr": "",
+  "tabsize": 2
+}

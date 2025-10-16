@@ -1,4 +1,5 @@
-﻿#Requires AutoHotkey v1
+﻿; Keybinds to insert general LaTeX symbols&commands.
+#Requires AutoHotkey v1
 #Warn
 #NoEnv
 #SingleInstance, Force

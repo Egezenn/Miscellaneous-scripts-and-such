@@ -1,4 +1,5 @@
-﻿#Requires AutoHotkey v1
+﻿; Handy script to see which pixels your cursor is at, color of the pixel and copy those into the clipboard.
+#Requires AutoHotkey v1
 #Warn
 #NoEnv
 #SingleInstance, Force

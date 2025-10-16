@@ -1,10 +1,5 @@
 Clear-Host
 Invoke-Expression (& starship init powershell)
-# Buggy
-# function Invoke-Starship-TransientFunction {
-#     &starship module character
-# }
-# Enable-TransientPrompt
 Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
 
 # shorthands & overrides
@@ -59,6 +54,7 @@ function cdm {
 function cwd { (Get-Location).Path }
 
 function editprofile { edit $env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 }
+function adminterminal { Start-Process wt -ArgumentList "-d `"$PWD`"" -Verb runas }
 
 # executables
 function updatelist { 

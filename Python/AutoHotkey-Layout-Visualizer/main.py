@@ -32,8 +32,7 @@ def main():
     try:
         keybinds = []
         if (
-            ((input.endswith("/*") or input.endswith("\\*")))
-            and os.path.isdir(input.replace("*", ""))
+            ((input.endswith("/*") or input.endswith("\\*"))) and os.path.isdir(input.replace("*", ""))
         ) or os.path.isdir(input):
             path = input.replace("*", "") if input.endswith("*") else input
 
@@ -83,21 +82,11 @@ def main():
                 if text in keybinds or any(e in text_list for e in keybinds):
                     descent = descent_single if multiple else descent_multiple
                     try:
-                        redness = 255 - (
-                            (
-                                keybinds.count(text_list[1])
-                                + keybinds.count(text_list[2])
-                            )
-                            * descent
-                        )
+                        redness = 255 - ((keybinds.count(text_list[1]) + keybinds.count(text_list[2])) * descent)
                     except IndexError:
                         redness = 255 - (keybinds.count(text) * descent)
 
-                    redness = (
-                        format(darkness_limit, "x")
-                        if redness < darkness_limit
-                        else format(redness, "x")
-                    )
+                    redness = format(darkness_limit, "x") if redness < darkness_limit else format(redness, "x")
 
                 bg_fill = f"#{redness}0000" if redness is not None else "white"
 

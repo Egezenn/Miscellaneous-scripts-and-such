@@ -1,4 +1,5 @@
-﻿#Requires AutoHotkey v1
+﻿; Middleware to control your desktop with a controller
+#Requires AutoHotkey v1
 #Warn
 #NoEnv
 #SingleInstance, Force

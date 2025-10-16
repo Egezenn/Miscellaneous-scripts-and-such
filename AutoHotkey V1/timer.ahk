@@ -1,4 +1,5 @@
-﻿#Requires AutoHotkey v1
+﻿; A simple always on top, resettable timer.
+#Requires AutoHotkey v1
 #Warn
 #NoEnv
 #SingleInstance, Force

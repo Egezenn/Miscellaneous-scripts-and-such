@@ -49,9 +49,7 @@ def svg_element_constructor(
     bg_fill="white",
 ):
     # TODO replace the text to something beatiful with a dict
-    font_color = (
-        "lightgray" if (bg_fill != "white" and int(bg_fill[1:3], 16) < 96) else "black"
-    )
+    font_color = "lightgray" if (bg_fill != "white" and int(bg_fill[1:3], 16) < 96) else "black"
     _x = (
         (current_width + (key_dimension / 2) * modified_width)
         if modified_width != 1

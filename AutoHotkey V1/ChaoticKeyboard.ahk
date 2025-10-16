@@ -1,4 +1,5 @@
-﻿#Requires AutoHotkey v1
+﻿; Type with random letterlike symbols.
+#Requires AutoHotkey v1
 #Warn
 #NoEnv
 #SingleInstance, Force

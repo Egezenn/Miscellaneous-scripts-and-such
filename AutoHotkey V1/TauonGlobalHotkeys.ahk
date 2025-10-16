@@ -1,3 +1,4 @@
+; Media control using Tauon's HTTP API, also shows tooltips to mitigate the program not having notifications.
 #Requires AutoHotkey v1
 #NoTrayIcon
 

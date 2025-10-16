@@ -1,4 +1,5 @@
-﻿#Requires AutoHotkey v1
+﻿; Template script to use https://github.com/geovens/gInk with a mouse or a drawing tablet and binding hotkeys for specific programs when using a drawing tablet.
+#Requires AutoHotkey v1
 #Warn
 #NoEnv
 #SingleInstance, Force

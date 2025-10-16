@@ -1,3 +1,4 @@
+# Config that doesn't interfere with accesibility keys and workspace switching with alt+tab.
 general:
   startup_commands: ["shell-exec zebar", "focus --workspace 1"]
   shutdown_commands: ["shell-exec taskkill /IM zebar.exe /F"]

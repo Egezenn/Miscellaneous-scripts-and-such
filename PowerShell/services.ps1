@@ -32,7 +32,7 @@ sc config AcerQAAgentSvis start=disabled
 
 # Autodesk
 Write-Host -NoNewline "`n`n`nConfiguring: Autodesk Access Service Host`n"
-sc stop Autodesk Access Service Host
+sc stop "Autodesk Access Service Host"
 sc config "Autodesk Access Service Host" start=demand
 Write-Host -NoNewline "`n`n`nConfiguring: Autodesk CER Service`n"
 sc stop Autodesk CER Service

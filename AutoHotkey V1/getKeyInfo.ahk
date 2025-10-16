@@ -1,4 +1,5 @@
-﻿#Requires AutoHotkey v1
+﻿; Tool to get information about your next keystroke.
+#Requires AutoHotkey v1
 
 #Warn
 #NoEnv

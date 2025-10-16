@@ -1,4 +1,5 @@
-﻿#Requires AutoHotkey v1
+﻿; Bind keys to specific commands that are used 90% of the time for 2D sketching on AutoCAD.
+#Requires AutoHotkey v1
 #Warn
 #NoEnv
 #SingleInstance, Force
