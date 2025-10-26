@@ -1,12 +1,12 @@
-/* Condensed firefox with tabs on sidebar. */
 #urlbar-background,
+.urlbar-background,
 #navigator-toolbox,
 .urlbar-input-container {
-	max-height: 2rem !important;
+  height: 2rem !important;
 }
 
 #urlbar {
-	top: 0px !important;
+  top: 0px !important;
 }
 
 #urlbar-container,
@@ -15,17 +15,17 @@ hbox.urlbar-input-container,
 hbox.tab-content,
 vbox.tab-background,
 vbox.tab-content {
-	border-radius: unset !important;
-	border: 0 !important;
-	margin: 0 !important;
-	padding: 0 !important;
+  border-radius: unset !important;
+  border: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 #tabs-newtab-button,
 vbox.tab-background,
 hbox.tab-content,
 stack.tab-stack {
-	height: 1rem !important;
+  height: 1rem !important;
 }
 
 toolbarbutton#PanelUI-menu-button,
@@ -33,44 +33,74 @@ stack.toolbarbutton-badge-stack,
 toolbarbutton.titlebar-button.titlebar-min,
 toolbarbutton.titlebar-button.titlebar-max,
 toolbarbutton.titlebar-button.titlebar-close {
-	padding: 0 2px !important;
+  padding: 0 2px !important;
 }
 
 #main-window[sidebar-expand-on-hover] > html:body > #browser > #sidebar-main,
 #sidebar-launcher-splitter {
-	display: none !important;
+  display: none !important;
 }
 
 #sidebar-main {
-	background: rgba(0, 0, 0, 0.5);
-	border-radius: 0.25rem;
-	overflow: hidden !important;
-	position: fixed;
-	scrollbar-width: none !important;
-	width: 2rem !important;
-	z-index: 2147483647;
-	max-width: unset !important;
-	right: 0;
-	top: 0;
-	/*left: 50%;*/
-	/*transform: translateX(-50%);*/
-	transform: scale(0.7) !important;
-	transform-origin: top right !important;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 0.25rem;
+  overflow: hidden !important;
+  position: fixed;
+  scrollbar-width: none !important;
+  width: 2rem !important;
+  z-index: 2147483647;
+  max-width: unset !important;
+  right: 0;
+  top: 0;
+  /*left: 50%;*/
+  /*transform: translateX(-50%);*/
+  transform: scale(0.7) !important;
+  transform-origin: top right !important;
 }
 
 #sidebar-main:hover {
-	width: 10% !important;
-	padding: 1rem !important;
+  width: 10% !important;
+  padding: 1rem !important;
 }
 
-#sidebar-main > html:sidebar-main > #vertical-tabs > #tabbrowser-tabs > #tabbrowser-arrowscrollbox > tab.tabbrowser-tab > stack.tab-stack > hbox.tab-content > vbox.tab-label-container,
-#sidebar-main > html:sidebar-main > #vertical-tabs > #tabbrowser-tabs > #tabbrowser-arrowscrollbox > tab.tabbrowser-tab > stack.tab-stack > vbox.tab-background {
-	display: none !important;
+#sidebar-main
+  > html:sidebar-main
+  > #vertical-tabs
+  > #tabbrowser-tabs
+  > #tabbrowser-arrowscrollbox
+  > tab.tabbrowser-tab
+  > stack.tab-stack
+  > hbox.tab-content
+  > vbox.tab-label-container,
+#sidebar-main
+  > html:sidebar-main
+  > #vertical-tabs
+  > #tabbrowser-tabs
+  > #tabbrowser-arrowscrollbox
+  > tab.tabbrowser-tab
+  > stack.tab-stack
+  > vbox.tab-background {
+  display: none !important;
 }
 
-#sidebar-main:hover > html:sidebar-main > #vertical-tabs > #tabbrowser-tabs > #tabbrowser-arrowscrollbox > tab.tabbrowser-tab > stack.tab-stack > hbox.tab-content > vbox.tab-label-container,
-#sidebar-main:hover > html:sidebar-main > #vertical-tabs > #tabbrowser-tabs > #tabbrowser-arrowscrollbox > tab.tabbrowser-tab > stack.tab-stack > vbox.tab-background {
-	display: flex !important;
+#sidebar-main:hover
+  > html:sidebar-main
+  > #vertical-tabs
+  > #tabbrowser-tabs
+  > #tabbrowser-arrowscrollbox
+  > tab.tabbrowser-tab
+  > stack.tab-stack
+  > hbox.tab-content
+  > vbox.tab-label-container,
+#sidebar-main:hover
+  > html:sidebar-main
+  > #vertical-tabs
+  > #tabbrowser-tabs
+  > #tabbrowser-arrowscrollbox
+  > tab.tabbrowser-tab
+  > stack.tab-stack
+  > vbox.tab-background {
+  display: flex !important;
 }
 
 #tabbrowser-tabs:not([expanded]),
@@ -83,60 +113,63 @@ button[aria-label="Mute tab"],
 #vertical-spacer,
 /*image.tab-close-button,*/
 #tabs-newtab-button,
-button[title="More tools"] {
-	display: none !important;
+button[title="More tools"],
+#sidebar-tools-and-extensions-splitter,
+#vertical-tabs::after,
+hbox[tooltiptext="Add tab to taskbar"] {
+  display: none !important;
 }
 
 :root {
-	--tab-min-height: unset !important;
+  --tab-min-height: unset !important;
 }
 #tabbrowser-arrowscrollbox[orient="vertical"] {
-	min-height: unset !important;
+  min-height: unset !important;
 }
 
 .tabbrowser-tab {
-	padding-top: 0 !important;
+  padding-top: 0 !important;
 }
 
 #nav-bar {
-	padding: 0 10% !important;
+  padding: 0 10% !important;
 }
 
 .toolbarbutton-badge {
-	margin-top: 10px !important;
+  margin-top: 10px !important;
 }
 
 .tab-label-container {
-	mask-image: none !important;
+  mask-image: none !important;
 }
 
 #statuspanel {
-	opacity: 0.7 !important;
-	top: -21px !important;
-	bottom: unset !important;
-	margin: 0 !important;
-	padding: 0 !important;
-	max-width: 10% !important;
-	min-width: unset !important;
+  opacity: 0.7 !important;
+  top: -21px !important;
+  bottom: unset !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: 10% !important;
+  min-width: unset !important;
 }
 
 findbar {
-	position: absolute !important;
-	bottom: 0 !important;
-	width: 780px !important;
-	left: 50% !important;
-	opacity: 0.7 !important;
-	transform: translate(-50%, -50%) scale(0.85) !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  width: 780px !important;
+  left: 50% !important;
+  opacity: 0.7 !important;
+  transform: translate(-50%, -50%) scale(0.85) !important;
 }
 
 #sidebar-box {
-	position: absolute !important;
-	z-index: 999 !important;
-	opacity: .7 !important;
-	height: 100% !important;
-	width: 20% !important;
+  position: absolute !important;
+  z-index: 999 !important;
+  opacity: 0.7 !important;
+  height: 100% !important;
+  width: 20% !important;
 }
 
 #sidebar {
-	border-radius: unset !important;
+  border-radius: unset !important;
 }

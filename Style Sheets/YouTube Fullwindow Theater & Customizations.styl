@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           YouTube Fullwindow Theater & Customizations
 @namespace      https://userstyles.world/user/egezenn
-@version        1.3.3
+@version        1.4
 @description    Use up all the window in theatre mode with hoverable header!
 Along with lots of optional removals & customizations
 @preprocessor   stylus
@@ -15,7 +15,10 @@ Along with lots of optional removals & customizations
 @var            color    pbar-scrub                 "Scrub button color"                        rgba(255, 0, 51, 1)
 @var            color    pbar-loaded                "Loaded section color"                      rgba(255, 255, 255, .4)
 @var            color    pbar-rest                  "Rest of the bar"                           rgba(255, 255, 255, .2)
-@var            checkbox fixedSubs                  "Force subtitle styling (customization soon)" 0
+@var            checkbox enableSubStyling           "Enable and enforce subtitle styling"       0
+@var            color    sub-color                  "Subtitle color"                            rgba(255, 255, 255, 1)
+@var            range    sub-rem                    "Subtitle size"                             [4, 1, 7, 0.1, "rem"]
+@var            text     sub-font                   "Subtitle font"                             "sans-serif"
 @var            checkbox rmPreviews                 "Remove video previews"                     0
 @var            checkbox rmChips                    "Remove chips (filters on homepage)"        0
 @var            checkbox rmShorts                   "Remove shorts from feeds"                  0
@@ -241,17 +244,17 @@ i = !important
         .ytp-caption-window-rollup.ytp-rollup-mode .captions-text
             transition none i
 
-    if fixedSubs
+    if enableSubStyling
         .ytp-caption-segment
         .caption-window
             background unset i
             bottom 2% i
 
         .ytp-caption-segment
-            color white i
+            color sub-color i
             fill white i
-            font-family sans-serif i
-            font-size 3rem i
+            font-family sub-font i
+            font-size sub-rem i
             text-shadow rgba(34, 34, 34, .75) 1.6px 1.6px 2.4px, rgba(34, 34, 34, .75) 1.6px 1.6px 3.2px, rgba(34, 34, 34, .75) 1.6px 1.6px 4px i
 
         #ytp-caption-window-container

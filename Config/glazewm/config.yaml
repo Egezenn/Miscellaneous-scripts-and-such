@@ -177,7 +177,9 @@ window_rules:
     match:
       - window_process: { regex: "msiexec" }
       - window_process: { regex: ".*[Ss][Ee][Tt][Uu][Pp].*" }
+      - window_process: { regex: ".*[Ww][Ii][Zz][Aa][Rr][Dd].*" }
       - window_class: { regex: ".*[Ss][Ee][Tt][Uu][Pp].*" }
+      - window_class: { regex: ".*[Ww][Ii][Zz][Aa][Rr][Dd].*" }
       - window_process: { equals: "VSIXInstaller" }
       # - window_title: { regex: ".*[Ss][Ee][Tt][Uu][Pp].*" }
       # - window_process: { equals: "explorer" }
@@ -187,6 +189,8 @@ window_rules:
         window_class: { equals: "BootstrapUpdateUIClass" }
       - window_process: { equals: "v2rayN" }
         window_title: { regex: "v2rayN - .*" }
+      - window_process: { equals: "gimp-3" }
+        window_title: { equals: "GIMP Startup" }
 
   # contextual dialogs
   - commands: ["set-floating --centered --shown-on-top=true", "set-transparency --opacity 0.75"]

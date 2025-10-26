@@ -2,7 +2,7 @@ Clear-Host
 Invoke-Expression (& starship init powershell)
 Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
 
-# shorthands & overrides
+# path and history stuff
 function .. { Set-Location .. }
 function ~ { Set-Location ~ }
 function / { Set-Location / }
@@ -19,23 +19,21 @@ function history {
     }
 }
 
-function c { Clear-Host }
-function prl {
-    . $PROFILE
-    Clear-Host
-}
-
 $historyPath = (Get-PSReadlineOption).HistorySavePath
 function histfile { Invoke-Item $historyPath }
 function hpure { Get-Content $historyPath }
-function hgrep { Get-Content $historyPath | grep $args }
+function hgrep { Get-Content $historyPath | rg $args }
 
 Set-PSReadLineKeyHandler -Chord "Ctrl+RightArrow" -Function ForwardWord
 Remove-Item Alias:ls -Force
 function ls { lsd $args }
+function l { lsd -l --blocks 'permission,size,name' }
+function lld { lsd -l --blocks 'permission,size,date,name' --date '+%Y-%m-%d_%H-%M' }
+function l1 { lsd -1 $args }
 function lsps { Get-ChildItem $args }
-function lsa { lsd -A $args }
-function lst { lsd --tree $args }
+function la { lsd -A $args }
+function lt { lsd --tree --depth 3 $args }
+function ltd { lsd --tree $args }
 function cds {
     Set-Location $args[0]
     lsd 
@@ -55,8 +53,16 @@ function cwd { (Get-Location).Path }
 
 function editprofile { edit $env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 }
 function adminterminal { Start-Process wt -ArgumentList "-d `"$PWD`"" -Verb runas }
+function markhidden { attrib +h /d .\.* }
+function c { Clear-Host }
+function reload {
+    . $PROFILE
+    Clear-Host
+}
 
+#########################################################################################
 # executables
+
 function updatelist { 
     pacman -Sy
     pacman -Qu
@@ -96,8 +102,6 @@ function gitrestore {
     git restore --staged . 
 }
 
-function markhidden { attrib +h /d .\.* }
-
 function exp {
     param(
         [string]$Path = "."
@@ -105,14 +109,24 @@ function exp {
     Explorer++.exe $Path
 }
 
+function code { codium $args }
 
 function pipreset { pip freeze | xargs pip uninstall -y }
 function acvenv { .\.venv\Scripts\activate }
-function createvenv { python -m venv .venv }
+function createvenv {
+    python -m venv .venv
+    acvenv
+}
 function createvenvi {
     python -m venv .venv
     acvenv
     pip install -r .\requirements.txt 
+}
+
+function cbuild {
+    mkdir build
+    Set-Location build
+    cmake ..
 }
 
 function pkill { taskkill /F /IM $args }
@@ -120,6 +134,8 @@ function whr { & "C:\Windows\System32\where.exe" @args }
 
 function win { winget install $args }
 function wse { winget search $args }
+
+function rgn { rg -NI --color never $args }
 
 function y {
     $tmp = [System.IO.Path]::GetTempFileName()
@@ -132,15 +148,15 @@ function y {
 }
 
 function yt { yt-dlp @args }
-function yt144 { yt-dlp -f "bv*[height<=144]+ba/b" @args }
-function yt240 { yt-dlp -f "bv*[height<=240]+ba/b" @args }
-function yt360 { yt-dlp -f "bv*[height<=360]+ba/b" @args }
-function yt480 { yt-dlp -f "bv*[height<=480]+ba/b" @args }
-function yt720 { yt-dlp -f "bv*[height<=720]+ba/b" @args }
-function ytx { yt-dlp -x @args }
+function yt144 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=144]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
+function yt240 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=240]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
+function yt360 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=360]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
+function yt480 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=480]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
+function yt720 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=720]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
+function ytx { Set-Location ~\Music && yt-dlp -x @args }
 
-
-function cppyhere {
+function cppyhere { python copyparty-en.py }
+function cppyhered {
     $fileName = "copyparty-en.py"
     $url = "https://github.com/9001/copyparty/releases/latest/download/copyparty-en.py"
     if (Test-Path $fileName) {
@@ -149,3 +165,7 @@ function cppyhere {
     Invoke-WebRequest -Uri $url -OutFile $fileName
     python $fileName
 }
+
+function steams { & 'C:\Program Files (x86)\Steam\steam.exe' -silent }
+function steamc { & 'C:\Program Files (x86)\Steam\steam.exe' -userchooser }
+function steamq { & 'C:\Program Files (x86)\Steam\steam.exe' -exitsteam }

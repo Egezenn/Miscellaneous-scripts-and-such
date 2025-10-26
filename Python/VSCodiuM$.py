@@ -1,5 +1,5 @@
 """
-Simple script to use M$ marketplace instead of OpenVSX.
+Use M$ marketplace instead of OpenVSX.
 Needs to be run every VSCodium update as the file gets overwritten.
 Use it at your own risk, you're _expected_ to not do this.
 """

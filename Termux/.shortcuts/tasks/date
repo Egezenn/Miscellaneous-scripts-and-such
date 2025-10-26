@@ -1,0 +1,4 @@
+termux-api-start
+date_iso=$(date -I)
+termux-toast $date_iso
+termux-clipboard-set $date_iso
