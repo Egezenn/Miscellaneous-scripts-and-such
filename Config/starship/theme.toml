@@ -36,7 +36,7 @@ format = '[$number$symbol]($style) '
 symbol = 'j'
 
 [line_break]
-disabled = true
+disabled = false
 
 [package]
 format = '[$version]($style) '

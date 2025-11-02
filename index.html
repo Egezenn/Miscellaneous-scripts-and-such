@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ege's WebShed</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 0;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      @media (prefers-color-scheme: light) {
+        body {
+          background-color: #f0f0f0;
+          color: #333;
+        }
+        a {
+          color: #007bff;
+        }
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #212121;
+          color: #f0f0f0;
+        }
+        a {
+          color: #64b5f6;
+        }
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      #projects-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+        padding: 2rem 0;
+      }
+
+      .project-button {
+        display: inline-block;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 1.2rem;
+        background-color: #007bff;
+        color: white;
+        transition: background-color 0.3s, transform 0.2s;
+        border: none;
+        cursor: pointer;
+      }
+
+      .project-button:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .project-button {
+          background-color: #64b5f6;
+          color: #212121;
+        }
+        .project-button:hover {
+          background-color: #2196f3;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Ege's WebShed</h1>
+    <div id="projects-container">
+      <p>Loading projects...</p>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const container = document.getElementById("projects-container");
+        const user = "Egezenn";
+        const repo = "miscellaneous-scripts-and-such";
+        const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/Web`;
+
+        fetch(apiUrl)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`GitHub API request failed: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            container.innerHTML = "";
+            const projects = data.filter((item) => item.type === "dir");
+            if (projects.length === 0) {
+              container.innerHTML = "<p>No projects found in the /Web directory.</p>";
+              return;
+            }
+            projects.forEach((project) => {
+              const button = document.createElement("a");
+              button.href = `Web/${project.name}/`;
+              button.className = "project-button";
+              button.textContent = project.name;
+              container.appendChild(button);
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching project list:", error);
+            container.innerHTML = `<p>Error loading projects. See console for details.</p><p>${error.message}</p>`;
+          });
+      });
+    </script>
+  </body>
+</html>

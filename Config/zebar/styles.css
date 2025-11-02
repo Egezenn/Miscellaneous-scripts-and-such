@@ -7,7 +7,7 @@
 body {
   color: rgb(255 255 255 / 90%);
   font-family: "MesloLGM Nerd Font Mono", ui-monospace, monospace;
-  font-size: 10px;
+  font-size: 9px;
   overflow: hidden;
 }
 
@@ -42,6 +42,7 @@ body,
 .right > div {
   display: flex;
   align-items: center;
+  height: 100%;
 }
 
 .right {
@@ -63,26 +64,30 @@ body,
 .workspaces {
   display: flex;
   align-items: center;
+  height: 100%;
 }
 
 .workspace {
   background: inherit;
   margin-right: 4px;
-  padding: 1px 6px 0px 6px;
+  padding: 0 6px;
   color: rgb(255 255 255 / 90%);
   border: 1px solid rgb(255 255 255 / 15%);
   cursor: pointer;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
 
-  &.displayed {
-    background: rgb(255 255 255 / 15%);
-    border: 1px solid rgb(255 255 255 / 15%);
-  }
+.workspace.displayed {
+  background: rgb(255 255 255 / 15%);
+  border: 1px solid rgb(255 255 255 / 15%);
+}
 
-  &.focused,
-  &:hover {
-    background: rgb(75 115 255 / 50%);
-    border: 1px solid rgb(75 115 255 / 50%);
-  }
+.workspace.focused,
+.workspace:hover {
+  background: rgb(75 115 255 / 50%);
+  border: 1px solid rgb(75 115 255 / 50%);
 }
 
 .binding-mode,
@@ -90,9 +95,12 @@ body,
 .paused-button {
   background: inherit;
   color: rgb(255 255 255 / 90%);
-  padding: 1px 8px 0px 8px;
+  padding: 0 8px;
   cursor: pointer;
   border: 1px solid rgb(255 255 255 / 15%);
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .binding-mode {
@@ -103,49 +111,66 @@ body,
   border: 1px solid rgb(255 255 255 / 15%);
   color: rgb(255 255 255 / 90%);
   margin-right: 4px;
-  padding: 1px 8px 0px 8px;
+  padding: 0 8px;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .media {
   color: #cbd35e;
   display: inline;
   border: 1px solid rgb(203 211 94 / 30%);
-  padding: 0 6px 0 6px;
+  padding: 0 6px;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .media > * {
   display: inline;
   height: 100%;
-  padding: 1px 6px 0px 6px;
+  padding: 0 6px;
   border-right: 1px solid rgb(203 211 94 / 30%);
+  display: flex;
+  align-items: center;
+}
 
-  &:first-child {
-    padding-left: 0px;
-  }
+.media > *:first-child {
+  padding-left: 0px;
+}
 
-  &:last-child {
-    padding-right: 0px;
-    border: none;
-  }
+.media > *:last-child {
+  padding-right: 0px;
+  border: none;
 }
 
 .network > .received {
   color: #a865e7;
   border: 1px solid rgb(168 101 231 / 30%);
-  padding: 1px 6px 0px 6px;
+  padding: 0 6px;
   margin-right: 1px;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .network > .transmitted {
   color: #4ac54a;
   border: 1px solid rgb(74 197 74 / 30%);
-  padding: 1px 6px 0px 6px;
+  padding: 0 6px;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .cpu {
   color: #e2673b;
   border: 1px solid rgb(226 103 59 / 30%);
-  padding: 1px 6px 0px 6px;
+  padding: 0 6px;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .cpu .high-usage {
@@ -155,37 +180,55 @@ body,
 .memory {
   color: #dda0dd;
   border: 1px solid rgb(221 160 221 / 30%);
-  padding: 1px 6px 0px 6px;
+  padding: 0 6px;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .audio {
   color: #7fffd4;
   border: 1px solid rgb(127 255 212 / 30%);
-  padding: 1px 6px 0px 6px;
+  padding: 0 6px;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .battery > .percentage {
   color: #f0469b;
   border: 1px solid rgb(240 70 155 / 30%);
-  padding: 1px 6px 0px 6px;
+  padding: 0 6px;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .battery > .state {
   color: #f0469b;
   border: 1px solid rgb(240 70 155 / 30%);
-  padding: 1px 6px 0px 6px;
+  padding: 0 6px;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 .disk > .first {
   color: #6495ed;
   border: 1px solid rgb(100 149 237 / 30%);
-  padding: 1px 6px 0px 6px;
+  padding: 0 6px;
   margin-right: 1px;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .disk > .second {
   color: #4169e1;
   border: 1px solid rgb(65 105 225 / 30%);
-  padding: 1px 6px 0px 6px;
+  padding: 0 6px;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .network > .received,

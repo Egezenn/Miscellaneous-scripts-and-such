@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sözeviri</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="search-container">
+        <input type="text" id="searchbar" autocomplete="off" />
+        <button id="searchButton">Ara</button>
+        <select id="targetLanguageSelect"></select>
+        <select id="translationProviderSelect"></select>
+        <button id="themeToggleButton">Tema</button>
+        <div id="autocompleteSuggestions" class="autocomplete-suggestions"></div>
+      </div>
+      <div id="searchResults" class="search-results"></div>
+    </div>
+    <div id="selection-menu" class="selection-menu">
+      <button id="selection-search-button">Ara</button>
+      <button id="selection-translate-button">Çevir</button>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -260,7 +260,7 @@ keybindings:
     bindings: ["ctrl+alt+shift+p"]
 
   - commands: ["toggle-tiling-direction"]
-    bindings: ['alt+"']
+    bindings: ["alt+shift+t"]
 
   - commands: ["toggle-floating --centered"]
     bindings: ["ctrl+alt+shift+space"]

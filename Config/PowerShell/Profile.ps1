@@ -10,7 +10,7 @@ function / { Set-Location / }
 Remove-Item Alias:history -Force
 function history {
     $historyPath = (Get-PSReadlineOption).HistorySavePath
-    Get-Content $historyPath | ForEach-Object { 
+    Get-Content $historyPath | ForEach-Object {
         $lineNumber = ($_ | Select-Object -Index 0)
     }
     Get-Content $historyPath | ForEach-Object -Begin { $i = 1 } -Process {
@@ -36,7 +36,7 @@ function lt { lsd --tree --depth 3 $args }
 function ltd { lsd --tree $args }
 function cds {
     Set-Location $args[0]
-    lsd 
+    lsd
 }
 function cdm {
     param (
@@ -63,7 +63,7 @@ function reload {
 #########################################################################################
 # executables
 
-function updatelist { 
+function updatelist {
     pacman -Sy
     pacman -Qu
     choco outdated
@@ -86,20 +86,23 @@ function updateallx {
 
 function gitscommit {
     git add .
-    git commit -a -m $args 
+    git commit -a -m $args
 }
 function gitscommitp {
     git add .
-    git commit -a -m $args 
+    git commit -a -m $args
     git push
 }
 function gitrecommit {
     git reset --soft HEAD~1
-    git commit -a -m $args 
+    git commit -a -m $args
 }
 function gitrestore {
     git reset --soft HEAD~1
-    git restore --staged . 
+    git restore --staged .
+}
+function gitreset {
+    git reset --hard HEAD
 }
 
 function exp {
@@ -120,7 +123,7 @@ function createvenv {
 function createvenvi {
     python -m venv .venv
     acvenv
-    pip install -r .\requirements.txt 
+    pip install -r .\requirements.txt
 }
 
 function cbuild {
