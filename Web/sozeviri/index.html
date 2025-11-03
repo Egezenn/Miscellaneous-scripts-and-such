@@ -5,15 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sözeviri</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
   </head>
   <body>
     <div class="container">
       <div class="search-container">
-        <input type="text" id="searchbar" autocomplete="off" />
-        <button id="searchButton">Ara</button>
+        <div class="search-input-group">
+          <input type="text" id="searchbar" autocomplete="off" />
+          <button id="searchButton">Ara</button>
+        </div>
         <select id="targetLanguageSelect"></select>
         <select id="translationProviderSelect"></select>
         <button id="themeToggleButton">Tema</button>
+        <button id="helpButton">?</button>
         <div id="autocompleteSuggestions" class="autocomplete-suggestions"></div>
       </div>
       <div id="searchResults" class="search-results"></div>

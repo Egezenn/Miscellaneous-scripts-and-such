@@ -1,7 +1,7 @@
 const displayCanvas = document.getElementById("canvas");
-const displayCtx = displayCanvas.getContext("2d");
+const displayCtx = displayCanvas.getContext("2d", { willReadFrequently: true });
 const drawingCanvas = document.getElementById("drawing-canvas");
-const drawingCtx = drawingCanvas.getContext("2d");
+const drawingCtx = drawingCanvas.getContext("2d", { willReadFrequently: true });
 const hexColorInput = document.getElementById("hex-color-input");
 const colorDisplay = document.getElementById("color-display");
 const penSize = document.getElementById("pen-size");
@@ -17,15 +17,18 @@ const eraserToolRadio = document.getElementById("eraser-tool-radio");
 const eraserHexColorInput = document.getElementById("eraser-hex-color-input");
 const eraserColorDisplay = document.getElementById("eraser-color-display");
 const canvasWrapper = document.getElementById("canvas-wrapper");
+const mainContent = document.querySelector(".main-content");
 const closeButton = document.querySelector(".close-button");
 const helpModal = document.getElementById("help-modal");
+const helpButton = document.getElementById("help-button");
+const scrollLockToggle = document.getElementById("scroll-lock-toggle");
 const notificationBox = document.getElementById("notification-box");
 
 const PAN_SPEED_ARROW = 10;
 const PAN_SPEED_ARROW_FAST = 100;
-const SELECTION_MOVE_SPEED = 1;
-const SELECTION_MOVE_SPEED_FAST = 10;
-const SCALE_AMOUNT_WHEEL = 1;
+const SELECTION_MOVE_SPEED = 0.1;
+const SELECTION_MOVE_SPEED_FAST = 1;
+const SCALE_AMOUNT_WHEEL = 0.1;
 const ZOOM_AMOUNT_WHEEL = 0.1;
 const PAN_SPEED_WHEEL = 1;
 
@@ -45,6 +48,7 @@ let panY = 0;
 let lastX = 0;
 let lastY = 0;
 let isInputFocused = false;
+let isScrollLocked = true;
 
 let isResizing = false;
 let resizeDirection = "";
@@ -57,6 +61,9 @@ let isSelecting = false;
 let selectionRect = null;
 let selectedCanvasContent = null;
 let isDraggingSelection = false;
+let isResizingSelection = false;
+let selectionResizeDirection = "";
+let startSelectionRect = null;
 let dragOffsetX = 0;
 let dragOffsetY = 0;
 let isSelectionLifted = false;
@@ -80,9 +87,9 @@ function updateCanvasContainer() {
 
 function showNotification(message) {
   notificationBox.textContent = message;
-  notificationBox.style.display = "block";
+  notificationBox.classList.add("notification-active");
   setTimeout(() => {
-    notificationBox.style.display = "none";
+    notificationBox.classList.remove("notification-active");
   }, 3000);
 }
 
@@ -126,11 +133,17 @@ function moveSelection() {
 }
 
 const cursor = document.createElement("div");
-cursor.style.position = "absolute";
-cursor.style.pointerEvents = "none";
+cursor.classList.add("custom-cursor");
 document.body.appendChild(cursor);
 
 function startDrawing(e) {
+  if (e.touches && !isScrollLocked) {
+    return;
+  }
+  if (e.touches) {
+    e.clientX = e.touches[0].clientX;
+    e.clientY = e.touches[0].clientY;
+  }
   const canvasRect = displayCanvas.getBoundingClientRect();
   const mouseX = ((e.clientX - canvasRect.left) / displayScale - panX) / zoom;
   const mouseY = ((e.clientY - canvasRect.top) / displayScale - panY) / zoom;
@@ -141,7 +154,14 @@ function startDrawing(e) {
     lastY = mouseY;
     draw(e);
   } else if (mode === "selection") {
-    if (
+    const handle = selectionRect && !isSelectionLifted ? getResizeHandleAt(mouseX, mouseY, selectionRect) : null;
+    if (handle) {
+      isResizingSelection = true;
+      selectionResizeDirection = handle.type;
+      startResizeX = mouseX;
+      startResizeY = mouseY;
+      startSelectionRect = { ...selectionRect };
+    } else if (
       selectionRect &&
       mouseX >= selectionRect.x &&
       mouseX <= selectionRect.x + selectionRect.width &&
@@ -174,6 +194,7 @@ function stopDrawing() {
   } else if (mode === "selection") {
     isSelecting = false;
     isDraggingSelection = false;
+    isResizingSelection = false;
     if (selectionRect) {
       selectionRect = normalizeRect(selectionRect);
 
@@ -191,6 +212,10 @@ function stopDrawing() {
 }
 
 function draw(e) {
+  if (e.touches) {
+    e.clientX = e.touches[0].clientX;
+    e.clientY = e.touches[0].clientY;
+  }
   const canvasRect = displayCanvas.getBoundingClientRect();
   const mouseX = ((e.clientX - canvasRect.left) / displayScale - panX) / zoom;
   const mouseY = ((e.clientY - canvasRect.top) / displayScale - panY) / zoom;
@@ -208,10 +233,10 @@ function draw(e) {
       drawingCtx.lineCap = "round";
       drawingCtx.strokeStyle = currentStrokeStyle;
 
+      drawingCtx.beginPath();
+      drawingCtx.moveTo(lastX, lastY);
       drawingCtx.lineTo(mouseX, mouseY);
       drawingCtx.stroke();
-      drawingCtx.beginPath();
-      drawingCtx.moveTo(mouseX, mouseY);
     }
 
     lastX = mouseX;
@@ -219,9 +244,35 @@ function draw(e) {
 
     redraw();
   } else if (mode === "selection") {
-    if (isSelecting) {
-      selectionRect.width = mouseX - selectionRect.x;
-      selectionRect.height = mouseY - selectionRect.y;
+    if (isResizingSelection) {
+      const mouseXClamped = Math.max(0, Math.min(mouseX, drawingCanvas.width));
+      const mouseYClamped = Math.max(0, Math.min(mouseY, drawingCanvas.height));
+      const dx = mouseXClamped - startResizeX;
+      const dy = mouseYClamped - startResizeY;
+      const newRect = { ...startSelectionRect };
+
+      if (selectionResizeDirection.includes("right")) {
+        newRect.width += dx;
+      }
+      if (selectionResizeDirection.includes("left")) {
+        newRect.x += dx;
+        newRect.width -= dx;
+      }
+      if (selectionResizeDirection.includes("bottom")) {
+        newRect.height += dy;
+      }
+      if (selectionResizeDirection.includes("top")) {
+        newRect.y += dy;
+        newRect.height -= dy;
+      }
+      selectionRect = newRect;
+      redraw();
+    } else if (isSelecting) {
+      const clampedMouseX = Math.max(0, Math.min(mouseX, drawingCanvas.width));
+      const clampedMouseY = Math.max(0, Math.min(mouseY, drawingCanvas.height));
+
+      selectionRect.width = clampedMouseX - selectionRect.x;
+      selectionRect.height = clampedMouseY - selectionRect.y;
       redraw();
     } else if (isDraggingSelection) {
       selectionRect.x = mouseX - dragOffsetX;
@@ -286,29 +337,73 @@ function redraw() {
 
     displayCtx.strokeRect(selectionRect.x, selectionRect.y, selectionRect.width, selectionRect.height);
     displayCtx.setLineDash([]);
+    if (!isSelectionLifted) {
+      drawResizeHandles(selectionRect);
+    }
   }
 
   displayCtx.restore();
 }
 
 function updateCursor(e) {
-  cursor.style.display = "block";
+  cursor.classList.remove(
+    "cursor-selection-base",
+    "cursor-fill-base",
+    "cursor-round",
+    "cursor-square",
+    "cursor-size-1",
+    "cursor-size-other"
+  );
+  cursor.style.backgroundColor = "";
+  cursor.style.border = "";
+  cursor.style.width = "";
+  cursor.style.height = "";
+  cursor.style.backgroundImage = "";
+  cursor.style.transform = "";
+
+  if (e && e.touches) {
+    cursor.classList.add("hidden");
+    return;
+  }
+
+  if (e && !isResizing) {
+    const direction = getResizeDirection(e);
+    if (direction) {
+      canvasWrapper.style.cursor =
+        direction === "corner" ? "nwse-resize" : direction === "right" ? "ew-resize" : "ns-resize";
+      cursor.classList.add("hidden");
+      return;
+    }
+  }
+
+  cursor.classList.remove("hidden");
 
   if (mode === "selection") {
-    cursor.style.backgroundColor = "transparent";
-    cursor.style.border = "1px solid blue";
-    cursor.style.width = "16px";
-    cursor.style.height = "16px";
-    cursor.style.transform = "translate(-50%, -50%)";
-    cursor.style.backgroundImage = "none";
+    if (e) {
+      const canvasRect = displayCanvas.getBoundingClientRect();
+      const mouseX = ((e.clientX - canvasRect.left) / displayScale - panX) / zoom;
+      const mouseY = ((e.clientY - canvasRect.top) / displayScale - panY) / zoom;
+      const handle = selectionRect && !isSelectionLifted ? getResizeHandleAt(mouseX, mouseY, selectionRect) : null;
+      if (handle) {
+        canvasWrapper.style.cursor = handle.cursor;
+        cursor.classList.remove("cursor-selection-base", "cursor-fill-base");
+      } else {
+        canvasWrapper.style.cursor = "default";
+        cursor.classList.remove("hidden");
+        cursor.classList.add("cursor-selection-base");
+        cursor.classList.remove("cursor-fill-base");
+      }
+    } else {
+      canvasWrapper.style.cursor = "default";
+      cursor.classList.remove("hidden");
+      cursor.classList.add("cursor-selection-base");
+      cursor.classList.remove("cursor-fill-base");
+    }
   } else if (mode === "fill") {
-    cursor.style.backgroundColor = "#000000";
-    cursor.style.border = "1px solid red";
-    cursor.style.width = "16px";
-    cursor.style.height = "16px";
-    cursor.style.transform = "translate(-50%, -50%)";
-    cursor.style.backgroundImage = "none";
+    cursor.classList.add("cursor-fill-base");
+    cursor.classList.remove("cursor-selection-base");
   } else {
+    cursor.classList.remove("cursor-selection-base", "cursor-fill-base");
     const cursorSize = size * zoom * displayScale;
     const cursorCanvas = document.createElement("canvas");
     const cursorCtx = cursorCanvas.getContext("2d");
@@ -320,24 +415,29 @@ function updateCursor(e) {
     if (isPixelated) {
       cursorCtx.fillStyle = cursorColor;
       cursorCtx.fillRect(0, 0, cursorSize, cursorSize);
+      cursor.classList.add("cursor-square");
+      cursor.classList.remove("cursor-round");
     } else {
       cursorCtx.fillStyle = cursorColor;
       cursorCtx.beginPath();
       cursorCtx.arc(cursorSize / 2, cursorSize / 2, cursorSize / 2, 0, 2 * Math.PI);
       cursorCtx.fill();
+      cursor.classList.add("cursor-round");
+      cursor.classList.remove("cursor-square");
     }
 
     cursor.style.width = `${cursorSize}px`;
     cursor.style.height = `${cursorSize}px`;
     cursor.style.backgroundColor = "transparent";
     cursor.style.border = "none";
-    cursor.style.borderRadius = "0";
     cursor.style.backgroundImage = `url(${cursorCanvas.toDataURL()})`;
 
     if (size === 1) {
-      cursor.style.transform = "translate(0, 0)";
+      cursor.classList.add("cursor-size-1");
+      cursor.classList.remove("cursor-size-other");
     } else {
-      cursor.style.transform = "translate(-50%, -50%)";
+      cursor.classList.remove("cursor-size-1");
+      cursor.classList.add("cursor-size-other");
     }
   }
 
@@ -368,11 +468,11 @@ function updateColorDisplay() {
 
 function updatePixelateButtonState() {
   if (isPixelated) {
-    pixelPenToggle.style.backgroundColor = "blue";
-    pixelPenToggle.style.color = "white";
+    pixelPenToggle.classList.add("tool-button-active");
+    pixelPenToggle.classList.remove("tool-button-inactive");
   } else {
-    pixelPenToggle.style.backgroundColor = "gray";
-    pixelPenToggle.style.color = "black";
+    pixelPenToggle.classList.remove("tool-button-active");
+    pixelPenToggle.classList.add("tool-button-inactive");
   }
 }
 
@@ -610,11 +710,146 @@ async function pasteFromClipboard() {
   }
 }
 
+function saveCanvasToLocalStorage() {
+  try {
+    const dataURL = drawingCanvas.toDataURL();
+    localStorage.setItem("faint-canvas", dataURL);
+  } catch (e) {
+    console.error("Failed to save canvas to local storage", e);
+  }
+}
+
+function loadCanvasFromLocalStorage() {
+  try {
+    const dataURL = localStorage.getItem("faint-canvas");
+    if (dataURL) {
+      const img = new Image();
+      img.onload = () => {
+        drawingCanvas.width = img.width;
+        drawingCanvas.height = img.height;
+        drawingCtx.drawImage(img, 0, 0);
+
+        displayCanvas.width = img.width;
+        displayCanvas.height = img.height;
+        canvasWidthInput.value = img.width;
+        canvasHeightInput.value = img.height;
+        previousCanvasWidth = img.width;
+        previousCanvasHeight = img.height;
+
+        canvasWrapper.style.width = `${img.width * displayScale}px`;
+        canvasWrapper.style.height = `${img.height * displayScale}px`;
+        displayCanvas.style.width = `${img.width * displayScale}px`;
+        displayCanvas.style.height = `${img.height * displayScale}px`;
+
+        redraw();
+        saveState();
+      };
+      img.src = dataURL;
+      return true;
+    }
+  } catch (e) {
+    console.error("Failed to load canvas from local storage", e);
+  }
+  return false;
+}
+
+function saveUIState() {
+  const uiState = {
+    size: size,
+    color: color,
+    eraserColor: eraserColor,
+    displayScale: displayScale,
+    isPixelated: isPixelated,
+    isScrollLocked: isScrollLocked,
+  };
+  localStorage.setItem("faint-ui-state", JSON.stringify(uiState));
+}
+
+function loadUIState() {
+  try {
+    const uiStateJSON = localStorage.getItem("faint-ui-state");
+    if (uiStateJSON) {
+      const uiState = JSON.parse(uiStateJSON);
+      size = uiState.size;
+      color = uiState.color;
+      eraserColor = uiState.eraserColor;
+      displayScale = uiState.displayScale;
+      isPixelated = uiState.isPixelated;
+      setTimeout(() => {
+        penSize.value = size;
+      }, 0);
+      hexColorInput.value = color.replace("#", "");
+      eraserHexColorInput.value = eraserColor.replace("#", "");
+      scaleInput.value = displayScale.toFixed(1);
+      updatePixelateButtonState();
+      updateColorDisplay();
+      if (isScrollLocked) {
+        scrollLockToggle.classList.add("tool-button-active");
+        scrollLockToggle.classList.remove("tool-button-inactive");
+      } else {
+        scrollLockToggle.classList.remove("tool-button-active");
+        scrollLockToggle.classList.add("tool-button-inactive");
+      }
+    }
+  } catch (e) {
+    console.error("Failed to load UI state from local storage", e);
+  }
+}
+
+window.addEventListener("beforeunload", () => {
+  saveCanvasToLocalStorage();
+  saveUIState();
+});
+
+function getResizeHandles(rect) {
+  if (!rect) return [];
+  return [
+    { x: rect.x, y: rect.y, cursor: "nwse-resize", type: "top-left" },
+    { x: rect.x + rect.width / 2, y: rect.y, cursor: "ns-resize", type: "top" },
+    { x: rect.x + rect.width, y: rect.y, cursor: "nesw-resize", type: "top-right" },
+    { x: rect.x, y: rect.y + rect.height / 2, cursor: "ew-resize", type: "left" },
+    { x: rect.x + rect.width, y: rect.y + rect.height / 2, cursor: "ew-resize", type: "right" },
+    { x: rect.x, y: rect.y + rect.height, cursor: "nesw-resize", type: "bottom-left" },
+    { x: rect.x + rect.width / 2, y: rect.y + rect.height, cursor: "ns-resize", type: "bottom" },
+    { x: rect.x + rect.width, y: rect.y + rect.height, cursor: "nwse-resize", type: "bottom-right" },
+  ];
+}
+
+function getResizeHandleAt(x, y, rect) {
+  const handles = getResizeHandles(rect);
+  const handleSize = Math.max(4, 8 / displayScale);
+  for (const handle of handles) {
+    if (
+      x >= handle.x - handleSize / 2 &&
+      x <= handle.x + handleSize / 2 &&
+      y >= handle.y - handleSize / 2 &&
+      y <= handle.y + handleSize / 2
+    ) {
+      return handle;
+    }
+  }
+  return null;
+}
+
+function drawResizeHandles(rect) {
+  const handleSize = Math.max(1, 8 / displayScale);
+  displayCtx.fillStyle = "white";
+  displayCtx.strokeStyle = "black";
+  displayCtx.lineWidth = 1 / (zoom * displayScale);
+
+  const handles = getResizeHandles(rect);
+  for (const handle of handles) {
+    displayCtx.fillRect(handle.x - handleSize / 2, handle.y - handleSize / 2, handleSize, handleSize);
+    displayCtx.strokeRect(handle.x - handleSize / 2, handle.y - handleSize / 2, handleSize, handleSize);
+  }
+}
+
 function init() {
+  loadUIState();
   drawingCtx.imageSmoothingEnabled = false;
   displayCtx.imageSmoothingEnabled = false;
 
-  drawingCtx.fillStyle = "#FFFFFF";
+  drawingCtx.fillStyle = eraserColor;
   drawingCtx.fillRect(0, 0, drawingCanvas.width, drawingCanvas.height);
 
   penToolRadio.checked = true;
@@ -622,7 +857,7 @@ function init() {
 
   hexColorInput.value = color.replace("#", "");
   zoomInput.value = zoom.toFixed(1);
-  scaleInput.value = displayScale;
+  scaleInput.value = displayScale.toFixed(1);
   scaleInput.step = "0.1";
   canvasWidthInput.value = displayCanvas.width;
   canvasHeightInput.value = displayCanvas.height;
@@ -633,12 +868,17 @@ function init() {
 
   displayCanvas.style.imageRendering = "pixelated";
 
-  updateCursor();
-  redraw();
+  updatePixelateButtonState();
   updateColorDisplay();
-  saveState();
+
+  if (!loadCanvasFromLocalStorage()) {
+    setupCanvas(500, 500);
+  }
+
+  redraw();
   pan();
-  setupCanvas(500, 500);
+
+  setInterval(saveCanvasToLocalStorage, 10000);
 
   canvasWrapper.addEventListener("mousedown", (e) => {
     const direction = getResizeDirection(e);
@@ -652,18 +892,6 @@ function init() {
       startCanvasHeight = drawingCanvas.height;
       canvasWrapper.style.cursor =
         direction === "corner" ? "nwse-resize" : direction === "right" ? "ew-resize" : "ns-resize";
-    }
-  });
-
-  canvasWrapper.addEventListener("mousemove", (e) => {
-    if (!isResizing) {
-      const direction = getResizeDirection(e);
-      if (direction) {
-        canvasWrapper.style.cursor =
-          direction === "corner" ? "nwse-resize" : direction === "right" ? "ew-resize" : "ns-resize";
-      } else {
-        canvasWrapper.style.cursor = "default";
-      }
     }
   });
 
@@ -777,12 +1005,20 @@ function init() {
   });
 
   penSize.addEventListener("input", (e) => {
-    size = parseInt(e.target.value, 10);
-    if (isNaN(size) || size < 1) {
+    let newSize = parseInt(e.target.value, 10);
+    if (!isNaN(newSize) && newSize >= 1) {
+      size = newSize;
+      updateCursor();
+    }
+  });
+
+  penSize.addEventListener("blur", (e) => {
+    let newSize = parseInt(e.target.value, 10);
+    if (isNaN(newSize) || newSize < 1) {
       size = 1;
       penSize.value = 1;
+      updateCursor();
     }
-    updateCursor();
   });
 
   zoomInput.addEventListener("input", (e) => {
@@ -825,7 +1061,7 @@ function init() {
     let newScale = parseFloat(e.target.value);
     if (isNaN(newScale) || newScale < 0.1) {
       displayScale = 1;
-      e.target.value = 1;
+      e.target.value = displayScale.toFixed(1);
       canvasWrapper.style.width = `${drawingCanvas.width * displayScale}px`;
       canvasWrapper.style.height = `${drawingCanvas.height * displayScale}px`;
       displayCanvas.style.width = `${drawingCanvas.width * displayScale}px`;
@@ -1099,6 +1335,12 @@ function init() {
             restoreState(historyPointer);
           }
         }
+      } else if (!isInputFocused && e.key === "n") {
+        e.preventDefault();
+        drawingCtx.fillStyle = eraserColor;
+        drawingCtx.fillRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+        saveState();
+        redraw();
       } else if (e.ctrlKey && e.key === "y") {
         e.preventDefault();
 
@@ -1121,7 +1363,10 @@ function init() {
   });
 
   displayCanvas.addEventListener("mousedown", startDrawing);
+  displayCanvas.addEventListener("touchstart", startDrawing);
   window.addEventListener("mouseup", stopDrawing);
+  window.addEventListener("touchend", stopDrawing);
+  window.addEventListener("touchcancel", stopDrawing);
   window.addEventListener("mouseup", () => {
     if (isResizing) {
       isResizing = false;
@@ -1135,21 +1380,38 @@ function init() {
       let newHeight = startCanvasHeight;
 
       if (resizeDirection.includes("right") || resizeDirection.includes("corner")) {
-        newWidth = startCanvasWidth + (e.clientX - startResizeX);
+        newWidth = Math.round(startCanvasWidth + (e.clientX - startResizeX) / displayScale);
       }
       if (resizeDirection.includes("bottom") || resizeDirection.includes("corner")) {
-        newHeight = startCanvasHeight + (e.clientY - startResizeY);
+        newHeight = Math.round(startCanvasHeight + (e.clientY - startResizeY) / displayScale);
       }
 
       newWidth = Math.max(1, newWidth);
       newHeight = Math.max(1, newHeight);
 
       setupCanvas(newWidth, newHeight);
-    } else if (isDrawing || isSelecting || isDraggingSelection) {
+    } else if (isDrawing || isSelecting || isDraggingSelection || isResizingSelection) {
       draw(e);
     }
     updateCursor(e);
   });
+
+  window.addEventListener("touchmove", (e) => {
+    if (isDrawing || isSelecting || isDraggingSelection) {
+      draw(e);
+    }
+    updateCursor(e);
+  });
+
+  mainContent.addEventListener(
+    "touchmove",
+    (e) => {
+      if (isScrollLocked) {
+        e.preventDefault();
+      }
+    },
+    { passive: false }
+  );
 
   window.addEventListener(
     "wheel",
@@ -1160,10 +1422,12 @@ function init() {
 
           const scaleAmount = SCALE_AMOUNT_WHEEL;
           let newDisplayScale = e.deltaY < 0 ? displayScale + scaleAmount : displayScale - scaleAmount;
-          newDisplayScale = Math.max(1, newDisplayScale);
+          newDisplayScale = Math.max(0.1, newDisplayScale);
 
-          if (newDisplayScale !== displayScale) {
-            displayScale = newDisplayScale;
+          const roundedNewDisplayScale = parseFloat(newDisplayScale.toFixed(1));
+
+          if (roundedNewDisplayScale !== displayScale) {
+            displayScale = roundedNewDisplayScale;
             canvasWrapper.style.width = `${drawingCanvas.width * displayScale}px`;
             canvasWrapper.style.height = `${drawingCanvas.height * displayScale}px`;
             displayCanvas.style.width = `${drawingCanvas.width * displayScale}px`;
@@ -1172,7 +1436,7 @@ function init() {
             clampPan();
             redraw();
             updateCursor(e);
-            scaleInput.value = displayScale;
+            scaleInput.value = displayScale.toFixed(1);
           }
         } else if (e.ctrlKey) {
           e.preventDefault();
@@ -1223,21 +1487,40 @@ function init() {
 
   displayCanvas.addEventListener("mouseenter", () => {
     displayCanvas.style.cursor = "crosshair";
-    cursor.style.display = "block";
+    cursor.classList.remove("hidden");
   });
 
   displayCanvas.addEventListener("mouseleave", () => {
     displayCanvas.style.cursor = "default";
-    cursor.style.display = "none";
+    cursor.classList.add("hidden");
+  });
+
+  scrollLockToggle.classList.add("tool-button-active");
+
+  scrollLockToggle.addEventListener("click", () => {
+    isScrollLocked = !isScrollLocked;
+    if (isScrollLocked) {
+      scrollLockToggle.classList.add("tool-button-active");
+      scrollLockToggle.classList.remove("tool-button-inactive");
+      showNotification("Scroll locked");
+    } else {
+      scrollLockToggle.classList.remove("tool-button-active");
+      scrollLockToggle.classList.add("tool-button-inactive");
+      showNotification("Scroll unlocked");
+    }
+  });
+
+  helpButton.addEventListener("click", () => {
+    helpModal.classList.add("modal-active");
   });
 
   closeButton.addEventListener("click", () => {
-    helpModal.style.display = "none";
+    helpModal.classList.remove("modal-active");
   });
 
   window.addEventListener("click", (e) => {
     if (e.target == helpModal) {
-      helpModal.style.display = "none";
+      helpModal.classList.remove("modal-active");
     }
   });
 }

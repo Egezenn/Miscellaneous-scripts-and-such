@@ -109,7 +109,8 @@ let searchbar,
   translationProviderSelect,
   selectionMenu,
   selectionSearchButton,
-  selectionTranslateButton;
+  selectionTranslateButton,
+  helpButton;
 
 document.addEventListener("DOMContentLoaded", function () {
   searchbar = document.getElementById("searchbar");
@@ -122,6 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
   selectionMenu = document.getElementById("selection-menu");
   selectionSearchButton = document.getElementById("selection-search-button");
   selectionTranslateButton = document.getElementById("selection-translate-button");
+  helpButton = document.getElementById("helpButton");
 
   initialize();
 });
@@ -170,6 +172,20 @@ function setupEventListeners() {
   document.addEventListener("selectionchange", handleSelectionChange);
   selectionSearchButton.addEventListener("click", handleSelectionSearch);
   selectionTranslateButton.addEventListener("click", handleSelectionTranslate);
+  helpButton.addEventListener("click", showHelp);
+}
+
+function showHelp() {
+  alert(`Sözeviri - Egezenn
+Hızlı ve efektif, sözlük ve çeviri!
+
+Kısayollar:
+- Arrow Down: Otomatik tamamlama listesinde aşağı in
+- Arrow Up: Otomatik tamamlama listesinde yukarı çık
+- Enter: Otomatik tamamlama seçimini ara
+- Escape: Otomatik tamamlama listesini kapat
+- Enter (metin seçili iken): Seçili metni arat
+- Space (metin seçili iken): Seçili metni istenilen motorda çevirttirt`);
 }
 
 async function handleSearchButtonClick() {
@@ -363,7 +379,6 @@ async function fetchAndProcessWord(word) {
     }
   } catch (error) {
     console.error("Error fetching word data:", error);
-    searchResults.innerHTML = '<p class="error-message">Kelime aranırken bir hata oluştu.</p>';
     return false;
   }
 }
@@ -380,10 +395,6 @@ function createSearchResultNode(data, cacheKey) {
   const word = data?.[0]?.madde;
 
   if (!word) {
-    const noResultParagraph = document.createElement("p");
-    noResultParagraph.classList.add("error-message");
-    noResultParagraph.textContent = "Kelime bulunamadı.";
-    resultWrapper.appendChild(noResultParagraph);
     return resultWrapper;
   }
 
@@ -580,16 +591,7 @@ async function handleDocumentKeydown(e) {
 
   if (e.key === "h") {
     e.preventDefault();
-    alert(`Shortcuts:
-- Arrow Down: Otomatik tamamlama listesinde aşağı in
-- Arrow Up: Otomatik tamamlama listesinde yukarı çık
-- Enter: Otomatik tamamlama seçimini ara
-- Escape: Otomatik tamamlama listesini kapat
-- Enter (metin seçili iken): Seçili metni arat
-- Space (metin seçili iken): Seçili metni istenilen motorda çevirttirt
-
-Sözeviri - Egezenn
-Hızlı ve efektif, sözlük ve çeviri!`);
+    showHelp();
     return;
   }
 
@@ -622,8 +624,8 @@ function handleSelectionChange() {
     const range = selection.getRangeAt(0);
     const rect = range.getBoundingClientRect();
     selectionMenu.style.display = "block";
-    selectionMenu.style.top = `${rect.bottom + 5}px`;
-    selectionMenu.style.left = `${rect.left + (rect.width - selectionMenu.offsetWidth) / 2}px`;
+    selectionMenu.style.top = `calc(${rect.bottom + window.scrollY + 5}px + 3rem)`;
+    selectionMenu.style.left = `${rect.left + window.scrollX + (rect.width - selectionMenu.offsetWidth) / 2}px`;
   } else {
     selectionMenu.style.display = "none";
   }

@@ -1,4 +1,4 @@
-body {
+.app-body {
   align-items: flex-start;
   background-color: black;
   box-sizing: border-box;
@@ -24,7 +24,7 @@ body {
   display: none;
 }
 
-canvas {
+.main-canvas {
   background-color: white;
   display: block;
   flex-shrink: 0;
@@ -32,7 +32,7 @@ canvas {
   width: 100%;
 }
 
-#canvas-wrapper {
+.canvas-wrapper {
   border: 1px solid #555;
   box-sizing: content-box;
   height: 200px;
@@ -48,10 +48,17 @@ canvas {
   width: 100%;
 }
 
-.color-display {
+.color-display-box {
   border: 1px solid black;
   height: 20px;
   width: 20px;
+}
+
+.eraser-color-display-box {
+  border: 1px solid black;
+  height: 20px;
+  width: 20px;
+  background-color: white;
 }
 
 .tools {
@@ -72,8 +79,34 @@ canvas {
   z-index: 100;
 }
 
-.tools input[type="text"],
-.tools input[type="number"] {
+.tool-button {
+  background-color: #555;
+  border-radius: 4px;
+  border: 1px solid #777;
+  color: white;
+  cursor: pointer;
+  padding: 8px 12px;
+}
+
+.tool-button:hover {
+  background-color: #666;
+}
+
+.tool-button-active {
+  background-color: blue;
+  color: white;
+}
+
+.tool-button-active:hover {
+  background-color: #4444ff;
+}
+
+.tool-button-inactive {
+  background-color: gray;
+  color: black;
+}
+
+.tools-input {
   background-color: #333;
   border-radius: 4px;
   border: 1px solid #555;
@@ -82,22 +115,21 @@ canvas {
   width: 3rem;
 }
 
-.tools input[type="text"]:focus,
-.tools input[type="number"]:focus {
+.tools-input:focus {
   border-color: #007bff;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
   outline: none;
 }
 
-.tools input[type="checkbox"],
-.tools input[type="radio"] {
+.tools-checkbox-radio {
   accent-color: #007bff;
 }
 
-.tools label {
+.tools-label {
   color: #ccc;
   margin-right: 5px;
 }
+
 .modal {
   position: fixed;
   z-index: 1000;
@@ -108,6 +140,10 @@ canvas {
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.4);
   display: none;
+}
+
+.modal-active {
+  display: block;
 }
 
 .modal-content {
@@ -137,20 +173,7 @@ canvas {
   text-decoration: none;
 }
 
-#color-display {
-  width: 20px;
-  height: 20px;
-  border: 1px solid black;
-}
-
-#eraser-color-display {
-  width: 20px;
-  height: 20px;
-  border: 1px solid black;
-  background-color: white;
-}
-
-#drawing-canvas {
+.drawing-canvas-hidden {
   display: none;
 }
 
@@ -165,4 +188,55 @@ canvas {
   border-radius: 5px;
   z-index: 1001;
   display: none;
+}
+
+.notification-active {
+  display: block;
+}
+
+.header {
+  display: inline;
+}
+
+.custom-cursor {
+  position: absolute;
+  pointer-events: none;
+}
+
+.hidden {
+  display: none;
+}
+
+.cursor-size-1 {
+  transform: translate(0, 0);
+}
+
+.cursor-size-other {
+  transform: translate(-50%, -50%);
+}
+
+.cursor-round {
+  border-radius: 50%;
+}
+
+.cursor-square {
+  border-radius: 0;
+}
+
+.cursor-selection-base {
+  background-color: transparent;
+  border: 1px solid blue;
+  width: 16px;
+  height: 16px;
+  transform: translate(-50%, -50%);
+  background-image: none;
+}
+
+.cursor-fill-base {
+  background-color: #000000;
+  border: 1px solid red;
+  width: 16px;
+  height: 16px;
+  transform: translate(-50%, -50%);
+  background-image: none;
 }

@@ -1,6 +1,6 @@
 body {
   font-family: Arial, sans-serif;
-  margin: 0;
+  margin: 0 0 200px 0;
   padding: 20px;
   background-color: #f4f4f4;
   display: flex;
@@ -22,11 +22,19 @@ body {
 .search-container {
   position: relative;
   display: flex;
+  flex-wrap: wrap;
   margin-bottom: 20px;
+  gap: 10px;
+}
+
+.search-input-group {
+  display: flex;
+  flex-grow: 1;
 }
 
 .search-container input[type="text"] {
   flex-grow: 1;
+  min-width: 60px;
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 4px 0 0 4px;
@@ -59,9 +67,8 @@ body {
   background-color: rgb(90, 39, 39) !important;
 }
 
-#themeToggleButton {
+#themeToggleButton, #helpButton {
   border-radius: 4px;
-  margin-left: 10px;
 }
 
 .autocomplete-suggestions {
@@ -106,8 +113,14 @@ body {
   margin: 20px 0;
 }
 
+.search-results > div {
+  background-color: #f8f8f8;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
 .word-entry {
-  background-color: #f9f9f9;
+  background-color: #f4f4f4;
   border: 1px solid #eee;
   border-radius: 6px;
   padding: 15px;
@@ -123,6 +136,14 @@ body {
 .word-entry p {
   margin-bottom: 5px;
   line-height: 1.6;
+}
+
+.word-entry > p:first-of-type {
+  margin-top: 0px;
+}
+
+.word-entry > p:last-of-type {
+  margin-bottom: 0px;
 }
 
 .word-entry strong {
@@ -204,6 +225,10 @@ body.dark-theme .search-results hr {
   background-color: #555;
 }
 
+body.dark-theme .search-results > div {
+  background-color: #444;
+}
+
 body.dark-theme .word-entry {
   background-color: #4a4a4a;
   border-color: #555;
@@ -237,7 +262,6 @@ body.dark-theme .autocomplete-suggestions::-webkit-scrollbar-thumb:hover {
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
-  margin-left: 10px;
 }
 
 .delete-query-button:hover {
@@ -245,7 +269,6 @@ body.dark-theme .autocomplete-suggestions::-webkit-scrollbar-thumb:hover {
 }
 
 #targetLanguageSelect {
-  margin-left: 10px;
   padding: 12px;
   border-radius: 4px;
   border: 1px solid #ddd;
@@ -261,7 +284,6 @@ body.dark-theme #targetLanguageSelect {
 }
 
 #translationProviderSelect {
-  margin-left: 10px;
   padding: 12px;
   border-radius: 4px;
   border: 1px solid #ddd;
@@ -277,7 +299,7 @@ body.dark-theme #translationProviderSelect {
 }
 
 .selection-menu {
-  position: fixed;
+  position: absolute;
   display: none;
   background-color: #333;
   border-radius: 5px;

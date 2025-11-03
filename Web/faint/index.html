@@ -5,35 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Faint</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
   </head>
-  <body>
+  <body class="app-body">
     <div class="tools">
-      <div>Size: <input type="number" id="pen-size" min="1" max="100" value="1" /></div>
-      <label> <input type="radio" name="tool-mode" id="pen-tool-radio" value="pen" checked /> A </label>
-      <input type="text" id="hex-color-input" placeholder="000000" maxlength="6" />
-      <div id="color-display"></div>
-      <label> <input type="radio" name="tool-mode" id="eraser-tool-radio" value="eraser" /> E </label>
-      <input type="text" id="eraser-hex-color-input" placeholder="FFFFFF" maxlength="6" value="FFFFFF" />
-      <div id="eraser-color-display"></div>
-      <label> <input type="radio" name="tool-mode" id="selection-tool-radio" value="selection" /> S </label>
-      <label> <input type="radio" name="tool-mode" id="fill-tool-radio" value="fill" /> F </label>
-      <div>Zoom: <input type="number" id="zoom-input" step="0.1" value="1" min="1" /></div>
-      <div>Scale: <input type="number" id="scale-input" step="0.1" value="1" min="0.1" /></div>
-      <div>X: <input type="number" id="canvas-width-input" min="1" value="500" /></div>
-      <div>Y: <input type="number" id="canvas-height-input" min="1" value="500" /></div>
-      <button id="pixel-pen-toggle">Pixelate</button>
+      <div>Size: <input type="number" id="pen-size" min="1" max="100" class="tools-input" /></div>
+      <label class="tools-label"> <input type="radio" name="tool-mode" id="pen-tool-radio" value="pen" checked class="tools-checkbox-radio" /> A </label>
+      <input type="text" id="hex-color-input" placeholder="000000" maxlength="6" class="tools-input" />
+      <div id="color-display" class="color-display-box"></div>
+      <label class="tools-label"> <input type="radio" name="tool-mode" id="eraser-tool-radio" value="eraser" class="tools-checkbox-radio" /> E </label>
+      <input type="text" id="eraser-hex-color-input" placeholder="FFFFFF" maxlength="6" value="FFFFFF" class="tools-input" />
+      <div id="eraser-color-display" class="eraser-color-display-box"></div>
+      <label class="tools-label"> <input type="radio" name="tool-mode" id="selection-tool-radio" value="selection" class="tools-checkbox-radio" /> S </label>
+      <label class="tools-label"> <input type="radio" name="tool-mode" id="fill-tool-radio" value="fill" class="tools-checkbox-radio" /> F </label>
+      <div>Zoom: <input type="number" id="zoom-input" step="0.1" value="1" min="1" class="tools-input" /></div>
+      <div>Scale: <input type="number" id="scale-input" step="0.1" value="1" min="0.1" class="tools-input" /></div>
+      <div>X: <input type="number" id="canvas-width-input" min="1" value="500" class="tools-input" /></div>
+      <div>Y: <input type="number" id="canvas-height-input" min="1" value="500" class="tools-input" /></div>
+      <button id="pixel-pen-toggle" class="tool-button">Pixelate</button>
+      <button id="scroll-lock-toggle" class="tool-button">Lock Scroll</button>
+      <button id="help-button" class="tool-button">?</button>
     </div>
     <div class="main-content">
-      <div id="canvas-wrapper">
+      <div id="canvas-wrapper" class="canvas-wrapper">
         <div class="limit-visualizer">
-          <canvas id="canvas" width="500" height="500"></canvas>
-          <canvas id="drawing-canvas" width="500" height="500"></canvas>
+          <canvas id="canvas" width="500" height="500" class="main-canvas"></canvas>
+          <canvas id="drawing-canvas" width="500" height="500" class="drawing-canvas-hidden"></canvas>
         </div>
       </div>
     </div>
     <div id="help-modal" class="modal">
       <div class="modal-content">
         <span class="close-button">&times;</span>
+        <h1 class="header"><b style="color: red">F</b><b style="color: orange">a</b><b style="color: yellow">i</b><b style="color: green"></b><b style="color: blue">n</b><b style="color: violet">t</b></h1>
+        <p><b style="color: red">F</b>ast p<b style="color: orange">a</b><b style="color: yellow">i</b><b style="color: green"></b><b style="color: blue">n</b><b style="color: violet">t</b> - Egezenn</p>
+        <p>Paint clone with a focus on ease of use, speed and simplicity.</p>
         <h1>Shortcuts</h1>
         <div id="help-text">
           <h2>Tools</h2>
@@ -63,6 +69,7 @@
           <h2>Canvas/File</h2>
           <p>Ctrl + O: Open image</p>
           <p>Ctrl + S: Save image</p>
+          <p>N: Clear canvas</p>
 
           <h2>Undo/Redo</h2>
           <p>Ctrl + Z: Undo</p>
@@ -79,13 +86,10 @@
           <p>Alt + Mousewheel: Pan up/down</p>
           <p>Plain Mousewheel: Document scroll</p>
         </div>
-        <h1><b style="color: red">F</b><b style="color: orange">a</b><b style="color: yellow">i</b><b style="color: green"></b><b style="color: blue">n</b><b style="color: violet">t</b></h1>
-        <p><b style="color: red">F</b>ast p<b style="color: orange">a</b><b style="color: yellow">i</b><b style="color: green"></b><b style="color: blue">n</b><b style="color: violet">t</b> - Egezenn</p>
-        <p>Paint clone with a focus on ease of use, speed and simplicity.</p>
       </div>
     </div>
     <div id="notification-box" class="notification"></div>
-    <script src="script.js?v=1.1"></script>
+    <script src="script.js"></script>
   </body>
 </html>
 <!-- TODO: Better cursors with preview canvas, color picker, predefined colors & saved colors, shapes, text, position display, flip, image stretch & selection stretch, color inversion -->
