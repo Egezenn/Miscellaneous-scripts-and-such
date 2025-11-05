@@ -87,7 +87,7 @@ const languages = {
 };
 
 const providers = {
-  google: "Google",
+  google: "Google Translate",
   deepl: "DeepL",
   libre: "LibreTranslate",
 };
@@ -99,31 +99,40 @@ let originalInputValue = "";
 let lastSearchedWord = "";
 let isSearching = false;
 
-// DOM Elements
 let searchbar,
   searchButton,
   searchResults,
   autocompleteSuggestions,
-  themeToggleButton,
+  themeSelect,
   targetLanguageSelect,
   translationProviderSelect,
   selectionMenu,
   selectionSearchButton,
   selectionTranslateButton,
-  helpButton;
+  helpButton,
+  settingsButton,
+  settingsModal,
+  closeButton,
+  helpModal,
+  helpModalCloseButton;
 
 document.addEventListener("DOMContentLoaded", function () {
   searchbar = document.getElementById("searchbar");
   searchButton = document.getElementById("searchButton");
   searchResults = document.getElementById("searchResults");
   autocompleteSuggestions = document.getElementById("autocompleteSuggestions");
-  themeToggleButton = document.getElementById("themeToggleButton");
+  themeSelect = document.getElementById("themeSelect");
   targetLanguageSelect = document.getElementById("targetLanguageSelect");
   translationProviderSelect = document.getElementById("translationProviderSelect");
   selectionMenu = document.getElementById("selection-menu");
   selectionSearchButton = document.getElementById("selection-search-button");
   selectionTranslateButton = document.getElementById("selection-translate-button");
   helpButton = document.getElementById("helpButton");
+  settingsButton = document.getElementById("settingsButton");
+  settingsModal = document.getElementById("settingsModal");
+  closeButton = document.querySelector(".close-button");
+  helpModal = document.getElementById("helpModal");
+  helpModalCloseButton = helpModal.querySelector(".close-button");
 
   initialize();
 });
@@ -159,7 +168,7 @@ function updateWordSearchCacheStructure() {
 function setupEventListeners() {
   searchbar.addEventListener("input", displayAutocompleteSuggestions);
   searchButton.addEventListener("click", handleSearchButtonClick);
-  themeToggleButton.addEventListener("click", toggleTheme);
+  themeSelect.addEventListener("change", () => setTheme(themeSelect.value));
   searchbar.addEventListener("keydown", handleSearchbarKeydown);
   document.addEventListener("click", handleDocumentClick);
   targetLanguageSelect.addEventListener("change", () =>
@@ -173,19 +182,24 @@ function setupEventListeners() {
   selectionSearchButton.addEventListener("click", handleSelectionSearch);
   selectionTranslateButton.addEventListener("click", handleSelectionTranslate);
   helpButton.addEventListener("click", showHelp);
+  settingsButton.addEventListener("click", () => {
+    settingsModal.style.display = "block";
+    closeButton.focus();
+  });
+  closeButton.addEventListener("click", () => (settingsModal.style.display = "none"));
+  helpModalCloseButton.addEventListener("click", () => (helpModal.style.display = "none"));
+  window.addEventListener("click", (event) => {
+    if (event.target == settingsModal) {
+      settingsModal.style.display = "none";
+    } else if (event.target == helpModal) {
+      helpModal.style.display = "none";
+    }
+  });
 }
 
 function showHelp() {
-  alert(`Sözeviri - Egezenn
-Hızlı ve efektif, sözlük ve çeviri!
-
-Kısayollar:
-- Arrow Down: Otomatik tamamlama listesinde aşağı in
-- Arrow Up: Otomatik tamamlama listesinde yukarı çık
-- Enter: Otomatik tamamlama seçimini ara
-- Escape: Otomatik tamamlama listesini kapat
-- Enter (metin seçili iken): Seçili metni arat
-- Space (metin seçili iken): Seçili metni istenilen motorda çevirttirt`);
+  helpModal.style.display = "block";
+  helpModalCloseButton.focus();
 }
 
 async function handleSearchButtonClick() {
@@ -412,9 +426,26 @@ function createSearchResultNode(data, cacheKey) {
   deleteButton.classList.add("delete-query-button");
   deleteButton.addEventListener("click", (e) => {
     e.stopPropagation();
-    delete wordSearchCache[cacheKey];
+    const currentWord = cacheKey;
+    if (lastSearchedWord === currentWord) {
+      lastSearchedWord = "";
+    }
+    delete wordSearchCache[currentWord];
     localStorage.setItem("wordSearchCache", JSON.stringify(wordSearchCache));
+
+    const allDeleteButtons = Array.from(document.querySelectorAll(".delete-query-button"));
+    const currentIndex = allDeleteButtons.indexOf(e.target);
+
     loadAndRenderSavedQueries();
+
+    const newDeleteButtons = document.querySelectorAll(".delete-query-button");
+
+    if (newDeleteButtons.length > 0) {
+      const nextButtonIndex = Math.min(currentIndex, newDeleteButtons.length - 1);
+      newDeleteButtons[nextButtonIndex].focus();
+    } else {
+      searchbar.focus();
+    }
   });
   headerContainer.appendChild(deleteButton);
   resultWrapper.appendChild(headerContainer);
@@ -475,23 +506,21 @@ function loadAndRenderSavedQueries() {
   });
 }
 
-function toggleTheme() {
-  document.body.classList.toggle("dark-theme");
-  localStorage.setItem("theme", document.body.classList.contains("dark-theme") ? "dark" : "light");
+function setTheme(theme) {
+  document.body.classList.toggle("dark-theme", theme === "dark");
+  localStorage.setItem("theme", theme);
+  themeSelect.value = theme;
 }
 
 function loadTheme() {
-  const savedTheme = localStorage.getItem("theme");
-  if (savedTheme === "dark" || !savedTheme) {
-    document.body.classList.add("dark-theme");
-  }
+  const savedTheme = localStorage.getItem("theme") || "dark";
+  setTheme(savedTheme);
 }
 
 async function handleSearchbarKeydown(e) {
   let x = autocompleteSuggestions.getElementsByTagName("div");
 
   if (e.keyCode == 40) {
-    // Arrow Down
     e.preventDefault();
     if (currentFocus === -1) {
       originalInputValue = searchbar.value;
@@ -499,12 +528,10 @@ async function handleSearchbarKeydown(e) {
     currentFocus++;
     addActive(x);
   } else if (e.keyCode == 38) {
-    // Arrow Up
     e.preventDefault();
     currentFocus--;
     addActive(x);
   } else if (e.keyCode == 13) {
-    // Enter
     e.preventDefault();
     if (currentFocus > -1 && x && x[currentFocus]) {
       x[currentFocus].click();
@@ -521,7 +548,6 @@ async function handleSearchbarKeydown(e) {
       }
     }
   } else if (e.keyCode == 27) {
-    // Escape
     closeAllLists();
     if (originalInputValue !== "") {
       searchbar.value = originalInputValue;
@@ -595,6 +621,14 @@ async function handleDocumentKeydown(e) {
     return;
   }
 
+  if (e.key === "Escape") {
+    if (settingsModal.style.display === "block") {
+      settingsModal.style.display = "none";
+    } else if (helpModal.style.display === "block") {
+      helpModal.style.display = "none";
+    }
+  }
+
   const selection = window.getSelection().toString().trim();
   if (selection.length > 0) {
     if (e.code === "Enter") {
@@ -613,6 +647,9 @@ async function handleDocumentKeydown(e) {
       handleTranslation(provider, targetLang, selection);
       window.getSelection().removeAllRanges();
     }
+  } else if (e.key === "s") {
+    settingsModal.style.display = "block";
+    closeButton.focus();
   }
 }
 
@@ -620,7 +657,7 @@ function handleSelectionChange() {
   const selection = window.getSelection();
   const selectedText = selection.toString().trim();
 
-  if (selectedText.length > 0) {
+  if (selectedText.length > 0 && searchResults.contains(selection.anchorNode)) {
     const range = selection.getRangeAt(0);
     const rect = range.getBoundingClientRect();
     selectionMenu.style.display = "block";

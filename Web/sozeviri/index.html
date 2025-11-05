@@ -14,17 +14,50 @@
           <input type="text" id="searchbar" autocomplete="off" />
           <button id="searchButton">Ara</button>
         </div>
-        <select id="targetLanguageSelect"></select>
-        <select id="translationProviderSelect"></select>
-        <button id="themeToggleButton">Tema</button>
+        <button id="settingsButton">Ayarlar</button>
         <button id="helpButton">?</button>
         <div id="autocompleteSuggestions" class="autocomplete-suggestions"></div>
       </div>
       <div id="searchResults" class="search-results"></div>
     </div>
     <div id="selection-menu" class="selection-menu">
-      <button id="selection-search-button">Ara</button>
-      <button id="selection-translate-button">Çevir</button>
+      <button id="selection-search-button">Ara <span class="shortcut-hint">(Enter)</span></button>
+      <button id="selection-translate-button">Çevir <span class="shortcut-hint">(Space)</span></button>
+    </div>
+    <div id="settingsModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" tabindex="0">&times;</span>
+        <h2>Ayarlar</h2>
+        <div class="settings-grid">
+          <label for="targetLanguageSelect">Hedef Dil:</label>
+          <select id="targetLanguageSelect" class="styled-select"></select>
+          <label for="translationProviderSelect">Çeviri Servisi:</label>
+          <select id="translationProviderSelect" class="styled-select"></select>
+          <label for="themeSelect">Tema:</label>
+          <select id="themeSelect" class="styled-select">
+            <option value="dark">Koyu</option>
+            <option value="light">Açık</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div id="helpModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h1>Sözeviri</h1>
+        <p>Hızlı ve efektif, <b>Söz</b>lük ve Ç<b>eviri</b> - Egezenn</p>
+        <p><a href="https://github.com/Egezenn/Miscellaneous-scripts-and-such/tree/main/Web/faint">Kaynak</a></p>
+        <h3>Kısayollar:</h3>
+        <ul>
+          <li><b>Aşağı/Yukarı Ok:</b> Otomatik tamamlama listesinde gezin</li>
+          <li><b>Enter:</b> Otomatik tamamlama seçimini veya arama çubuğundaki kelimeyi ara</li>
+          <li><b>Escape:</b> Otomatik tamamlama listesini veya açık pencereleri kapat</li>
+          <li><b>S:</b> Ayarlar penceresini aç</li>
+          <li><b>H:</b> Yardım penceresini aç</li>
+          <li><b>Metin Seçimi + Enter:</b> Seçili metni arat</li>
+          <li><b>Metin Seçimi + Space:</b> Seçili metni çevir</li>
+        </ul>
+      </div>
     </div>
     <script src="script.js"></script>
   </body>
