@@ -1,8 +1,4 @@
-/**
- * Import the Nerdfonts icon font.
- * Ref https://www.nerdfonts.com/cheat-sheet for a cheatsheet of available Nerdfonts icons.
- */
-@import "https://www.nerdfonts.com/assets/css/webfont.css";
+@import url("https://www.nerdfonts.com/assets/css/webfont.css");
 
 body {
   color: rgb(255 255 255 / 90%);
@@ -119,7 +115,6 @@ body,
 
 .media {
   color: #cbd35e;
-  display: inline;
   border: 1px solid rgb(203 211 94 / 30%);
   padding: 0 6px;
   height: 100%;
@@ -128,7 +123,6 @@ body,
 }
 
 .media > * {
-  display: inline;
   height: 100%;
   padding: 0 6px;
   border-right: 1px solid rgb(203 211 94 / 30%);
@@ -137,11 +131,11 @@ body,
 }
 
 .media > *:first-child {
-  padding-left: 0px;
+  padding-left: 0;
 }
 
 .media > *:last-child {
-  padding-right: 0px;
+  padding-right: 0;
   border: none;
 }
 
@@ -174,7 +168,7 @@ body,
 }
 
 .cpu .high-usage {
-  color: #ff0000;
+  color: #f00;
 }
 
 .memory {
@@ -212,6 +206,7 @@ body,
   display: flex;
   align-items: center;
 }
+
 .disk > .first {
   color: #6495ed;
   border: 1px solid rgb(100 149 237 / 30%);

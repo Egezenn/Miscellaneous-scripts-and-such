@@ -1,16 +1,16 @@
+/* stylelint-disable no-duplicate-selectors */
 :root {
-  --minimizer-color-dir-l1: rgba(138, 92, 245, .1);
-  --minimizer-color-dir-l1-hover: rgba(138, 92, 245, .2);
-  --minimizer-color-dir-l2: rgba(138, 92, 245, .3);
-  --minimizer-color-dir-l2-hover: rgba(138, 92, 245, .4);
-  --minimizer-color-dir-file-tag: rgba(138, 92, 245, .5);
-  --minimizer-color-vt-file: rgba(245, 92, 138, 1);
-  --minimizer-color-vt-file-hidden: rgba(138, 92, 245, .6);
+  --minimizer-color-dir-l1: rgb(138 92 245 / 10%);
+  --minimizer-color-dir-l1-hover: rgb(138 92 245 / 20%);
+  --minimizer-color-dir-l2: rgb(138 92 245 / 30%);
+  --minimizer-color-dir-l2-hover: rgb(138 92 245 / 40%);
+  --minimizer-color-dir-file-tag: rgb(138 92 245 / 50%);
+  --minimizer-color-vt-file: rgb(245 92 138 / 100%);
+  --minimizer-color-vt-file-hidden: rgb(138 92 245 / 60%);
 }
 
 /* i don't plan on porting this to mobile */
-@media only screen and (device-aspect-ratio: 16/9) {
-
+@media only screen and (device-aspect-ratio = 16/9) {
   /* useless buttons & headers (imo) */
   .view-header,
   .workspace-sidedock-vault-profile,
@@ -43,14 +43,14 @@
   .quiet-outline,
   #calendar-container,
   #calendar-container>.nav {
-    padding: 0px !important;
-    margin: 0px !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
   /* widget containers */
   .workspace-leaf-content .view-content,
   .nav-files-container.node-insert-event.show-unsupported {
-    padding: 0px !important;
+    padding: 0 !important;
   }
 
   /* search widget */
@@ -58,12 +58,12 @@
   .search-results-info,
   .search-result-container.mod-global-search.node-insert-event,
   .suggestion-container.mod-search-suggestion>div {
-    margin: 0px !important;
-    padding: 0px !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .search-result-file-match {
-    padding: 5px 0px !important;
+    padding: 5px 0 !important;
   }
 
   /* i'm not **that** precise cmon */
@@ -80,28 +80,28 @@
   }
 
   .obsidian-vertical-tabs-container {
-    padding: 0px !important;
+    padding: 0 !important;
   }
 
   .obsidian-vertical-tabs-container>div>.tree-item.is-group,
   .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children {
-    margin: 0px !important;
-    border: 0px !important;
+    margin: 0 !important;
+    border: 0 !important;
   }
 
   .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-self.is-clickable {
-    margin: 0px !important;
-    padding: 0px 0px 0px 24px !important;
+    margin: 0 !important;
+    padding: 0 0 0 24px !important;
   }
 
   .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab {
-    margin: 0px !important;
-    border: 0px !important;
+    margin: 0 !important;
+    border: 0 !important;
   }
 
   .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab>.tree-item-self.is-clickable {
-    padding: 0px 0px 0px 24px !important;
-    margin: 0px !important;
+    padding: 0 0 0 24px !important;
+    margin: 0 !important;
   }
 
   .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab>.tree-item-children {
@@ -130,19 +130,19 @@
   }
 
   .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-self.is-clickable>.tree-item-flair-outer>.clickable-icon.action-button.action-eye>svg {
-    color: #000000 !important;
-    background-color: #FF0000;
+    color: #000 !important;
+    background-color: #F00;
     border-radius: 8px !important;
   }
 
   .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-self.is-clickable>.tree-item-flair-outer>.clickable-icon.action-button.action-eye-off>svg {
-    color: #000000 !important;
-    background-color: #00FF00 !important;
+    color: #000 !important;
+    background-color: #0F0 !important;
     border-radius: 8px !important;
   }
 
   .workspace-split.mod-vertical.mod-root {
-    background: radial-gradient(rgba(0, 255, 255, .05), rgba(255, 0, 255, .05)) !important;
+    background: radial-gradient(rgb(0 255 255 / 5%), rgb(255 0 255 / 5%)) !important;
   }
 
   /* slide note */
@@ -160,6 +160,7 @@
   }
 
   /* HyperMD codeblocks disable backtick lines */
+
   /* can still edit them if you use right & left instead of up & down,
   makes it whole lot easier to actually type imho */
   .HyperMD-codeblock-begin,
@@ -175,13 +176,13 @@
   /* folder views */
   .tree-item-self.mod-collapsible.nav-folder-title,
   .tree-item-self.nav-file-title {
-    margin: 0px !important;
-    padding: 0px !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .tree-item-children.nav-folder-children {
     margin-left: 6px !important;
-    border: 0px !important;
+    border: 0 !important;
   }
 
   /* directory hierarchy coloring
@@ -215,17 +216,17 @@
   }
 
   .workspace-tab-header-container {
-    padding-left: 0px !important;
+    padding-left: 0 !important;
   }
 
   .workspace-tab-header-container>.workspace-tab-header-container-inner,
   .workspace-tab-header-new-tab {
-    padding: 0px !important;
-    margin: 0px !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
   .workspace-tab-header-container>.workspace-tab-header-container-inner>.workspace-tab-header.tappable {
-    padding: 0px !important;
+    padding: 0 !important;
   }
 
   .workspace-tab-header {
@@ -234,8 +235,9 @@
 
   /* calculates the main box bigger and it overflows, modify the variable used to calculate its size */
   .view-content>.markdown-source-view>.cm-editor>div.cm-scroller {
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+
     /* padding: 0px !important; */
   }
 
@@ -244,6 +246,7 @@
   } */
 
   /* misc */
+
   /* positioning latex blocks to left instead of center */
   mjx-container[jax="CHTML"][display="true"] {
     text-align: left !important;
@@ -254,12 +257,14 @@
   }
 
   /* readable line length, doesn't account sidebars */
+
   /* .view-content>.markdown-source-view>.cm-editor>div.cm-scroller>.cm-sizer {
     margin: 0px 300px !important;
   } */
 
 
   /* bigger math */
+
   /* mjx-math {
     font-size: 130% !important;
     font-weight: normal !important;

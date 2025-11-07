@@ -51,6 +51,7 @@ div[class^="newMessagesBar"] {
 }
 
 /* condenses channels, a lot [leads to wrong height calculations] */
+
 /* dividers and spacing */
 div[class^="sectionDivider"],
 div[style="height: 16px;"],
@@ -74,7 +75,8 @@ div[aria-label="Stage (Locked) icon"] {
 }
 
 /* remove pads&margins from channel&member lists */
-/*div[class^="channelTextArea"],*/
+
+/* div[class^="channelTextArea"], */
 ul[aria-label="Channels"]>*,
 ul[aria-label="Channels"]>li>div>*,
 /* ul[aria-label="Channels"]>li>div>*>*, */
@@ -129,14 +131,12 @@ div[class^="contents"] > span[class*="timestamp"] {
   float: right !important;
   width: 100% !important;
 }
-h3 > span[class*="timestamp"] {
-  display: absolute !important;
-}
 
 /* white usernames */
 span[class*="username"] {
   color: #d0d0d0 !important;
 }
+
 span[class*="usernameGradient"] {
   background: none !important;
   -webkit-text-fill-color: #d0d0d0 !important;

@@ -42,8 +42,8 @@
 }
 
 .limit-visualizer {
-  border-bottom: 4px dashed rgb(0, 255, 255);
-  border-right: 4px dashed rgb(0, 255, 255);
+  border-bottom: 4px dashed rgb(0 255 255);
+  border-right: 4px dashed rgb(0 255 255);
   height: 100%;
   width: 100%;
 }
@@ -64,7 +64,7 @@
 .tools {
   align-items: center;
   background-color: #33333380;
-  border-bottom: 1px solid #333333;
+  border-bottom: 1px solid #333;
   box-sizing: border-box;
   color: white;
   display: flex;
@@ -98,7 +98,7 @@
 }
 
 .tool-button-active:hover {
-  background-color: #4444ff;
+  background-color: #44f;
 }
 
 .tool-button-inactive {
@@ -117,7 +117,7 @@
 
 .tools-input:focus {
   border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+  box-shadow: 0 0 0 2px rgb(0 123 255 / 50%);
   outline: none;
 }
 
@@ -138,7 +138,7 @@
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgb(0 0 0 / 40%);
   display: none;
 }
 
@@ -156,7 +156,7 @@
   padding: 20px;
   position: relative;
   top: 20px;
-  width: 80%;
+  width: 100%;
 }
 
 .close-button {
@@ -224,16 +224,16 @@
 }
 
 .cursor-selection-base {
-  background-color: transparent;
-  border: 1px solid blue;
-  width: 16px;
-  height: 16px;
   transform: translate(-50%, -50%);
+  background-color: transparent;
   background-image: none;
+  border: 1px solid blue;
+  height: 16px;
+  width: 16px;
 }
 
 .cursor-fill-base {
-  background-color: #000000;
+  background-color: #000;
   border: 1px solid red;
   width: 16px;
   height: 16px;

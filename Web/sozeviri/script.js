@@ -1,5 +1,6 @@
 const AUTOCOMPLETE_API_URL = "https://sozluk.gov.tr/autocomplete.json";
 const WORD_SEARCH_API_URL = "https://sozluk.gov.tr/gts?ara=";
+const FAILED_QUERIES_KEY = "failedQueries";
 
 const languages = {
   af: "Afrikaans",
@@ -94,10 +95,12 @@ const providers = {
 
 let autocompleteCache = null;
 let wordSearchCache = JSON.parse(localStorage.getItem("wordSearchCache")) || {};
+let translationCache = JSON.parse(localStorage.getItem("translationCache")) || {};
 let currentFocus = -1;
 let originalInputValue = "";
 let lastSearchedWord = "";
 let isSearching = false;
+let blockAutocomplete = false;
 
 let searchbar,
   searchButton,
@@ -114,11 +117,25 @@ let searchbar,
   settingsModal,
   closeButton,
   helpModal,
-  helpModalCloseButton;
-
+  helpModalCloseButton,
+  googleApiKeyInput,
+  deeplApiKeyInput,
+  libreApiKeyInput,
+  secondaryLanguagesInput,
+  errorModal,
+  errorModalCloseButton,
+  errorMessageElement;
 document.addEventListener("DOMContentLoaded", function () {
+  if ("serviceWorker" in navigator && (window.location.protocol === "http:" || window.location.protocol === "https:")) {
+    navigator.serviceWorker
+      .register("service-worker.js")
+      .then((reg) => console.log("Service Worker Registered", reg))
+      .catch((err) => console.error("Service Worker Error", err));
+  }
+
   searchbar = document.getElementById("searchbar");
   searchButton = document.getElementById("searchButton");
+  translateButton = document.getElementById("translateButton");
   searchResults = document.getElementById("searchResults");
   autocompleteSuggestions = document.getElementById("autocompleteSuggestions");
   themeSelect = document.getElementById("themeSelect");
@@ -133,7 +150,13 @@ document.addEventListener("DOMContentLoaded", function () {
   closeButton = document.querySelector(".close-button");
   helpModal = document.getElementById("helpModal");
   helpModalCloseButton = helpModal.querySelector(".close-button");
-
+  googleApiKeyInput = document.getElementById("googleApiKey");
+  deeplApiKeyInput = document.getElementById("deeplApiKey");
+  libreApiKeyInput = document.getElementById("libreApiKey");
+  secondaryLanguagesInput = document.getElementById("secondaryLanguagesInput");
+  errorModal = document.getElementById("errorModal");
+  errorModalCloseButton = errorModal.querySelector(".close-button");
+  errorMessageElement = document.getElementById("errorMessage");
   initialize();
 });
 
@@ -141,14 +164,15 @@ function initialize() {
   updateWordSearchCacheStructure();
   setupEventListeners();
   loadTheme();
-  loadAndRenderSavedQueries();
+  loadAndRenderSavedItems();
+  retryFailedQueries();
   populateLanguages();
   populateProviders();
+  loadApiKeys();
   handleInitialQuery();
   fetchAutocompleteData();
   searchbar.focus();
 }
-
 function updateWordSearchCacheStructure() {
   let cacheNeedsUpdate = false;
   Object.keys(wordSearchCache).forEach((word) => {
@@ -165,9 +189,37 @@ function updateWordSearchCacheStructure() {
   }
 }
 
+function saveFailedQuery(query) {
+  const failedQueries = getFailedQueries();
+  if (!failedQueries.includes(query)) {
+    failedQueries.push(query);
+    localStorage.setItem(FAILED_QUERIES_KEY, JSON.stringify(failedQueries));
+  }
+}
+
+function getFailedQueries() {
+  return JSON.parse(localStorage.getItem(FAILED_QUERIES_KEY)) || [];
+}
+
+function clearFailedQueries() {
+  localStorage.removeItem(FAILED_QUERIES_KEY);
+}
+
+async function retryFailedQueries() {
+  const failedQueries = getFailedQueries();
+  if (failedQueries.length > 0) {
+    console.log("Retrying failed queries:", failedQueries);
+    clearFailedQueries();
+    for (const query of failedQueries) {
+      await fetchAndProcessWord(query);
+    }
+  }
+}
+
 function setupEventListeners() {
   searchbar.addEventListener("input", displayAutocompleteSuggestions);
   searchButton.addEventListener("click", handleSearchButtonClick);
+  translateButton.addEventListener("click", handleTranslateButtonClick);
   themeSelect.addEventListener("change", () => setTheme(themeSelect.value));
   searchbar.addEventListener("keydown", handleSearchbarKeydown);
   document.addEventListener("click", handleDocumentClick);
@@ -188,13 +240,28 @@ function setupEventListeners() {
   });
   closeButton.addEventListener("click", () => (settingsModal.style.display = "none"));
   helpModalCloseButton.addEventListener("click", () => (helpModal.style.display = "none"));
+  errorModalCloseButton.addEventListener("click", () => (errorModal.style.display = "none"));
+  googleApiKeyInput.addEventListener("input", () => localStorage.setItem("googleApiKey", googleApiKeyInput.value));
+  deeplApiKeyInput.addEventListener("input", () => localStorage.setItem("deeplApiKey", deeplApiKeyInput.value));
+  libreApiKeyInput.addEventListener("input", () => localStorage.setItem("libreApiKey", libreApiKeyInput.value));
+  secondaryLanguagesInput.addEventListener("input", () =>
+    localStorage.setItem("secondaryLanguages", secondaryLanguagesInput.value)
+  );
   window.addEventListener("click", (event) => {
     if (event.target == settingsModal) {
       settingsModal.style.display = "none";
     } else if (event.target == helpModal) {
       helpModal.style.display = "none";
+    } else if (event.target == errorModal) {
+      errorModal.style.display = "none";
     }
   });
+}
+
+function showErrorModal(message) {
+  errorMessageElement.textContent = message;
+  errorModal.style.display = "block";
+  errorModalCloseButton.focus();
 }
 
 function showHelp() {
@@ -240,6 +307,7 @@ async function fetchAutocompleteData() {
     return data;
   } catch (error) {
     console.error("Error fetching autocomplete data:", error);
+    showErrorModal("Otomatik tamamlama verileri getirilirken bir hata oluştu: " + error.message);
     return null;
   }
 }
@@ -290,6 +358,10 @@ function closeAllLists(elmnt) {
 }
 
 async function displayAutocompleteSuggestions() {
+  if (blockAutocomplete) {
+    blockAutocomplete = false;
+    return;
+  }
   const query = searchbar.value.toLowerCase();
   closeAllLists();
   autocompleteSuggestions.innerHTML = "";
@@ -354,7 +426,7 @@ async function searchWord() {
     } else if (wordSearchCache[word]) {
       wordSearchCache[word].timestamp = Date.now();
       localStorage.setItem("wordSearchCache", JSON.stringify(wordSearchCache));
-      loadAndRenderSavedQueries();
+      loadAndRenderSavedItems();
       window.scrollTo(0, 0);
       lastSearchedWord = word;
       success = true;
@@ -393,6 +465,10 @@ async function fetchAndProcessWord(word) {
     }
   } catch (error) {
     console.error("Error fetching word data:", error);
+    showErrorModal("Kelime verileri getirilirken bir hata oluştu: " + error.message);
+    if (error.message.includes("NetworkError") || error.message.includes("Failed to fetch")) {
+      saveFailedQuery(word);
+    }
     return false;
   }
 }
@@ -406,6 +482,7 @@ function showInputError() {
 
 function createSearchResultNode(data, cacheKey) {
   const resultWrapper = document.createElement("div");
+  resultWrapper.classList.add("search");
   const word = data?.[0]?.madde;
 
   if (!word) {
@@ -432,27 +509,14 @@ function createSearchResultNode(data, cacheKey) {
     }
     delete wordSearchCache[currentWord];
     localStorage.setItem("wordSearchCache", JSON.stringify(wordSearchCache));
-
-    const allDeleteButtons = Array.from(document.querySelectorAll(".delete-query-button"));
-    const currentIndex = allDeleteButtons.indexOf(e.target);
-
-    loadAndRenderSavedQueries();
-
-    const newDeleteButtons = document.querySelectorAll(".delete-query-button");
-
-    if (newDeleteButtons.length > 0) {
-      const nextButtonIndex = Math.min(currentIndex, newDeleteButtons.length - 1);
-      newDeleteButtons[nextButtonIndex].focus();
-    } else {
-      searchbar.focus();
-    }
+    loadAndRenderSavedItems();
   });
   headerContainer.appendChild(deleteButton);
   resultWrapper.appendChild(headerContainer);
 
   data.forEach((entry) => {
     const wordEntryDiv = document.createElement("div");
-    wordEntryDiv.classList.add("word-entry");
+    wordEntryDiv.classList.add("query-result");
 
     if (entry.anlamlarListe) {
       entry.anlamlarListe.forEach((anlam) => {
@@ -475,6 +539,54 @@ function createSearchResultNode(data, cacheKey) {
   return resultWrapper;
 }
 
+function createTranslationGroupNode(originalText, translations) {
+  const resultWrapper = document.createElement("div");
+  resultWrapper.classList.add("search", "translation-group"); // Add a new class for styling if needed
+
+  const headerContainer = document.createElement("div");
+  headerContainer.style.display = "flex";
+  headerContainer.style.justifyContent = "space-between";
+  headerContainer.style.alignItems = "center";
+
+  const originalHeader = document.createElement("h2");
+  originalHeader.textContent = originalText; // Display the original text as the main header
+  headerContainer.appendChild(originalHeader);
+
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "Sil";
+  deleteButton.classList.add("delete-query-button");
+  deleteButton.addEventListener("click", (e) => {
+    e.stopPropagation();
+    delete translationCache[originalText]; // Delete the entire group
+    localStorage.setItem("translationCache", JSON.stringify(translationCache));
+    loadAndRenderSavedItems();
+  });
+  headerContainer.appendChild(deleteButton);
+  resultWrapper.appendChild(headerContainer);
+
+  // Iterate through all translations for this original text
+  for (const targetLang in translations) {
+    const translationData = translations[targetLang];
+    const languageName = languages[targetLang] || targetLang; // Get full language name or use code
+
+    const translationEntryDiv = document.createElement("div");
+    translationEntryDiv.classList.add("query-result");
+    translationEntryDiv.classList.add("translation-entry");
+
+    const translationHeader = document.createElement("h3");
+    translationHeader.textContent = `${languageName}`; // e.g., "English Translation"
+    translationEntryDiv.appendChild(translationHeader);
+
+    const translatedParagraph = document.createElement("p");
+    translatedParagraph.textContent = translationData.translatedText;
+    translationEntryDiv.appendChild(translatedParagraph);
+
+    resultWrapper.appendChild(translationEntryDiv);
+  }
+
+  return resultWrapper;
+}
+
 function displaySearchResults(data, word) {
   const searchResultNode = createSearchResultNode(data, word);
   if (searchResults.firstChild) {
@@ -485,24 +597,37 @@ function displaySearchResults(data, word) {
   }
 }
 
-function loadAndRenderSavedQueries() {
+function loadAndRenderSavedItems() {
   searchResults.innerHTML = "";
 
-  const sortedWords = Object.keys(wordSearchCache)
-    .map((word) => ({
-      word: word,
-      timestamp: wordSearchCache[word].timestamp,
-    }))
-    .sort((a, b) => b.timestamp - a.timestamp);
+  const sortedSearches = Object.keys(wordSearchCache).map((word) => ({
+    type: "search",
+    key: word,
+    timestamp: wordSearchCache[word].timestamp,
+    data: wordSearchCache[word].data,
+  }));
 
-  sortedWords.forEach(({ word }, index) => {
-    const data = wordSearchCache[word].data;
-    const searchResultNode = createSearchResultNode(data, word);
+  const sortedTranslations = Object.keys(translationCache).map((originalText) => ({
+    type: "translation-group",
+    key: originalText,
+    timestamp: translationCache[originalText].timestamp,
+    data: translationCache[originalText].translations,
+  }));
+
+  const sortedItems = [...sortedSearches, ...sortedTranslations].sort((a, b) => b.timestamp - a.timestamp);
+
+  sortedItems.forEach(({ type, key, data }, index) => {
+    let node;
+    if (type === "search") {
+      node = createSearchResultNode(data, key);
+    } else if (type === "translation-group") {
+      node = createTranslationGroupNode(key, data);
+    }
 
     if (index > 0) {
       searchResults.appendChild(document.createElement("hr"));
     }
-    searchResults.appendChild(searchResultNode);
+    searchResults.appendChild(node);
   });
 }
 
@@ -515,6 +640,17 @@ function setTheme(theme) {
 function loadTheme() {
   const savedTheme = localStorage.getItem("theme") || "dark";
   setTheme(savedTheme);
+}
+
+async function handleTranslateButtonClick() {
+  const text = searchbar.value.trim();
+  if (text) {
+    const provider = translationProviderSelect.value;
+    const targetLang = targetLanguageSelect.value;
+    handleTranslation(provider, targetLang, text);
+    closeAllLists();
+    blockAutocomplete = true;
+  }
 }
 
 async function handleSearchbarKeydown(e) {
@@ -532,6 +668,11 @@ async function handleSearchbarKeydown(e) {
     currentFocus--;
     addActive(x);
   } else if (e.keyCode == 13) {
+    if (e.ctrlKey) {
+      e.preventDefault();
+      handleTranslateButtonClick();
+      return;
+    }
     e.preventDefault();
     if (currentFocus > -1 && x && x[currentFocus]) {
       x[currentFocus].click();
@@ -566,6 +707,13 @@ function handleDocumentClick(event) {
   }
 }
 
+function loadApiKeys() {
+  googleApiKeyInput.value = localStorage.getItem("googleApiKey") || "";
+  deeplApiKeyInput.value = localStorage.getItem("deeplApiKey") || "";
+  libreApiKeyInput.value = localStorage.getItem("libreApiKey") || "";
+  secondaryLanguagesInput.value = localStorage.getItem("secondaryLanguages") || "";
+}
+
 function handleInitialQuery() {
   autocompleteSuggestions.style.display = "none";
   const urlParams = new URLSearchParams(window.location.search);
@@ -580,7 +728,7 @@ function populateLanguages() {
   for (const code in languages) {
     const option = document.createElement("option");
     option.value = code;
-    option.textContent = languages[code];
+    option.textContent = `${languages[code]} (${code})`;
     targetLanguageSelect.appendChild(option);
   }
   const savedLang = localStorage.getItem("targetLanguage") || "en";
@@ -598,21 +746,178 @@ function populateProviders() {
   translationProviderSelect.value = savedProvider;
 }
 
-function handleTranslation(provider, targetLang, text) {
-  let url;
-  if (provider === "google") {
-    url = `https://translate.google.com/?sl=tr&tl=${targetLang}&text=${encodeURIComponent(text)}`;
-  } else if (provider === "deepl") {
-    url = `https://www.deepl.com/translator#tr/${targetLang.toUpperCase()}/${encodeURIComponent(text)}`;
-  } else if (provider === "libre") {
-    url = `https://libretranslate.com/?source=tr&target=${targetLang}&q=${encodeURIComponent(text)}`;
-  }
-  if (url) {
-    window.open(url, "_blank");
+async function handleTranslation(provider, targetLang, text) {
+  let translatedText = "";
+
+  try {
+    if (provider === "google") {
+      const useDefault = !googleApiKeyInput.value;
+      const defaultKey = "AIzaSyDLEeFI5OtFBwYBIoK_jj5m32rZK5CkCXA";
+
+      if (useDefault) {
+        const apiKey = defaultKey;
+        const url = `https://translate-pa.googleapis.com/v1/translate?params.client=gtx&dataTypes=TRANSLATION&key=${apiKey}&query.sourceLanguage=tr&query.targetLanguage=${targetLang}&query.text=${encodeURIComponent(
+          text
+        )}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.error) {
+          console.error("Google Translate API error:", data.error.message || JSON.stringify(data.error));
+          showErrorModal(`Google Translate Hatası: ${data.error.message || JSON.stringify(data.error)}`);
+          return;
+        }
+
+        if (data.translation) {
+          translatedText = data.translation;
+        } else {
+          console.error("Google Translate API: No translation returned.", data);
+          showErrorModal("Google Translate: Çeviri bulunamadı.");
+          return;
+        }
+      } else {
+        const apiKey = localStorage.getItem("googleApiKey");
+        if (!apiKey) {
+          showErrorModal("Google API anahtarı eksik.");
+          return;
+        }
+        const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}&q=${encodeURIComponent(
+          text
+        )}&target=${targetLang}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.error) {
+          console.error("Google Translate API error:", data.error.message);
+          showErrorModal(`Google Translate Hatası: ${data.error.message}`);
+          return;
+        }
+
+        if (data.data && data.data.translations && data.data.translations.length > 0) {
+          translatedText = data.data.translations[0].translatedText;
+        } else {
+          console.error("Google Translate API: No translation returned.", data);
+          showErrorModal("Google Translate: Çeviri bulunamadı.");
+          return;
+        }
+      }
+    } else if (provider === "deepl") {
+      const apiKey = localStorage.getItem("deeplApiKey");
+      if (!apiKey) {
+        window.open(`https://www.deepl.com/translator#tr/${targetLang}/${encodeURIComponent(text)}`, "_blank");
+        return;
+      }
+      const url = `https://api-free.deepl.com/v2/translate`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `auth_key=${apiKey}&text=${encodeURIComponent(text)}&target_lang=${targetLang.toUpperCase()}`,
+      });
+      const data = await response.json();
+
+      if (data.message) {
+        console.error("DeepL API error:", data.message);
+        showErrorModal(`DeepL Hatası: ${data.message}`);
+        return;
+      }
+
+      if (data.translations && data.translations.length > 0) {
+        translatedText = data.translations[0].text;
+      } else {
+        console.error("DeepL API: No translation returned.", data);
+        showErrorModal("DeepL: Çeviri bulunamadı.");
+        return;
+      }
+    } else if (provider === "libre") {
+      const apiKey = localStorage.getItem("libreApiKey");
+      if (!apiKey) {
+        window.open(
+          `https://libretranslate.com/?q=${encodeURIComponent(text)}&source=tr&target=${targetLang}`,
+          "_blank"
+        );
+        return;
+      }
+      const url = `https://libretranslate.com/translate`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          q: text,
+          source: "tr",
+          target: targetLang,
+          api_key: apiKey,
+        }),
+      });
+      const data = await response.json();
+
+      if (data.error) {
+        console.error("LibreTranslate API error:", data.error);
+        showErrorModal(`LibreTranslate Hatası: ${data.error}`);
+        return;
+      }
+      translatedText = data.translatedText;
+    }
+
+    if (translatedText) {
+      if (!translationCache[text]) {
+        translationCache[text] = {
+          timestamp: Date.now(),
+          translations: {},
+        };
+      }
+      translationCache[text].translations[targetLang] = {
+        translatedText: translatedText,
+        originalText: text,
+        provider: provider,
+      };
+      translationCache[text].timestamp = Date.now(); // Update timestamp on any new translation
+      localStorage.setItem("translationCache", JSON.stringify(translationCache));
+      loadAndRenderSavedItems();
+    } else {
+      showErrorModal("Çeviri başarısız.");
+    }
+
+    // Handle secondary translations
+    const secondaryLanguages = secondaryLanguagesInput.value
+      .split(",")
+      .map((lang) => lang.trim())
+      .filter((lang) => lang !== "");
+
+    for (const secondaryLang of secondaryLanguages) {
+      if (secondaryLang === targetLang) continue; // Skip if it's the same as the primary target language
+      await performSecondaryTranslation(provider, secondaryLang, text);
+    }
+  } catch (error) {
+    console.error("Translation error:", error);
+    showErrorModal("Çeviri sırasında bir hata oluştu: " + error.message);
   }
 }
 
 async function handleDocumentKeydown(e) {
+  const isModalOpen =
+    settingsModal.style.display === "block" ||
+    helpModal.style.display === "block" ||
+    errorModal.style.display === "block";
+
+  if (isModalOpen) {
+    if (e.key === "Escape") {
+      if (settingsModal.style.display === "block") {
+        settingsModal.style.display = "none";
+      } else if (helpModal.style.display === "block") {
+        helpModal.style.display = "none";
+      } else if (errorModal.style.display === "block") {
+        errorModal.style.display = "none";
+      }
+      e.preventDefault();
+      return;
+    } else {
+      return;
+    }
+  }
   if (document.activeElement === searchbar) return;
 
   if (e.key === "h") {
@@ -626,6 +931,8 @@ async function handleDocumentKeydown(e) {
       settingsModal.style.display = "none";
     } else if (helpModal.style.display === "block") {
       helpModal.style.display = "none";
+    } else if (errorModal.style.display === "block") {
+      errorModal.style.display = "none";
     }
   }
 
@@ -683,7 +990,7 @@ async function handleSelectionSearch() {
   }
 }
 
-function handleSelectionTranslate() {
+async function handleSelectionTranslate() {
   const selection = window.getSelection();
   const selectedText = selection.toString().trim();
   if (selectedText.length > 0) {
@@ -692,5 +999,133 @@ function handleSelectionTranslate() {
     handleTranslation(provider, targetLang, selectedText);
     window.getSelection().removeAllRanges();
     selectionMenu.style.display = "none";
+  }
+}
+
+async function performSecondaryTranslation(provider, targetLang, text) {
+  let translatedText = "";
+  try {
+    if (provider === "google") {
+      const useDefault = !googleApiKeyInput.value;
+      const defaultKey = "AIzaSyDLEeFI5OtFBwYBIoK_jj5m32rZK5CkCXA";
+
+      if (useDefault) {
+        const apiKey = defaultKey;
+        const url = `https://translate-pa.googleapis.com/v1/translate?params.client=gtx&dataTypes=TRANSLATION&key=${apiKey}&query.sourceLanguage=tr&query.targetLanguage=${targetLang}&query.text=${encodeURIComponent(
+          text
+        )}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.error) {
+          console.error("Google Translate API error:", data.error.message || JSON.stringify(data.error));
+          return;
+        }
+
+        if (data.translation) {
+          translatedText = data.translation;
+        } else {
+          console.error("Google Translate API: No translation returned.", data);
+          return;
+        }
+      } else {
+        const apiKey = localStorage.getItem("googleApiKey");
+        if (!apiKey) {
+          return;
+        }
+        const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}&q=${encodeURIComponent(
+          text
+        )}&target=${targetLang}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.error) {
+          console.error("Google Translate API error:", data.error.message);
+          return;
+        }
+
+        if (data.data && data.data.translations && data.data.translations.length > 0) {
+          translatedText = data.data.translations[0].translatedText;
+        } else {
+          console.error("Google Translate API: No translation returned.", data);
+          return;
+        }
+      }
+    } else if (provider === "deepl") {
+      const apiKey = localStorage.getItem("deeplApiKey");
+      if (!apiKey) {
+        window.open(`https://www.deepl.com/translator#tr/${targetLang}/${encodeURIComponent(text)}`, "_blank");
+        return;
+      }
+      const url = `https://api-free.deepl.com/v2/translate`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `auth_key=${apiKey}&text=${encodeURIComponent(text)}&target_lang=${targetLang.toUpperCase()}`,
+      });
+      const data = await response.json();
+
+      if (data.message) {
+        console.error("DeepL API error:", data.message);
+        return;
+      }
+
+      if (data.translations && data.translations.length > 0) {
+        translatedText = data.translations[0].text;
+      } else {
+        console.error("DeepL API: No translation returned.", data);
+        return;
+      }
+    } else if (provider === "libre") {
+      const apiKey = localStorage.getItem("libreApiKey");
+      if (!apiKey) {
+        window.open(
+          `https://libretranslate.com/?q=${encodeURIComponent(text)}&source=tr&target=${targetLang}`,
+          "_blank"
+        );
+        return;
+      }
+      const url = `https://libretranslate.com/translate`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          q: text,
+          source: "tr",
+          target: targetLang,
+          api_key: apiKey,
+        }),
+      });
+      const data = await response.json();
+
+      if (data.error) {
+        console.error("LibreTranslate API error:", data.error);
+        return;
+      }
+      translatedText = data.translatedText;
+    }
+
+    if (translatedText) {
+      if (!translationCache[text]) {
+        translationCache[text] = {
+          timestamp: Date.now(),
+          translations: {},
+        };
+      }
+      translationCache[text].translations[targetLang] = {
+        translatedText: translatedText,
+        originalText: text,
+        provider: provider,
+      };
+      translationCache[text].timestamp = Date.now(); // Update timestamp on any new translation
+      localStorage.setItem("translationCache", JSON.stringify(translationCache));
+      loadAndRenderSavedItems(); // Re-render to show new translations
+    }
+  } catch (error) {
+    console.error(`Secondary translation error for ${targetLang}:`, error);
   }
 }
