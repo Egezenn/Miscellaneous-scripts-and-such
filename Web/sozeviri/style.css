@@ -1,30 +1,30 @@
 body {
-  font-family: Arial, sans-serif;
-  margin: 0 0 200px;
-  padding: 20px;
-  background-color: #f4f4f4;
-  display: flex;
-  justify-content: center;
   align-items: flex-start;
-  min-height: 100vh;
+  background-color: #f4f4f4;
   color: #333;
+  display: flex;
+  font-family: Arial, sans-serif;
+  justify-content: center;
+  margin: 0 0 200px;
+  min-height: 100vh;
+  padding: 20px;
 }
 
 .container {
   background-color: #fff;
-  padding: 30px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgb(0 0 0 / 10%);
-  width: 100%;
   max-width: 800px;
+  padding: 30px;
+  width: 100%;
 }
 
 .search-container {
-  position: relative;
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 20px;
   gap: 10px;
+  margin-bottom: 20px;
+  position: relative;
 }
 
 .search-input-group {
@@ -33,15 +33,15 @@ body {
 }
 
 .search-container input[type="text"] {
-  flex-grow: 1;
-  min-width: 60px;
-  padding: 12px;
+  background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 4px 0 0 4px;
-  font-size: 16px;
-  background-color: #fff;
   color: #333;
+  flex-grow: 1;
+  font-size: 16px;
+  min-width: 60px;
   outline: none;
+  padding: 12px;
 }
 
 .search-container input[type="text"]:focus {
@@ -49,12 +49,12 @@ body {
 }
 
 .search-container button {
-  padding: 12px 20px;
   background-color: #007bff;
-  color: white;
   border: none;
+  color: white;
   cursor: pointer;
   font-size: 16px;
+  padding: 12px 20px;
   transition: background-color 0.2s ease;
 }
 
@@ -84,25 +84,25 @@ body {
 }
 
 .autocomplete-suggestions {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
   background-color: #fff;
   border: 1px solid #ddd;
-  border-top: none;
   border-radius: 0 0 4px 4px;
+  border-top: none;
+  box-shadow: 0 4px 8px rgb(0 0 0 / 10%);
+  left: 50%;
   max-height: 200px;
   overflow-y: auto;
+  position: absolute;
+  top: 100%;
+  transform: translateX(-50%);
+  width: 100%;
   z-index: 100;
-  box-shadow: 0 4px 8px rgb(0 0 0 / 10%);
 }
 
 .autocomplete-suggestions div {
-  padding: 10px;
-  cursor: pointer;
   border-bottom: 1px solid #eee;
+  cursor: pointer;
+  padding: 10px;
 }
 
 .autocomplete-suggestions div:last-child {
@@ -119,16 +119,16 @@ body {
 }
 
 .search-results hr {
+  background-color: #ccc;
   border: 0;
   height: 1px;
-  background-color: #ccc;
   margin: 20px 0;
 }
 
 .search-results > .search {
   background-color: #f8f8f8;
-  padding: 1rem;
   border-radius: 1rem;
+  padding: 1rem;
 }
 
 
@@ -140,19 +140,19 @@ body {
   background-color: #f4f4f4;
   border: 1px solid #eee;
   border-radius: 6px;
-  padding: 15px;
   margin-bottom: 15px;
+  padding: 15px;
 }
 
 .query-result h3 {
   color: #216400;
-  margin-top: 0;
   margin-bottom: 10px;
+  margin-top: 0;
 }
 
 .query-result p {
-  margin-bottom: 5px;
   line-height: 1.6;
+  margin-bottom: 5px;
 }
 
 .query-result > p:first-of-type {
@@ -169,8 +169,8 @@ body {
 
 .error-message {
   color: red;
-  text-align: center;
   margin-top: 20px;
+  text-align: center;
 }
 
 .autocomplete-suggestions::-webkit-scrollbar {
@@ -277,12 +277,12 @@ body.dark-theme .autocomplete-suggestions::-webkit-scrollbar-thumb:hover {
 
 .delete-query-button {
   background-color: #dc3545;
-  color: white;
   border: none;
-  padding: 5px 10px;
   border-radius: 4px;
+  color: white;
   cursor: pointer;
   font-size: 14px;
+  padding: 5px 10px;
 }
 
 .delete-query-button:hover {
@@ -290,11 +290,11 @@ body.dark-theme .autocomplete-suggestions::-webkit-scrollbar-thumb:hover {
 }
 
 .styled-select {
-  padding: 12px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
   background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   font-size: 16px;
+  padding: 12px;
   width: 6rem;
 }
 
@@ -305,10 +305,10 @@ body.dark-theme .styled-select {
 }
 
 .settings-grid {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 15px;
   align-items: center;
+  display: grid;
+  gap: 15px;
+  grid-template-columns: auto 1fr;
 }
 
 .settings-grid label {
@@ -318,21 +318,21 @@ body.dark-theme .styled-select {
 .settings-grid select,
 .settings-grid button,
 .settings-grid .styled-input {
-  width: 100%;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
   background-color: #fff;
-  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   box-sizing: border-box;
+  font-size: 14px;
+  padding: 8px;
+  width: 100%;
   word-break: break-all;
 }
 
 .settings-grid input[type="checkbox"] {
-  justify-self: start;
-  width: auto;
   height: auto;
+  justify-self: start;
   margin: 0;
+  width: auto;
 }
 
 #helpModal .modal-content ul {
@@ -354,8 +354,8 @@ body.dark-theme .styled-select {
 .modal-content .close-button:hover,
 .modal-content .close-button:focus {
   color: black;
-  text-decoration: none;
   cursor: pointer;
+  text-decoration: none;
 }
 
 body.dark-theme .modal-content .close-button {
@@ -399,26 +399,26 @@ body.dark-theme .settings-grid .styled-input {
 }
 
 .modal {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
   background-color: rgb(0 0 0);
   background-color: rgb(0 0 0 / 40%);
+  display: none;
+  height: 100%;
+  left: 0;
+  overflow: auto;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1;
 }
 
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto;
-  padding: 20px;
   border: 1px solid #888;
-  width: 100%;
-  max-width: 800px;
   border-radius: 8px;
+  margin: 15% auto;
+  max-width: 800px;
+  padding: 20px;
+  width: 100%;
 }
 
 .modal.show {
@@ -426,13 +426,13 @@ body.dark-theme .settings-grid .styled-input {
 }
 
 #selection-menu {
-  display: none;
-  position: absolute;
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 4px;
-  padding: 5px;
   box-shadow: 0 2px 5px rgb(0 0 0 / 20%);
+  display: none;
+  padding: 5px;
+  position: absolute;
   z-index: 100;
 }
 
@@ -444,13 +444,13 @@ body.dark-theme #selection-menu {
 
 #selection-menu button {
   background-color: #007bff;
-  color: white;
   border: none;
-  padding: 8px 12px;
   border-radius: 4px;
+  color: white;
   cursor: pointer;
-  margin: 2px;
   font-size: 14px;
+  margin: 2px;
+  padding: 8px 12px;
 }
 
 #selection-menu button:hover {

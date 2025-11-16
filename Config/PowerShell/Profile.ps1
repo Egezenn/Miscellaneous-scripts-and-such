@@ -1,5 +1,6 @@
 Clear-Host
 Invoke-Expression (& starship init powershell)
+Invoke-Expression (& { (zoxide init powershell | Out-String) })
 Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
 
 # path and history stuff
@@ -9,13 +10,17 @@ function / { Set-Location / }
 
 Remove-Item Alias:history -Force
 function history {
+    param(
+        [int]$Count = 10
+    )
+
     $historyPath = (Get-PSReadlineOption).HistorySavePath
-    Get-Content $historyPath | ForEach-Object {
-        $lineNumber = ($_ | Select-Object -Index 0)
-    }
-    Get-Content $historyPath | ForEach-Object -Begin { $i = 1 } -Process {
-        "{0,4} | {1}" -f $i, $_
-        $i++
+    $lines = Get-Content $historyPath
+
+    $startIndex = [Math]::Max(0, $lines.Count - $Count)
+
+    for ($i = $startIndex; $i -lt $lines.Count; $i++) {
+        "{0,4} | {1}" -f ($i + 1), $lines[$i]
     }
 }
 
@@ -27,8 +32,8 @@ function hgrep { Get-Content $historyPath | rg $args }
 Set-PSReadLineKeyHandler -Chord "Ctrl+RightArrow" -Function ForwardWord
 Remove-Item Alias:ls -Force
 function ls { lsd $args }
-function l { lsd -l --blocks 'permission,size,name' }
-function lld { lsd -l --blocks 'permission,size,date,name' --date '+%Y-%m-%d_%H-%M' }
+function l { lsd -l --blocks 'permission,size,name' $args }
+function lld { lsd -l --blocks 'permission,size,date,name' --date '+%Y-%m-%d_%H-%M' $args }
 function l1 { lsd -1 $args }
 function lsps { Get-ChildItem $args }
 function la { lsd -A $args }
@@ -98,11 +103,13 @@ function gitrecommit {
     git commit -a -m $args
 }
 function gitrestore {
-    git reset --soft HEAD~1
+    param([int]$count)
+    git reset --soft ("HEAD~" + $count)
     git restore --staged .
 }
 function gitreset {
-    git reset --hard HEAD
+    param([int]$count)
+    git reset --hard ("HEAD~" + $count)
 }
 
 function exp {
@@ -132,6 +139,8 @@ function cbuild {
     cmake ..
 }
 
+function msbuild { & "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" $args }
+
 function pkill { taskkill /F /IM $args }
 function whr { & "C:\Windows\System32\where.exe" @args }
 
@@ -156,6 +165,12 @@ function yt240 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=240]+ba/b" --wr
 function yt360 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=360]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
 function yt480 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=480]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
 function yt720 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=720]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
+function yt144ns { Set-Location ~\Videos && yt-dlp -f "bv*[height<=144]+ba/b" @args }
+function yt240ns { Set-Location ~\Videos && yt-dlp -f "bv*[height<=240]+ba/b" @args }
+function yt360ns { Set-Location ~\Videos && yt-dlp -f "bv*[height<=360]+ba/b" @args }
+function yt480ns { Set-Location ~\Videos && yt-dlp -f "bv*[height<=480]+ba/b" @args }
+function yt720ns { Set-Location ~\Videos && yt-dlp -f "bv*[height<=720]+ba/b" @args }
+
 function ytx { Set-Location ~\Music && yt-dlp -x @args }
 
 function cppyhere { python copyparty-en.py }

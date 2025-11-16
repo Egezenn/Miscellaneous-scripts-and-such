@@ -1478,7 +1478,6 @@ function init() {
           clampPan();
           redraw();
           updateCursor(e);
-        } else {
         }
       }
     },

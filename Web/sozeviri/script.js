@@ -2,6 +2,20 @@ const AUTOCOMPLETE_API_URL = "https://sozluk.gov.tr/autocomplete.json";
 const WORD_SEARCH_API_URL = "https://sozluk.gov.tr/gts?ara=";
 const FAILED_QUERIES_KEY = "failedQueries";
 
+const STORAGE_PREFIX = "sozeviri-";
+
+function getStorageItem(key) {
+  return localStorage.getItem(STORAGE_PREFIX + key);
+}
+
+function setStorageItem(key, value) {
+  localStorage.setItem(STORAGE_PREFIX + key, value);
+}
+
+function removeStorageItem(key) {
+  localStorage.removeItem(STORAGE_PREFIX + key);
+}
+
 const languages = {
   af: "Afrikaans",
   sq: "Albanian",
@@ -94,8 +108,8 @@ const providers = {
 };
 
 let autocompleteCache = null;
-let wordSearchCache = JSON.parse(localStorage.getItem("wordSearchCache")) || {};
-let translationCache = JSON.parse(localStorage.getItem("translationCache")) || {};
+let wordSearchCache = JSON.parse(getStorageItem("wordSearchCache")) || {};
+let translationCache = JSON.parse(getStorageItem("translationCache")) || {};
 let currentFocus = -1;
 let originalInputValue = "";
 let lastSearchedWord = "";
@@ -135,7 +149,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   searchbar = document.getElementById("searchbar");
   searchButton = document.getElementById("searchButton");
-  translateButton = document.getElementById("translateButton");
   searchResults = document.getElementById("searchResults");
   autocompleteSuggestions = document.getElementById("autocompleteSuggestions");
   themeSelect = document.getElementById("themeSelect");
@@ -185,7 +198,7 @@ function updateWordSearchCacheStructure() {
     }
   });
   if (cacheNeedsUpdate) {
-    localStorage.setItem("wordSearchCache", JSON.stringify(wordSearchCache));
+    setStorageItem("wordSearchCache", JSON.stringify(wordSearchCache));
   }
 }
 
@@ -193,16 +206,16 @@ function saveFailedQuery(query) {
   const failedQueries = getFailedQueries();
   if (!failedQueries.includes(query)) {
     failedQueries.push(query);
-    localStorage.setItem(FAILED_QUERIES_KEY, JSON.stringify(failedQueries));
+    setStorageItem(FAILED_QUERIES_KEY, JSON.stringify(failedQueries));
   }
 }
 
 function getFailedQueries() {
-  return JSON.parse(localStorage.getItem(FAILED_QUERIES_KEY)) || [];
+  return JSON.parse(getStorageItem(FAILED_QUERIES_KEY)) || [];
 }
 
 function clearFailedQueries() {
-  localStorage.removeItem(FAILED_QUERIES_KEY);
+  removeStorageItem(FAILED_QUERIES_KEY);
 }
 
 async function retryFailedQueries() {
@@ -219,15 +232,12 @@ async function retryFailedQueries() {
 function setupEventListeners() {
   searchbar.addEventListener("input", displayAutocompleteSuggestions);
   searchButton.addEventListener("click", handleSearchButtonClick);
-  translateButton.addEventListener("click", handleTranslateButtonClick);
   themeSelect.addEventListener("change", () => setTheme(themeSelect.value));
   searchbar.addEventListener("keydown", handleSearchbarKeydown);
   document.addEventListener("click", handleDocumentClick);
-  targetLanguageSelect.addEventListener("change", () =>
-    localStorage.setItem("targetLanguage", targetLanguageSelect.value)
-  );
+  targetLanguageSelect.addEventListener("change", () => setStorageItem("targetLanguage", targetLanguageSelect.value));
   translationProviderSelect.addEventListener("change", () =>
-    localStorage.setItem("translationProvider", translationProviderSelect.value)
+    setStorageItem("translationProvider", translationProviderSelect.value)
   );
   document.addEventListener("keydown", handleDocumentKeydown);
   document.addEventListener("selectionchange", handleSelectionChange);
@@ -241,11 +251,11 @@ function setupEventListeners() {
   closeButton.addEventListener("click", () => (settingsModal.style.display = "none"));
   helpModalCloseButton.addEventListener("click", () => (helpModal.style.display = "none"));
   errorModalCloseButton.addEventListener("click", () => (errorModal.style.display = "none"));
-  googleApiKeyInput.addEventListener("input", () => localStorage.setItem("googleApiKey", googleApiKeyInput.value));
-  deeplApiKeyInput.addEventListener("input", () => localStorage.setItem("deeplApiKey", deeplApiKeyInput.value));
-  libreApiKeyInput.addEventListener("input", () => localStorage.setItem("libreApiKey", libreApiKeyInput.value));
+  googleApiKeyInput.addEventListener("input", () => setStorageItem("googleApiKey", googleApiKeyInput.value));
+  deeplApiKeyInput.addEventListener("input", () => setStorageItem("deeplApiKey", deeplApiKeyInput.value));
+  libreApiKeyInput.addEventListener("input", () => setStorageItem("libreApiKey", libreApiKeyInput.value));
   secondaryLanguagesInput.addEventListener("input", () =>
-    localStorage.setItem("secondaryLanguages", secondaryLanguagesInput.value)
+    setStorageItem("secondaryLanguages", secondaryLanguagesInput.value)
   );
   window.addEventListener("click", (event) => {
     if (event.target == settingsModal) {
@@ -282,7 +292,7 @@ async function fetchAutocompleteData() {
     return autocompleteCache;
   }
 
-  const cachedData = JSON.parse(localStorage.getItem("autocompleteCache"));
+  const cachedData = JSON.parse(getStorageItem("autocompleteCache"));
   if (cachedData && cachedData.timestamp) {
     const now = new Date().getTime();
     const thirtyDays = 30 * 24 * 60 * 60 * 1000;
@@ -303,7 +313,7 @@ async function fetchAutocompleteData() {
       data: data,
       timestamp: new Date().getTime(),
     };
-    localStorage.setItem("autocompleteCache", JSON.stringify(cacheToStore));
+    setStorageItem("autocompleteCache", JSON.stringify(cacheToStore));
     return data;
   } catch (error) {
     console.error("Error fetching autocomplete data:", error);
@@ -425,7 +435,7 @@ async function searchWord() {
       success = false;
     } else if (wordSearchCache[word]) {
       wordSearchCache[word].timestamp = Date.now();
-      localStorage.setItem("wordSearchCache", JSON.stringify(wordSearchCache));
+      setStorageItem("wordSearchCache", JSON.stringify(wordSearchCache));
       loadAndRenderSavedItems();
       window.scrollTo(0, 0);
       lastSearchedWord = word;
@@ -458,7 +468,7 @@ async function fetchAndProcessWord(word) {
         data: data,
         timestamp: Date.now(),
       };
-      localStorage.setItem("wordSearchCache", JSON.stringify(wordSearchCache));
+      setStorageItem("wordSearchCache", JSON.stringify(wordSearchCache));
       displaySearchResults(data, word);
       lastSearchedWord = word;
       return true;
@@ -508,7 +518,7 @@ function createSearchResultNode(data, cacheKey) {
       lastSearchedWord = "";
     }
     delete wordSearchCache[currentWord];
-    localStorage.setItem("wordSearchCache", JSON.stringify(wordSearchCache));
+    setStorageItem("wordSearchCache", JSON.stringify(wordSearchCache));
     loadAndRenderSavedItems();
   });
   headerContainer.appendChild(deleteButton);
@@ -558,7 +568,7 @@ function createTranslationGroupNode(originalText, translations) {
   deleteButton.addEventListener("click", (e) => {
     e.stopPropagation();
     delete translationCache[originalText]; // Delete the entire group
-    localStorage.setItem("translationCache", JSON.stringify(translationCache));
+    setStorageItem("translationCache", JSON.stringify(translationCache));
     loadAndRenderSavedItems();
   });
   headerContainer.appendChild(deleteButton);
@@ -633,12 +643,12 @@ function loadAndRenderSavedItems() {
 
 function setTheme(theme) {
   document.body.classList.toggle("dark-theme", theme === "dark");
-  localStorage.setItem("theme", theme);
+  setStorageItem("theme", theme);
   themeSelect.value = theme;
 }
 
 function loadTheme() {
-  const savedTheme = localStorage.getItem("theme") || "dark";
+  const savedTheme = getStorageItem("theme") || "dark";
   setTheme(savedTheme);
 }
 
@@ -708,10 +718,10 @@ function handleDocumentClick(event) {
 }
 
 function loadApiKeys() {
-  googleApiKeyInput.value = localStorage.getItem("googleApiKey") || "";
-  deeplApiKeyInput.value = localStorage.getItem("deeplApiKey") || "";
-  libreApiKeyInput.value = localStorage.getItem("libreApiKey") || "";
-  secondaryLanguagesInput.value = localStorage.getItem("secondaryLanguages") || "";
+  googleApiKeyInput.value = getStorageItem("googleApiKey") || "";
+  deeplApiKeyInput.value = getStorageItem("deeplApiKey") || "";
+  libreApiKeyInput.value = getStorageItem("libreApiKey") || "";
+  secondaryLanguagesInput.value = getStorageItem("secondaryLanguages") || "";
 }
 
 function handleInitialQuery() {
@@ -731,7 +741,7 @@ function populateLanguages() {
     option.textContent = `${languages[code]} (${code})`;
     targetLanguageSelect.appendChild(option);
   }
-  const savedLang = localStorage.getItem("targetLanguage") || "en";
+  const savedLang = getStorageItem("targetLanguage") || "en";
   targetLanguageSelect.value = savedLang;
 }
 
@@ -742,7 +752,7 @@ function populateProviders() {
     option.textContent = providers[code];
     translationProviderSelect.appendChild(option);
   }
-  const savedProvider = localStorage.getItem("translationProvider") || "google";
+  const savedProvider = getStorageItem("translationProvider") || "google";
   translationProviderSelect.value = savedProvider;
 }
 
@@ -776,7 +786,7 @@ async function handleTranslation(provider, targetLang, text) {
           return;
         }
       } else {
-        const apiKey = localStorage.getItem("googleApiKey");
+        const apiKey = getStorageItem("googleApiKey");
         if (!apiKey) {
           showErrorModal("Google API anahtarı eksik.");
           return;
@@ -802,7 +812,7 @@ async function handleTranslation(provider, targetLang, text) {
         }
       }
     } else if (provider === "deepl") {
-      const apiKey = localStorage.getItem("deeplApiKey");
+      const apiKey = getStorageItem("deeplApiKey");
       if (!apiKey) {
         window.open(`https://www.deepl.com/translator#tr/${targetLang}/${encodeURIComponent(text)}`, "_blank");
         return;
@@ -831,7 +841,7 @@ async function handleTranslation(provider, targetLang, text) {
         return;
       }
     } else if (provider === "libre") {
-      const apiKey = localStorage.getItem("libreApiKey");
+      const apiKey = getStorageItem("libreApiKey");
       if (!apiKey) {
         window.open(
           `https://libretranslate.com/?q=${encodeURIComponent(text)}&source=tr&target=${targetLang}`,
@@ -875,7 +885,7 @@ async function handleTranslation(provider, targetLang, text) {
         provider: provider,
       };
       translationCache[text].timestamp = Date.now(); // Update timestamp on any new translation
-      localStorage.setItem("translationCache", JSON.stringify(translationCache));
+      setStorageItem("translationCache", JSON.stringify(translationCache));
       loadAndRenderSavedItems();
     } else {
       showErrorModal("Çeviri başarısız.");
@@ -1029,7 +1039,7 @@ async function performSecondaryTranslation(provider, targetLang, text) {
           return;
         }
       } else {
-        const apiKey = localStorage.getItem("googleApiKey");
+        const apiKey = getStorageItem("googleApiKey");
         if (!apiKey) {
           return;
         }
@@ -1052,7 +1062,7 @@ async function performSecondaryTranslation(provider, targetLang, text) {
         }
       }
     } else if (provider === "deepl") {
-      const apiKey = localStorage.getItem("deeplApiKey");
+      const apiKey = getStorageItem("deeplApiKey");
       if (!apiKey) {
         window.open(`https://www.deepl.com/translator#tr/${targetLang}/${encodeURIComponent(text)}`, "_blank");
         return;
@@ -1079,7 +1089,7 @@ async function performSecondaryTranslation(provider, targetLang, text) {
         return;
       }
     } else if (provider === "libre") {
-      const apiKey = localStorage.getItem("libreApiKey");
+      const apiKey = getStorageItem("libreApiKey");
       if (!apiKey) {
         window.open(
           `https://libretranslate.com/?q=${encodeURIComponent(text)}&source=tr&target=${targetLang}`,
@@ -1122,7 +1132,7 @@ async function performSecondaryTranslation(provider, targetLang, text) {
         provider: provider,
       };
       translationCache[text].timestamp = Date.now(); // Update timestamp on any new translation
-      localStorage.setItem("translationCache", JSON.stringify(translationCache));
+      setStorageItem("translationCache", JSON.stringify(translationCache));
       loadAndRenderSavedItems(); // Re-render to show new translations
     }
   } catch (error) {

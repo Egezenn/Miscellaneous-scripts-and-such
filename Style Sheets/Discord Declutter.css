@@ -84,8 +84,8 @@ ul[aria-label="Channels"]>li>div>*>*>*,
 div[data-list-item-id^="channels"],
 div[role="list"][aria-label="Members"]>*,
 div[role="list"][aria-label="Members"]>*>* {
-  padding: 0;
   margin: 0;
+  padding: 0;
 }
 
 /* adjust member&channel list */

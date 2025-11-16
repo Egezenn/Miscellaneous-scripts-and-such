@@ -43,8 +43,8 @@
   .quiet-outline,
   #calendar-container,
   #calendar-container>.nav {
-    padding: 0 !important;
     margin: 0 !important;
+    padding: 0 !important;
   }
 
   /* widget containers */
@@ -85,8 +85,8 @@
 
   .obsidian-vertical-tabs-container>div>.tree-item.is-group,
   .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children {
-    margin: 0 !important;
     border: 0 !important;
+    margin: 0 !important;
   }
 
   .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-self.is-clickable {
@@ -95,13 +95,13 @@
   }
 
   .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab {
-    margin: 0 !important;
     border: 0 !important;
+    margin: 0 !important;
   }
 
   .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab>.tree-item-self.is-clickable {
-    padding: 0 0 0 24px !important;
     margin: 0 !important;
+    padding: 0 0 0 24px !important;
   }
 
   .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-children>.tree-item.is-tab>.tree-item-children {
@@ -130,15 +130,15 @@
   }
 
   .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-self.is-clickable>.tree-item-flair-outer>.clickable-icon.action-button.action-eye>svg {
-    color: #000 !important;
     background-color: #F00;
     border-radius: 8px !important;
+    color: #000 !important;
   }
 
   .obsidian-vertical-tabs-container>div>.tree-item.is-group>.tree-item-self.is-clickable>.tree-item-flair-outer>.clickable-icon.action-button.action-eye-off>svg {
-    color: #000 !important;
     background-color: #0F0 !important;
     border-radius: 8px !important;
+    color: #000 !important;
   }
 
   .workspace-split.mod-vertical.mod-root {
@@ -181,8 +181,8 @@
   }
 
   .tree-item-children.nav-folder-children {
-    margin-left: 6px !important;
     border: 0 !important;
+    margin-left: 6px !important;
   }
 
   /* directory hierarchy coloring
@@ -221,8 +221,8 @@
 
   .workspace-tab-header-container>.workspace-tab-header-container-inner,
   .workspace-tab-header-new-tab {
-    padding: 0 !important;
     margin: 0 !important;
+    padding: 0 !important;
   }
 
   .workspace-tab-header-container>.workspace-tab-header-container-inner>.workspace-tab-header.tappable {
@@ -235,8 +235,8 @@
 
   /* calculates the main box bigger and it overflows, modify the variable used to calculate its size */
   .view-content>.markdown-source-view>.cm-editor>div.cm-scroller {
-    padding-top: 0 !important;
     padding-bottom: 0 !important;
+    padding-top: 0 !important;
 
     /* padding: 0px !important; */
   }

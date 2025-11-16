@@ -23,7 +23,7 @@ truncation_length = 5
 truncation_symbol = '.\'
 
 [git_branch]
-format = "[$branch(:$remote_branch)]($style)"
+format = "[$branch(:$remote_branch)]($style) "
 ignore_branches = ["main", "master"]
 [git_commit]
 tag_symbol = " tag "
@@ -70,5 +70,7 @@ symbol = 'go '
 format = '[$symbol($version )]($style)'
 [python]
 format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+[rust]
+format = '[$symbol($version )]($style)'
 [typst]
 format = '[$symbol($version )]($style)'
