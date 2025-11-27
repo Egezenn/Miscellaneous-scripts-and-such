@@ -96,7 +96,7 @@ function gitscommit {
 function gitscommitp {
     git add .
     git commit -a -m $args
-    git push
+    git push -f
 }
 function gitrecommit {
     git reset --soft HEAD~1
@@ -138,10 +138,11 @@ function cbuild {
     Set-Location build
     cmake ..
 }
-
 function msbuild { & "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" $args }
 
-function pkill { taskkill /F /IM $args }
+function office2pdf { & 'C:\Program Files\LibreOffice\program\soffice.exe' --headless --convert-to pdf @args }
+
+function pkill { taskkill /F /IM @args }
 function whr { & "C:\Windows\System32\where.exe" @args }
 
 function win { winget install $args }

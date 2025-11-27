@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           No Unnecessary Scroll For Free Games
 @namespace      github.com/openstyles/stylus
-@version        1.0.5
+@version        1.1
 @description    Tired of scrolling to find the free games? How about putting them RIGHT ON TOP of the store page?
 @author         Egezenn
 @preprocessor   stylus
@@ -14,20 +14,11 @@
         div[aria-roledescription='carousel'][data-testid='SaleCarouselDesktop']
             display none i
 
-    div[data-testid='discover-page-0']>div:nth-of-type(2)>span:last-of-type
+    // HA!
+    div > div > div > div > div:has([data-component='FreeOfferCard']):first-of-type
         left 0 i
         padding 16px i
         position fixed i
         top 0 i
-        // might break
         width 60vw
         z-index 9999 i
-
-        *
-            background rgba(0, 0, 0, .3) i
-
-            :hover
-                background rgba(0, 0, 0, 1) i
-
-        img
-            opacity .5

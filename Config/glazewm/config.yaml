@@ -70,7 +70,6 @@ window_behavior:
 workspaces:
   - name: "br0wser"
   - name: "br1wser"
-  - name: "editor"
   - name: "1"
   - name: "2"
   - name: "3"
@@ -120,10 +119,6 @@ window_rules:
   - commands: ["move --workspace br1wser"]
     match:
       - window_process: { equals: "chrome" }
-
-  - commands: ["move --workspace editor"]
-    match:
-      - window_process: { equals: "VSCodium" }
 
   - commands: ["move --workspace media"]
     match:
@@ -203,6 +198,7 @@ window_rules:
       - window_process: { equals: "DllHost" }
         window_class: { equals: "MediaPlayerClassicW" }
       - window_process: { equals: "notepad++" }
+      - window_process: { equals: "notepad" }
       - window_process: { equals: "okular" }
         window_title: { equals: "Go to Page - Okular" }
       - window_process: { equals: "okular" }
@@ -289,9 +285,6 @@ keybindings:
   - commands: ["toggle-fullscreen"]
     bindings: ['ctrl+alt+shift+"']
 
-  - commands: ["toggle-fullscreen"]
-    bindings: ["ctrl+alt+shift+f"]
-
   - commands: ["wm-reload-config"]
     bindings: ["ctrl+alt+shift+r"]
 
@@ -324,12 +317,10 @@ keybindings:
     bindings: ["alt+f1"]
   - commands: ["focus --workspace br1wser"]
     bindings: ["ctrl+alt+f1"]
-  - commands: ["focus --workspace editor"]
-    bindings: ["alt+f2"]
   - commands: ["focus --workspace comms"]
-    bindings: ["alt+f3"]
+    bindings: ["alt+f2"]
   - commands: ["focus --workspace media"]
-    bindings: ["alt+f5"]
+    bindings: ["alt+f3"]
   - commands: ["focus --workspace leaveopen1"]
     bindings: ["alt+f6"]
   - commands: ["focus --workspace leaveopen2"]
@@ -367,12 +358,10 @@ keybindings:
     bindings: ["alt+shift+f1"]
   - commands: ["move --workspace br1wser", "focus --workspace br1wser"]
     bindings: ["ctrl+alt+shift+f1"]
-  - commands: ["move --workspace editor", "focus --workspace editor"]
-    bindings: ["alt+shift+f2"]
   - commands: ["move --workspace comms", "focus --workspace comms"]
-    bindings: ["alt+shift+f3"]
+    bindings: ["alt+shift+f2"]
   - commands: ["move --workspace media", "focus --workspace media"]
-    bindings: ["alt+shift+f5"]
+    bindings: ["alt+shift+f3"]
   - commands: ["move --workspace leaveopen1", "focus --workspace leaveopen1"]
     bindings: ["alt+shift+f6"]
   - commands: ["move --workspace leaveopen2", "focus --workspace leaveopen2"]

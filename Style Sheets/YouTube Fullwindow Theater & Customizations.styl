@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           YouTube Fullwindow Theater & Customizations
 @namespace      https://userstyles.world/user/egezenn
-@version        1.4
+@version        1.4.3
 @description    Use up all the window in theatre mode with hoverable header!
 Along with lots of optional removals & customizations
 @preprocessor   stylus
@@ -10,7 +10,6 @@ Along with lots of optional removals & customizations
 @var            checkbox enablePlayerCustomizations "Enable player customizations"              0
 @var            checkbox pinPBarBottom              "Pin progress bar to bottom"                0
 @var            range    controlScale               "Control scale"                             [0.8, 0, 1, 0.01]
-@var            checkbox allowPBarColorChanges      "Change progress bar colors"                0
 @var            color    pbar-progress              "Progress section color"                    rgba(255, 0, 51, 1)
 @var            color    pbar-scrub                 "Scrub button color"                        rgba(255, 0, 51, 1)
 @var            color    pbar-loaded                "Loaded section color"                      rgba(255, 255, 255, .4)
@@ -19,30 +18,36 @@ Along with lots of optional removals & customizations
 @var            color    sub-color                  "Subtitle color"                            rgba(255, 255, 255, 1)
 @var            range    sub-rem                    "Subtitle size"                             [4, 1, 7, 0.1, "rem"]
 @var            text     sub-font                   "Subtitle font"                             "sans-serif"
-@var            checkbox rmPreviews                 "Remove video previews"                     0
-@var            checkbox rmChips                    "Remove chips (filters on homepage)"        0
-@var            checkbox rmShorts                   "Remove shorts from feeds"                  0
-@var            checkbox transparentHeader          "Transparent header"                        0
-@var            checkbox rmGradientOnPlayer         "Remove gradient from player"               0
-@var            checkbox rmEnd                      "Remove endscreen video suggestions"        0
-@var            checkbox rmBranding                 "Remove branding (channel icons)"           0
-@var            checkbox rmVoice                    "Remove voice button"                       0
-@var            checkbox rmSurvey                   "Remove surveys"                            0
-@var            checkbox rmSign                     "Remove sign-in"                            0
-@var            checkbox rmExplore                  "Remove explore on sidebar"                 0
-@var            checkbox rmChannelsOnVidList        "Remove channels from video suggestions"    0
-@var            checkbox rmChat                     "Remove chat"                               0
-@var            checkbox rmNudges                   "Remove nudges"                             0
-@var            checkbox rmPopups                   "Remove popups"                             0
-@var            checkbox rmPaidContent              "Remove paid content warnings"              0
-@var            checkbox rmBackdropsOnPlayer        "Remove glass effect(blur) from player UI"  0
-@var            checkbox rmHeatmap                  "Remove heatmap on progress bar hover"      0
-@var            checkbox disableSubTransitions      "Disable subtitle transitions"              0
-@var            checkbox rmCreate                   "Remove create button"                      0
-@var            checkbox rmNotifications            "Remove notification button"                0
-@var            checkbox rmCountryCode              "Remove country code beside logo"           0
-@var            checkbox rmLogoText                 "Remove text from logo"                     0
-@var            checkbox rmMoreFrom                 "Remove more from button"                   0
+@var checkbox a "<===== Feed customizations =====>" 0
+@var            checkbox rmChips                    "Remove chips (filters on homepage)"              0
+@var            checkbox rmDonationShelves          "Remove donation shelves"                         0
+@var            checkbox rmMemberContent            "Remove videos with membership requirement"       0
+@var            checkbox rmNudges                   "Remove nudges"                                   0
+@var            checkbox rmPreviews                 "Remove video previews"                           0
+@var            checkbox rmShorts                   "Remove shorts from feeds"                        0
+@var            checkbox rmSurvey                   "Remove surveys"                                  0
+@var            checkbox rmVideoHoverBackgrounds    "Remove background color change on video hovers"  0
+@var            checkbox rmWatched                  "Remove videos that were watched"                 0
+@var            checkbox transparentHeader          "Transparent header"                              0
+@var checkbox x "<===== Player customizations =====>" 0
+@var            checkbox disableSubTransitions      "Disable subtitle transitions"                    0
+@var            checkbox rmBranding                 "Remove branding (channel icons)"                 0
+@var            checkbox rmChannelsOnVidList        "Remove channels from video suggestions"          0
+@var            checkbox rmChat                     "Remove chat&comments"                            0
+@var            checkbox rmEnd                      "Remove endscreen video suggestions"              0
+@var            checkbox rmHeatmap                  "Remove heatmap on progress bar hover"            0
+@var checkbox y "<===== General UI =====>" 0
+@var            checkbox rmBadges                   "Remove useless badges"                           0
+@var            checkbox rmCountryCode              "Remove country code beside logo"                 0
+@var            checkbox rmCreate                   "Remove create button"                            0
+@var            checkbox rmExplore                  "Remove explore on sidebar"                       0
+@var            checkbox rmLogoText                 "Remove text from logo"                           0
+@var            checkbox rmNotifications            "Remove notification button"                      0
+@var            checkbox rmSign                     "Remove sign-in"                                  0
+@var            checkbox rmVoice                    "Remove voice button"                             0
+@var checkbox z "<===== CONSIDERATIONS =====>" 0
+@var            checkbox rmMoreFrom                 "## Remove more from button"                      0
+@var            checkbox rmPaidContent              "## Remove paid content warnings"                 0
 ==/UserStyle== */
 i = !important
 
@@ -84,6 +89,7 @@ i = !important
 
     if rmSurvey
         #attached-survey
+        yt-slimline-survey-view-model.ytSlimlineSurveyViewModelHost
             display none i
 
     if rmSign
@@ -96,17 +102,12 @@ i = !important
             display none i
 
     if rmNudges
-        ytd-feed-nudge-renderer
+        ytd-rich-item-renderer:has(> div#content > ytd-feed-nudge-renderer)
             display none i
 
     if rmCountryCode
         #country-code
             display none i
-
-    if rmBackdropsOnPlayer
-        .yt-spec-button-shape-next--enable-backdrop-filter-experiment
-        #background
-            backdrop-filter unset i
 
     if rmCreate
         #buttons > ytd-button-renderer
@@ -131,6 +132,27 @@ i = !important
         a#logo
             width 105px i
 
+    if rmBadges
+        .badge-style-type-simple
+        .yt-content-metadata-view-model__badge
+            display none i
+
+    if rmMemberContent
+        ytd-rich-item-renderer:has(> #content > ytd-rich-grid-media> #dismissible > #details > #meta > ytd-badge-supported-renderer > .badge.badge-style-type-members-only.style-scope.ytd-badge-supported-renderer.style-scope.ytd-badge-supported-renderer > yt-icon.style-scope.ytd-badge-supported-renderer)
+            display none i
+
+    if rmWatched
+        ytd-rich-item-renderer:has(> #content > yt-lockup-view-model > .yt-lockup-view-model > .yt-lockup-view-model__content-image > yt-thumbnail-view-model > yt-thumbnail-bottom-overlay-view-model > yt-thumbnail-overlay-progress-bar-view-model > .ytThumbnailOverlayProgressBarHostWatchedProgressBar.ytThumbnailOverlayProgressBarHostUseLegacyBar)
+            display none i
+
+    if rmVideoHoverBackgrounds
+        .yt-spec-touch-feedback-shape.yt-spec-touch-feedback-shape--touch-response.yt-spec-touch-feedback-shape--trigger-events
+            display none i
+
+    if rmDonationShelves
+        #donation-shelf
+            display none i
+
 @-moz-document regexp("https://www\\.youtube\\.com/?")
     if rmChips
         ytd-rich-grid-renderer > #header
@@ -138,10 +160,17 @@ i = !important
             display none i
 
 @-moz-document url-prefix("https://www.youtube.com/watch?v=")
-    ytd-watch-flexy[theater]:not([fullscreen]) #full-bleed-container.ytd-watch-flexy
-    ytd-watch-flexy[theater]:not([fullscreen]) #player-full-bleed-container.ytd-watch-flexy
+    ytd-watch-flexy[full-bleed-player][respect-aspect-ratio]:not([fullscreen]) #full-bleed-container.ytd-watch-flexy
+    ytd-watch-flexy[full-bleed-player][respect-aspect-ratio]:not([fullscreen]) #player-full-bleed-container.ytd-watch-flexy
         height calc(100.5vh)
         max-height calc(100.5vh)
+
+    #panels-full-bleed-container.ytd-watch-flexy
+        height 100.5vh i
+
+    #player-container
+    #panels-full-bleed-container.ytd-watch-flexy
+        background-color #000 i
 
     ytd-watch[theater] #player.ytd-watch
         padding-top 15px i
@@ -190,15 +219,8 @@ i = !important
     if rmEnd
         .ytp-ce-video
         .ytp-ce-channel
+        .ytp-ce-hide-button-container
             display none i
-
-    if rmGradientOnPlayer
-        .ytp-gradient-bottom
-            display none i
-
-    if rmAnimationHovers
-        .ytp-chrome-bottom
-            transition none i
 
     if rmBranding
         .iv-branding
@@ -214,24 +236,9 @@ i = !important
         #full-bleed-container > #panels-full-bleed-container
             display none i
 
-    if rmPopups
-        ytd-popup-container
-            display none i
-
     if rmPaidContent
         .ytp-paid-content-overlay
             display none i
-
-    if rmBackdropsOnPlayer
-        .ytp-time-wrapper-delhi
-        .ytp-delhi-modern
-        .ytp-chrome-controls
-        .ytp-play-button
-        .ytp-right-controls
-        .ytp-popup
-        .ytp-delhi-modern-contextmenu
-        .yt-spec-button-shape-next--enable-backdrop-filter-experiment
-            backdrop-filter unset i
 
     if rmHeatmap
         .ytp-heat-map-container
@@ -242,7 +249,40 @@ i = !important
             margin-bottom none i
 
         .ytp-caption-window-rollup.ytp-rollup-mode .captions-text
-            transition none i
+            transition .001s i
+
+    if rmMoreFrom
+        .ytp-button.ytp-cards-button[aria-label^='More from']
+        .ytp-cards-teaser
+            display none i
+
+    if enablePlayerCustomizations
+        if pinPBarBottom
+            .ytp-progress-bar-container
+                bottom 4px i
+
+        .ytp-left-controls
+            flex unset i
+            transform scale(controlScale) i
+            transform-origin left center i
+            width fit-content i
+
+        .ytp-right-controls
+            margin-left auto i
+            transform scale(controlScale) i
+            transform-origin right center i
+
+        .ytp-play-progress
+            background pbar-progress i
+
+        .ytp-scrubber-button
+            background pbar-scrub i
+
+        .ytp-load-progress
+            background pbar-loaded i
+
+        .ytp-progress-list
+            background pbar-rest i
 
     if enableSubStyling
         .ytp-caption-segment
@@ -267,40 +307,6 @@ i = !important
             transform translate(-50%, -50%)
             width unset i
 
-    if enablePlayerCustomizations
-        if pinPBarBottom
-            .ytp-progress-bar-container
-                bottom 4px i
-
-        .ytp-left-controls
-            flex unset i
-            transform scale(controlScale) i
-            transform-origin left center i
-            width fit-content i
-
-        .ytp-right-controls
-            margin-left auto i
-            transform scale(controlScale) i
-            transform-origin right center i
-
-        if allowPBarColorChanges
-            .ytp-play-progress
-                background pbar-progress i
-
-            .ytp-scrubber-button
-                background pbar-scrub i
-
-            .ytp-load-progress
-                background pbar-loaded i
-
-            .ytp-progress-list
-                background pbar-rest i
-
-        if rmMoreFrom
-            .ytp-button.ytp-cards-button[aria-label^='More from']
-            .ytp-cards-teaser
-                display none i
-
 @-moz-document url-prefix("https://www.youtube.com/results?search_query=")
     if rmShorts
         .ytGridShelfViewModelHost.ytd-item-section-renderer.ytGridShelfViewModelHostHasBottomButton
@@ -309,4 +315,5 @@ i = !important
 
 @-moz-document url-prefix("https://music.youtube.com")
     ytmusic-mealbar-promo-renderer
+    yt-bubble-hint-renderer
         display none i
