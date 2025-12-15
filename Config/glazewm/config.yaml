@@ -152,14 +152,14 @@ window_rules:
 
   #################################################################
 
-  - commands: ["set-tiling"]
-    match:
-      - window_process: { equals: "ProtonVPN" }
-
   - commands: ["set-floating --centered"]
     match:
       - window_process: { equals: "devenv" }
       - window_process: { equals: "qView" }
+      - window_process: { equals: "ProtonVPN" }
+
+  - commands: ["set-floating --centered --shown-on-top=true"]
+    match:
       - window_process: { equals: "mpc-hc64" }
 
   - commands: ["set-fullscreen --maximized=false", "set-tiling"]
@@ -180,7 +180,7 @@ window_rules:
       # - window_title: { regex: ".*[Ss][Ee][Tt][Uu][Pp].*" }
       # - window_process: { equals: "explorer" }
       #   window_class: { equals: "OperationStatusWindow" }
-      - window_process: { equals: "ProtonVPN" }
+      # - window_process: { equals: "ProtonVPN" }
       - window_process: { equals: "steam" }
         window_class: { equals: "BootstrapUpdateUIClass" }
       - window_process: { equals: "v2rayN" }

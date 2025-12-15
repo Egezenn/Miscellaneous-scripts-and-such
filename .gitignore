@@ -2,3 +2,4 @@
 **/.venv
 **/.vscode
 pull.ps1
+.temp

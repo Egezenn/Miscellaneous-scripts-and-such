@@ -352,7 +352,7 @@ function updateCursor(e) {
     "cursor-round",
     "cursor-square",
     "cursor-size-1",
-    "cursor-size-other"
+    "cursor-size-other",
   );
   cursor.style.backgroundColor = "";
   cursor.style.border = "";
@@ -673,7 +673,7 @@ async function copySelectionToClipboard(imageData) {
   } catch (err) {
     console.error("Failed to copy image to clipboard:", err);
     showNotification(
-      "Failed to copy image to clipboard. Your browser might not support this feature or permission was denied."
+      "Failed to copy image to clipboard. Your browser might not support this feature or permission was denied.",
     );
   }
 }
@@ -704,7 +704,7 @@ async function pasteFromClipboard() {
   } catch (err) {
     console.error("Failed to paste image from clipboard:", err);
     showNotification(
-      "Failed to paste image from clipboard. Your browser might not support this feature or permission was denied."
+      "Failed to paste image from clipboard. Your browser might not support this feature or permission was denied.",
     );
     return null;
   }
@@ -1142,7 +1142,7 @@ function init() {
             0,
             0,
             selectionRect.width,
-            selectionRect.height
+            selectionRect.height,
           );
           drawingCtx.clearRect(selectionRect.x, selectionRect.y, selectionRect.width, selectionRect.height);
           selectedCanvasContent = liftedSelectionCtx.getImageData(0, 0, selectionRect.width, selectionRect.height);
@@ -1202,7 +1202,7 @@ function init() {
           selectionRect.x,
           selectionRect.y,
           selectionRect.width,
-          selectionRect.height
+          selectionRect.height,
         );
         clipboardContent = imageData;
         copySelectionToClipboard(imageData);
@@ -1410,7 +1410,7 @@ function init() {
         e.preventDefault();
       }
     },
-    { passive: false }
+    { passive: false },
   );
 
   window.addEventListener(
@@ -1481,7 +1481,7 @@ function init() {
         }
       }
     },
-    { passive: false }
+    { passive: false },
   );
 
   displayCanvas.addEventListener("mouseenter", () => {

@@ -32,6 +32,7 @@ function hgrep { Get-Content $historyPath | rg $args }
 Set-PSReadLineKeyHandler -Chord "Ctrl+RightArrow" -Function ForwardWord
 Remove-Item Alias:ls -Force
 function ls { lsd $args }
+function lnn { lsd --color=never --icon never }
 function l { lsd -l --blocks 'permission,size,name' $args }
 function lld { lsd -l --blocks 'permission,size,date,name' --date '+%Y-%m-%d_%H-%M' $args }
 function l1 { lsd -1 $args }
@@ -107,7 +108,8 @@ function gitrestore {
     git reset --soft ("HEAD~" + $count)
     git restore --staged .
 }
-function gitreset {
+function gitreset { git reset --hard HEAD }
+function gitresetback {
     param([int]$count)
     git reset --hard ("HEAD~" + $count)
 }
@@ -120,6 +122,8 @@ function exp {
 }
 
 function code { codium $args }
+
+function clip { win32yank -i }
 
 function pipreset { pip freeze | xargs pip uninstall -y }
 function acvenv { .\.venv\Scripts\activate }

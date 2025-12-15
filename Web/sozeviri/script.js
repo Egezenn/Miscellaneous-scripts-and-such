@@ -138,7 +138,13 @@ let searchbar,
   secondaryLanguagesInput,
   errorModal,
   errorModalCloseButton,
-  errorMessageElement;
+  errorMessageElement,
+  reverseTranslateButton,
+  selectionReverseTranslateButton,
+  exportDataButton,
+  importDataButton,
+  clearDataButton,
+  importFileInput;
 document.addEventListener("DOMContentLoaded", function () {
   if ("serviceWorker" in navigator && (window.location.protocol === "http:" || window.location.protocol === "https:")) {
     navigator.serviceWorker
@@ -157,6 +163,8 @@ document.addEventListener("DOMContentLoaded", function () {
   selectionMenu = document.getElementById("selection-menu");
   selectionSearchButton = document.getElementById("selection-search-button");
   selectionTranslateButton = document.getElementById("selection-translate-button");
+  reverseTranslateButton = document.getElementById("reverseTranslateButton");
+  selectionReverseTranslateButton = document.getElementById("selection-reverse-translate-button");
   helpButton = document.getElementById("helpButton");
   settingsButton = document.getElementById("settingsButton");
   settingsModal = document.getElementById("settingsModal");
@@ -170,12 +178,17 @@ document.addEventListener("DOMContentLoaded", function () {
   errorModal = document.getElementById("errorModal");
   errorModalCloseButton = errorModal.querySelector(".close-button");
   errorMessageElement = document.getElementById("errorMessage");
+  exportDataButton = document.getElementById("exportDataButton");
+  importDataButton = document.getElementById("importDataButton");
+  clearDataButton = document.getElementById("clearDataButton");
+  importFileInput = document.getElementById("importFileInput");
   initialize();
 });
 
 function initialize() {
   updateWordSearchCacheStructure();
   setupEventListeners();
+  setupDataManagementListeners();
   loadTheme();
   loadAndRenderSavedItems();
   retryFailedQueries();
@@ -237,12 +250,14 @@ function setupEventListeners() {
   document.addEventListener("click", handleDocumentClick);
   targetLanguageSelect.addEventListener("change", () => setStorageItem("targetLanguage", targetLanguageSelect.value));
   translationProviderSelect.addEventListener("change", () =>
-    setStorageItem("translationProvider", translationProviderSelect.value)
+    setStorageItem("translationProvider", translationProviderSelect.value),
   );
   document.addEventListener("keydown", handleDocumentKeydown);
   document.addEventListener("selectionchange", handleSelectionChange);
   selectionSearchButton.addEventListener("click", handleSelectionSearch);
   selectionTranslateButton.addEventListener("click", handleSelectionTranslate);
+  reverseTranslateButton.addEventListener("click", handleReverseTranslateButtonClick);
+  selectionReverseTranslateButton.addEventListener("click", handleSelectionReverseTranslate);
   helpButton.addEventListener("click", showHelp);
   settingsButton.addEventListener("click", () => {
     settingsModal.style.display = "block";
@@ -255,7 +270,7 @@ function setupEventListeners() {
   deeplApiKeyInput.addEventListener("input", () => setStorageItem("deeplApiKey", deeplApiKeyInput.value));
   libreApiKeyInput.addEventListener("input", () => setStorageItem("libreApiKey", libreApiKeyInput.value));
   secondaryLanguagesInput.addEventListener("input", () =>
-    setStorageItem("secondaryLanguages", secondaryLanguagesInput.value)
+    setStorageItem("secondaryLanguages", secondaryLanguagesInput.value),
   );
   window.addEventListener("click", (event) => {
     if (event.target == settingsModal) {
@@ -584,7 +599,15 @@ function createTranslationGroupNode(originalText, translations) {
     translationEntryDiv.classList.add("translation-entry");
 
     const translationHeader = document.createElement("h3");
-    translationHeader.textContent = `${languageName}`; // e.g., "English Translation"
+
+    if (targetLang.startsWith("tr-from-")) {
+      const sourceLangCode = targetLang.replace("tr-from-", "");
+      const sourceLangName = languages[sourceLangCode] || sourceLangCode;
+      translationHeader.textContent = `${sourceLangName} -> Turkish`;
+    } else {
+      translationHeader.textContent = `${languageName}`;
+    }
+
     translationEntryDiv.appendChild(translationHeader);
 
     const translatedParagraph = document.createElement("p");
@@ -680,7 +703,11 @@ async function handleSearchbarKeydown(e) {
   } else if (e.keyCode == 13) {
     if (e.ctrlKey) {
       e.preventDefault();
-      handleTranslateButtonClick();
+      if (e.shiftKey) {
+        handleReverseTranslateButtonClick();
+      } else {
+        handleTranslateButtonClick();
+      }
       return;
     }
     e.preventDefault();
@@ -727,10 +754,20 @@ function loadApiKeys() {
 function handleInitialQuery() {
   autocompleteSuggestions.style.display = "none";
   const urlParams = new URLSearchParams(window.location.search);
-  const query = urlParams.get("q");
+  const query = urlParams.get("q") || urlParams.get("query");
+  const type = urlParams.get("t") || "dict";
+
   if (query) {
     searchbar.value = query;
-    searchWord();
+    if (type === "translate" || type === "t") {
+      handleTranslateButtonClick();
+    } else if (type === "revtranslate" || type === "rt") {
+      handleReverseTranslateButtonClick();
+    } else {
+      searchWord();
+    }
+    // Strip URL parameters
+    window.history.replaceState({}, document.title, window.location.pathname);
   }
 }
 
@@ -756,7 +793,7 @@ function populateProviders() {
   translationProviderSelect.value = savedProvider;
 }
 
-async function handleTranslation(provider, targetLang, text) {
+async function translateText(provider, sourceLang, targetLang, text) {
   let translatedText = "";
 
   try {
@@ -766,56 +803,59 @@ async function handleTranslation(provider, targetLang, text) {
 
       if (useDefault) {
         const apiKey = defaultKey;
-        const url = `https://translate-pa.googleapis.com/v1/translate?params.client=gtx&dataTypes=TRANSLATION&key=${apiKey}&query.sourceLanguage=tr&query.targetLanguage=${targetLang}&query.text=${encodeURIComponent(
-          text
+        const url = `https://translate-pa.googleapis.com/v1/translate?params.client=gtx&dataTypes=TRANSLATION&key=${apiKey}&query.sourceLanguage=${sourceLang}&query.targetLanguage=${targetLang}&query.text=${encodeURIComponent(
+          text,
         )}`;
         const response = await fetch(url);
         const data = await response.json();
 
         if (data.error) {
           console.error("Google Translate API error:", data.error.message || JSON.stringify(data.error));
-          showErrorModal(`Google Translate Hatası: ${data.error.message || JSON.stringify(data.error)}`);
-          return;
+          return null;
         }
 
         if (data.translation) {
           translatedText = data.translation;
         } else {
           console.error("Google Translate API: No translation returned.", data);
-          showErrorModal("Google Translate: Çeviri bulunamadı.");
-          return;
+          return null;
         }
       } else {
         const apiKey = getStorageItem("googleApiKey");
         if (!apiKey) {
           showErrorModal("Google API anahtarı eksik.");
-          return;
+          return null;
         }
         const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}&q=${encodeURIComponent(
-          text
-        )}&target=${targetLang}`;
+          text,
+        )}&target=${targetLang}&source=${sourceLang}`; // Added source param
         const response = await fetch(url);
         const data = await response.json();
 
         if (data.error) {
           console.error("Google Translate API error:", data.error.message);
-          showErrorModal(`Google Translate Hatası: ${data.error.message}`);
-          return;
+          return null;
         }
 
         if (data.data && data.data.translations && data.data.translations.length > 0) {
           translatedText = data.data.translations[0].translatedText;
         } else {
           console.error("Google Translate API: No translation returned.", data);
-          showErrorModal("Google Translate: Çeviri bulunamadı.");
-          return;
+          return null;
         }
       }
     } else if (provider === "deepl") {
       const apiKey = getStorageItem("deeplApiKey");
       if (!apiKey) {
-        window.open(`https://www.deepl.com/translator#tr/${targetLang}/${encodeURIComponent(text)}`, "_blank");
-        return;
+        // For DeepL free opening, we can't easily do programmatic reverse without key
+        if (!getStorageItem("deeplApiKey")) {
+          window.open(
+            `https://www.deepl.com/translator#${sourceLang}/${targetLang}/${encodeURIComponent(text)}`,
+            "_blank",
+          );
+          return "OPENED_TAB"; // Signal that we opened a tab
+        }
+        return null;
       }
       const url = `https://api-free.deepl.com/v2/translate`;
       const response = await fetch(url, {
@@ -823,31 +863,29 @@ async function handleTranslation(provider, targetLang, text) {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: `auth_key=${apiKey}&text=${encodeURIComponent(text)}&target_lang=${targetLang.toUpperCase()}`,
+        body: `auth_key=${apiKey}&text=${encodeURIComponent(text)}&target_lang=${targetLang.toUpperCase()}&source_lang=${sourceLang.toUpperCase()}`,
       });
       const data = await response.json();
 
       if (data.message) {
         console.error("DeepL API error:", data.message);
-        showErrorModal(`DeepL Hatası: ${data.message}`);
-        return;
+        return null;
       }
 
       if (data.translations && data.translations.length > 0) {
         translatedText = data.translations[0].text;
       } else {
         console.error("DeepL API: No translation returned.", data);
-        showErrorModal("DeepL: Çeviri bulunamadı.");
-        return;
+        return null;
       }
     } else if (provider === "libre") {
       const apiKey = getStorageItem("libreApiKey");
       if (!apiKey) {
         window.open(
-          `https://libretranslate.com/?q=${encodeURIComponent(text)}&source=tr&target=${targetLang}`,
-          "_blank"
+          `https://libretranslate.com/?q=${encodeURIComponent(text)}&source=${sourceLang}&target=${targetLang}`,
+          "_blank",
         );
-        return;
+        return "OPENED_TAB";
       }
       const url = `https://libretranslate.com/translate`;
       const response = await fetch(url, {
@@ -857,7 +895,7 @@ async function handleTranslation(provider, targetLang, text) {
         },
         body: JSON.stringify({
           q: text,
-          source: "tr",
+          source: sourceLang,
           target: targetLang,
           api_key: apiKey,
         }),
@@ -866,44 +904,109 @@ async function handleTranslation(provider, targetLang, text) {
 
       if (data.error) {
         console.error("LibreTranslate API error:", data.error);
-        showErrorModal(`LibreTranslate Hatası: ${data.error}`);
-        return;
+        return null;
       }
       translatedText = data.translatedText;
     }
-
-    if (translatedText) {
-      if (!translationCache[text]) {
-        translationCache[text] = {
-          timestamp: Date.now(),
-          translations: {},
-        };
-      }
-      translationCache[text].translations[targetLang] = {
-        translatedText: translatedText,
-        originalText: text,
-        provider: provider,
-      };
-      translationCache[text].timestamp = Date.now(); // Update timestamp on any new translation
-      setStorageItem("translationCache", JSON.stringify(translationCache));
-      loadAndRenderSavedItems();
-    } else {
-      showErrorModal("Çeviri başarısız.");
-    }
-
-    // Handle secondary translations
-    const secondaryLanguages = secondaryLanguagesInput.value
-      .split(",")
-      .map((lang) => lang.trim())
-      .filter((lang) => lang !== "");
-
-    for (const secondaryLang of secondaryLanguages) {
-      if (secondaryLang === targetLang) continue; // Skip if it's the same as the primary target language
-      await performSecondaryTranslation(provider, secondaryLang, text);
-    }
   } catch (error) {
     console.error("Translation error:", error);
-    showErrorModal("Çeviri sırasında bir hata oluştu: " + error.message);
+    return null;
+  }
+  return translatedText;
+}
+
+async function handleTranslation(provider, targetLang, text) {
+  const sourceLang = "tr";
+  const translatedText = await translateText(provider, sourceLang, targetLang, text);
+
+  if (translatedText === "OPENED_TAB") return;
+
+  if (translatedText) {
+    saveTranslation(text, targetLang, translatedText, provider);
+  } else {
+    showErrorModal("Çeviri başarısız.");
+  }
+
+  // Handle secondary translations
+  const secondaryLanguages = secondaryLanguagesInput.value
+    .split(",")
+    .map((lang) => lang.trim())
+    .filter((lang) => lang !== "");
+
+  for (const secondaryLang of secondaryLanguages) {
+    if (secondaryLang === targetLang) continue;
+    const secTranslatedText = await translateText(provider, sourceLang, secondaryLang, text);
+    if (secTranslatedText && secTranslatedText !== "OPENED_TAB") {
+      saveTranslation(text, secondaryLang, secTranslatedText, provider);
+    }
+  }
+}
+
+function saveTranslation(originalText, targetCode, translatedText, provider) {
+  if (!translationCache[originalText]) {
+    translationCache[originalText] = {
+      timestamp: Date.now(),
+      translations: {},
+    };
+  }
+  translationCache[originalText].translations[targetCode] = {
+    translatedText: translatedText,
+    originalText: originalText,
+    provider: provider,
+  };
+  translationCache[originalText].timestamp = Date.now();
+  setStorageItem("translationCache", JSON.stringify(translationCache));
+  loadAndRenderSavedItems();
+}
+
+async function handleReverseTranslateButtonClick() {
+  const text = searchbar.value.trim();
+  if (text) {
+    const provider = translationProviderSelect.value;
+    const targetLang = targetLanguageSelect.value;
+    const secondaryLanguages = secondaryLanguagesInput.value
+      .split(",")
+      .map((l) => l.trim())
+      .filter((l) => l);
+
+    await handleReverseTranslation(provider, [targetLang, ...secondaryLanguages], text);
+    closeAllLists();
+    blockAutocomplete = true;
+  }
+}
+
+async function handleSelectionReverseTranslate() {
+  const selection = window.getSelection();
+  const selectedText = selection.toString().trim();
+  if (selectedText.length > 0) {
+    const provider = translationProviderSelect.value;
+    const targetLang = targetLanguageSelect.value;
+    const secondaryLanguages = secondaryLanguagesInput.value
+      .split(",")
+      .map((l) => l.trim())
+      .filter((l) => l);
+
+    await handleReverseTranslation(provider, [targetLang, ...secondaryLanguages], selectedText);
+
+    window.getSelection().removeAllRanges();
+    selectionMenu.style.display = "none";
+  }
+}
+
+async function handleReverseTranslation(provider, possibleSourceLangs, text) {
+  const targetCode = "tr";
+  // We want to try translating FROM each candidate language TO Turkish
+  // If the result is different from original text (and valid), we display it.
+
+  // De-duplicate languages
+  const candidateLangs = [...new Set(possibleSourceLangs)];
+
+  for (const sourceLang of candidateLangs) {
+    const translation = await translateText(provider, sourceLang, targetCode, text);
+
+    if (translation && translation !== "OPENED_TAB" && translation.toLowerCase() !== text.toLowerCase()) {
+      saveTranslation(text, targetCode, `${translation} (from ${languages[sourceLang] || sourceLang})`, provider);
+    }
   }
 }
 
@@ -912,6 +1015,12 @@ async function handleDocumentKeydown(e) {
     settingsModal.style.display === "block" ||
     helpModal.style.display === "block" ||
     errorModal.style.display === "block";
+
+  if (e.ctrlKey && e.key === "k") {
+    e.preventDefault();
+    searchbar.focus();
+    return;
+  }
 
   if (isModalOpen) {
     if (e.key === "Escape") {
@@ -959,9 +1068,21 @@ async function handleDocumentKeydown(e) {
       window.getSelection().removeAllRanges();
     } else if (e.code === "Space") {
       e.preventDefault();
-      const provider = translationProviderSelect.value;
-      const targetLang = targetLanguageSelect.value;
-      handleTranslation(provider, targetLang, selection);
+      if (e.shiftKey) {
+        // Reverse Translate Selection
+        const provider = translationProviderSelect.value;
+        const targetLang = targetLanguageSelect.value;
+        const secondaryLanguages = secondaryLanguagesInput.value
+          .split(",")
+          .map((l) => l.trim())
+          .filter((l) => l);
+        await handleReverseTranslation(provider, [targetLang, ...secondaryLanguages], selection);
+      } else {
+        // Normal Translate Selection
+        const provider = translationProviderSelect.value;
+        const targetLang = targetLanguageSelect.value;
+        handleTranslation(provider, targetLang, selection);
+      }
       window.getSelection().removeAllRanges();
     }
   } else if (e.key === "s") {
@@ -1022,7 +1143,7 @@ async function performSecondaryTranslation(provider, targetLang, text) {
       if (useDefault) {
         const apiKey = defaultKey;
         const url = `https://translate-pa.googleapis.com/v1/translate?params.client=gtx&dataTypes=TRANSLATION&key=${apiKey}&query.sourceLanguage=tr&query.targetLanguage=${targetLang}&query.text=${encodeURIComponent(
-          text
+          text,
         )}`;
         const response = await fetch(url);
         const data = await response.json();
@@ -1044,7 +1165,7 @@ async function performSecondaryTranslation(provider, targetLang, text) {
           return;
         }
         const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}&q=${encodeURIComponent(
-          text
+          text,
         )}&target=${targetLang}`;
         const response = await fetch(url);
         const data = await response.json();
@@ -1093,7 +1214,7 @@ async function performSecondaryTranslation(provider, targetLang, text) {
       if (!apiKey) {
         window.open(
           `https://libretranslate.com/?q=${encodeURIComponent(text)}&source=tr&target=${targetLang}`,
-          "_blank"
+          "_blank",
         );
         return;
       }
@@ -1138,4 +1259,102 @@ async function performSecondaryTranslation(provider, targetLang, text) {
   } catch (error) {
     console.error(`Secondary translation error for ${targetLang}:`, error);
   }
+}
+
+async function handleReverseTranslation(provider, possibleSourceLangs, text) {
+  const targetCode = "tr";
+
+  // De-duplicate languages
+  const candidateLangs = [...new Set(possibleSourceLangs)];
+
+  for (const sourceLang of candidateLangs) {
+    const translation = await translateText(provider, sourceLang, targetCode, text);
+
+    if (translation && translation !== "OPENED_TAB" && translation.toLowerCase() !== text.toLowerCase()) {
+      saveTranslation(text, `tr-from-${sourceLang}`, translation, provider);
+    }
+  }
+}
+
+function handleExportData() {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.startsWith(STORAGE_PREFIX) && !key.includes("autocompleteCache")) {
+      data[key] = localStorage.getItem(key);
+    }
+  }
+
+  const dataStr = JSON.stringify(data, null, 2);
+  const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+
+  const exportFileDefaultName = "sozeviri-data-" + new Date().toISOString().slice(0, 10) + ".json";
+
+  const linkElement = document.createElement("a");
+  linkElement.setAttribute("href", dataUri);
+  linkElement.setAttribute("download", exportFileDefaultName);
+  linkElement.click();
+}
+
+function handleImportData() {
+  importFileInput.click();
+}
+
+function handleClearData() {
+  if (confirm("Tüm verileri temizlemek istediğinize emin misiniz? Bu işlem geri alınamaz.")) {
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith(STORAGE_PREFIX)) {
+        keysToRemove.push(key);
+      }
+    }
+
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
+    location.reload();
+  }
+}
+
+function setupDataManagementListeners() {
+  exportDataButton.addEventListener("click", handleExportData);
+  importDataButton.addEventListener("click", handleImportData);
+  clearDataButton.addEventListener("click", handleClearData);
+
+  importFileInput.addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (typeof data !== "object" || data === null) {
+          throw new Error("Invalid JSON format");
+        }
+
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key.startsWith(STORAGE_PREFIX) && !key.includes("autocompleteCache")) {
+            keysToRemove.push(key);
+          }
+        }
+        keysToRemove.forEach((key) => localStorage.removeItem(key));
+
+        for (const key in data) {
+          if (key.startsWith(STORAGE_PREFIX)) {
+            localStorage.setItem(key, data[key]);
+          }
+        }
+
+        alert("Veriler başarıyla içe aktarıldı.");
+        location.reload();
+      } catch (error) {
+        console.error("Import Error:", error);
+        alert("Veri içe aktarılırken hata oluştu: " + error.message);
+      }
+      importFileInput.value = "";
+    };
+    reader.readAsText(file);
+  });
 }

@@ -64,7 +64,10 @@ body {
 
 #translateButton {
   background-color: #006421;
-  border-radius: 0 4px 4px 0;
+}
+
+#reverseTranslateButton {
+  background-color: #5d6400;
 }
 
 .search-container button:hover {
@@ -80,7 +83,7 @@ body {
 }
 
 #themeSelect {
-    width: 100%;
+  width: 100%;
 }
 
 .autocomplete-suggestions {
@@ -130,7 +133,6 @@ body {
   border-radius: 1rem;
   padding: 1rem;
 }
-
 
 .search-results > .search.translation-group {
   background-color: #baf8ba;
@@ -395,7 +397,7 @@ body.dark-theme .settings-grid .styled-input {
 }
 
 #settingsButton {
-    border-radius: 4px;
+  border-radius: 4px;
 }
 
 .modal {
@@ -463,4 +465,28 @@ body.dark-theme #selection-menu {
 
 #selection-menu #selection-translate-button:hover {
   background-color: #004d1a;
+}
+
+.settings-button {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.settings-button.is-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: white;
+}
+
+.settings-button.is-danger:hover {
+  background-color: #c82333;
+}
+
+body.dark-theme .settings-button.is-danger {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+body.dark-theme .settings-button.is-danger:hover {
+  background-color: #bd2130;
 }

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -14,6 +14,7 @@
           <input type="text" id="searchbar" autocomplete="off" />
           <button id="searchButton">Ara</button>
           <button id="translateButton">Çevir</button>
+          <button id="reverseTranslateButton">Türkçesi</button>
         </div>
         <button id="settingsButton">Ayarlar</button>
         <button id="helpButton">?</button>
@@ -24,6 +25,7 @@
     <div id="selection-menu" class="selection-menu">
       <button id="selection-search-button">Ara <span class="shortcut-hint">(Enter)</span></button>
       <button id="selection-translate-button">Çevir <span class="shortcut-hint">(Space)</span></button>
+      <button id="selection-reverse-translate-button">Türkçesi <span class="shortcut-hint">(Shift+Space)</span></button>
     </div>
     <div id="settingsModal" class="modal">
       <div class="modal-content">
@@ -47,6 +49,14 @@
           <input type="text" id="deeplApiKey" class="styled-input" />
           <label for="libreApiKey">LibreTranslate Anahtarı:</label>
           <input type="text" id="libreApiKey" class="styled-input" />
+
+          <label>Veri Yönetimi:</label>
+          <div class="data-management-buttons" style="grid-column: 2; display: flex; gap: 0.5rem">
+            <button id="exportDataButton" class="settings-button">Dışa Aktar</button>
+            <button id="importDataButton" class="settings-button">İçe Aktar</button>
+            <button id="clearDataButton" class="settings-button is-danger">Temizle</button>
+            <input type="file" id="importFileInput" accept=".json" style="display: none" />
+          </div>
         </div>
       </div>
     </div>
@@ -55,17 +65,22 @@
         <span class="close-button">&times;</span>
         <h1>Sözeviri</h1>
         <p>Hızlı ve efektif, <b>Söz</b>lük ve Ç<b>eviri</b> - Egezenn</p>
-        <p><a href="https://github.com/Egezenn/Miscellaneous-scripts-and-such/tree/main/Web/sozeviri">Kaynak</a></p>
+        <p>
+          <a href="https://github.com/Egezenn/Miscellaneous-scripts-and-such/tree/main/Web/sozeviri">Kaynak</a>
+        </p>
         <h3>Kısayollar:</h3>
         <ul>
           <li><b>Aşağı/Yukarı Ok:</b> Otomatik tamamlama listesinde gezin</li>
           <li><b>Enter:</b> Otomatik tamamlama seçimini veya arama çubuğundaki kelimeyi ara</li>
           <li><b>Ctrl + Enter:</b> Arama çubuğundaki kelimeyi çevir</li>
+          <li><b>Ctrl + Shift + Enter:</b> Arama çubuğundaki kelimenin Türkçesini bul</li>
+          <li><b>Ctrl + K:</b> Arama çubuğuna odaklan</li>
           <li><b>Escape:</b> Otomatik tamamlama listesini veya açık pencereleri kapat</li>
           <li><b>S:</b> Ayarlar penceresini aç</li>
           <li><b>H:</b> Yardım penceresini aç</li>
           <li><b>Metin Seçimi + Enter:</b> Seçili metni arat</li>
           <li><b>Metin Seçimi + Space:</b> Seçili metni çevir</li>
+          <li><b>Metin Seçimi + Shift + Space:</b> Seçili metnin Türkçesini bul</li>
         </ul>
       </div>
     </div>
