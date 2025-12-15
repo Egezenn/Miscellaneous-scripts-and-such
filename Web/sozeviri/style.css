@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   align-items: flex-start;
   background-color: #f4f4f4;
@@ -219,6 +225,22 @@ body.dark-theme .search-container button {
 
 body.dark-theme .search-container button:hover {
   background-color: #003f80;
+}
+
+#translateButton {
+  background-color: #006421;
+}
+
+#translateButton:hover {
+  background-color: #004d1a;
+}
+
+#reverseTranslateButton {
+  background-color: #5d6400;
+}
+
+#reverseTranslateButton:hover {
+  background-color: #4d5400;
 }
 
 body.dark-theme .autocomplete-suggestions {
@@ -467,6 +489,14 @@ body.dark-theme #selection-menu {
   background-color: #004d1a;
 }
 
+#selection-menu #selection-reverse-translate-button {
+  background-color: #5d6400;
+}
+
+#selection-menu #selection-reverse-translate-button:hover {
+  background-color: #4d5400;
+}
+
 .settings-button {
   cursor: pointer;
   transition: background-color 0.2s;
@@ -487,6 +517,59 @@ body.dark-theme .settings-button.is-danger {
   border-color: #bd2130;
 }
 
-body.dark-theme .settings-button.is-danger:hover {
-  background-color: #bd2130;
+@media (max-width: 800px) {
+  .search-container {
+    flex-direction: column;
+  }
+
+  .search-input-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .search-container input[type="text"] {
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 10px;
+    flex: 0 0 100%;
+  }
+
+  .search-container button {
+    width: auto;
+    flex: 1;
+    margin-bottom: 0;
+    margin-right: 5px; /* Add spacing between buttons */
+  }
+
+  /* Remove right margin from the last button */
+  .search-container button:last-child,
+  #settingsButton,
+  #helpButton {
+    margin-right: 0;
+  }
+
+  /* Fix specific button border radius reset */
+  #searchButton,
+  #translateButton,
+  #reverseTranslateButton {
+    border-radius: 4px;
+  }
+
+  .modal-content {
+    width: 90%;
+    margin: 10% auto;
+    max-width: none;
+  }
+
+  #selection-menu {
+    flex-direction: column;
+    display: flex;
+  }
+
+  #selection-menu button {
+    display: block;
+    width: 100%;
+    margin: 2px 0;
+  }
 }

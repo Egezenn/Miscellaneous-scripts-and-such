@@ -118,6 +118,7 @@ let blockAutocomplete = false;
 
 let searchbar,
   searchButton,
+  translateButton,
   searchResults,
   autocompleteSuggestions,
   themeSelect,
@@ -155,6 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   searchbar = document.getElementById("searchbar");
   searchButton = document.getElementById("searchButton");
+  translateButton = document.getElementById("translateButton");
   searchResults = document.getElementById("searchResults");
   autocompleteSuggestions = document.getElementById("autocompleteSuggestions");
   themeSelect = document.getElementById("themeSelect");
@@ -245,6 +247,7 @@ async function retryFailedQueries() {
 function setupEventListeners() {
   searchbar.addEventListener("input", displayAutocompleteSuggestions);
   searchButton.addEventListener("click", handleSearchButtonClick);
+  translateButton.addEventListener("click", handleTranslateButtonClick);
   themeSelect.addEventListener("change", () => setTheme(themeSelect.value));
   searchbar.addEventListener("keydown", handleSearchbarKeydown);
   document.addEventListener("click", handleDocumentClick);
@@ -299,6 +302,9 @@ async function handleSearchButtonClick() {
   const success = await searchWord();
   if (!success) {
     searchbar.value = originalValue;
+  } else {
+    searchbar.value = "";
+    originalInputValue = "";
   }
 }
 
@@ -681,6 +687,8 @@ async function handleTranslateButtonClick() {
     const provider = translationProviderSelect.value;
     const targetLang = targetLanguageSelect.value;
     handleTranslation(provider, targetLang, text);
+    searchbar.value = "";
+    originalInputValue = "";
     closeAllLists();
     blockAutocomplete = true;
   }
@@ -735,7 +743,13 @@ async function handleSearchbarKeydown(e) {
 }
 
 function handleDocumentClick(event) {
-  if (!autocompleteSuggestions.contains(event.target) && event.target !== searchbar) {
+  if (
+    !autocompleteSuggestions.contains(event.target) &&
+    event.target !== searchbar &&
+    event.target !== searchButton &&
+    event.target !== translateButton &&
+    event.target !== reverseTranslateButton
+  ) {
     closeAllLists();
     if (originalInputValue !== "") {
       searchbar.value = originalInputValue;
@@ -970,6 +984,8 @@ async function handleReverseTranslateButtonClick() {
       .filter((l) => l);
 
     await handleReverseTranslation(provider, [targetLang, ...secondaryLanguages], text);
+    searchbar.value = "";
+    originalInputValue = "";
     closeAllLists();
     blockAutocomplete = true;
   }
