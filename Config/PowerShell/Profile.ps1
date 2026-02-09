@@ -1,49 +1,33 @@
-Clear-Host
+# shellstuff
+
 Invoke-Expression (& starship init powershell)
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
+
 Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
 
-# path and history stuff
+Set-PSReadLineKeyHandler -Chord "Ctrl+RightArrow" -Function ForwardWord
+
 function .. { Set-Location .. }
 function ~ { Set-Location ~ }
 function / { Set-Location / }
+function c { Clear-Host }
+function cwd { (Get-Location).Path }
 
 Remove-Item Alias:history -Force
+$historyPath = (Get-PSReadlineOption).HistorySavePath
 function history {
     param(
         [int]$Count = 10
     )
-
-    $historyPath = (Get-PSReadlineOption).HistorySavePath
     $lines = Get-Content $historyPath
-
     $startIndex = [Math]::Max(0, $lines.Count - $Count)
-
     for ($i = $startIndex; $i -lt $lines.Count; $i++) {
         "{0,4} | {1}" -f ($i + 1), $lines[$i]
     }
 }
-
-$historyPath = (Get-PSReadlineOption).HistorySavePath
 function histfile { Invoke-Item $historyPath }
 function hpure { Get-Content $historyPath }
 function hgrep { Get-Content $historyPath | rg $args }
-
-Set-PSReadLineKeyHandler -Chord "Ctrl+RightArrow" -Function ForwardWord
-Remove-Item Alias:ls -Force
-function ls { lsd $args }
-function lnn { lsd --color=never --icon never }
-function l { lsd -l --blocks 'permission,size,name' $args }
-function lld { lsd -l --blocks 'permission,size,date,name' --date '+%Y-%m-%d_%H-%M' $args }
-function l1 { lsd -1 $args }
-function lsps { Get-ChildItem $args }
-function la { lsd -A $args }
-function lt { lsd --tree --depth 3 $args }
-function ltd { lsd --tree $args }
-function cds {
-    Set-Location $args[0]
-    lsd
-}
 function cdm {
     param (
         [Parameter(Mandatory = $true)]
@@ -55,20 +39,10 @@ function cdm {
     }
     Set-Location -Path $Path
 }
-function cwd { (Get-Location).Path }
-
-function editprofile { edit $env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 }
-function adminterminal { Start-Process wt -ArgumentList "-d `"$PWD`"" -Verb runas }
-function markhidden { attrib +h /d .\.* }
-function c { Clear-Host }
-function reload {
-    . $PROFILE
-    Clear-Host
-}
 
 #########################################################################################
-# executables
 
+# package managerment
 function updatelist {
     pacman -Sy
     pacman -Qu
@@ -79,17 +53,77 @@ function updatelist {
 }
 function updateall {
     pacman -Syu --noconfirm
-    choco upgrade all -y
     winget update --all
 }
 function updateallx {
     pacman -Syu --noconfirm
-    choco upgrade all -y
+    # choco upgrade all -y
     winget update --all
     uv tool upgrade --all
-    dotnet tool update --all -g
+    # dotnet tool update --all -g
 }
 
+function win { winget install $args }
+function wun { winget uninstall $args }
+function wup { winget update $args }
+function wse { winget search $args }
+
+# Filesystem exploration
+Remove-Item Alias:ls -Force
+function ls { lsd $args }
+function lnn { lsd --color=never --icon never $args }
+function l { lsd -l --blocks 'permission,size,name' $args }
+function lld { lsd -l --blocks 'permission,size,date,name' --date '+%Y-%m-%d_%H-%M' $args }
+function l1 { lsd -1 $args }
+function lsps { Get-ChildItem $args }
+function la { lsd -A $args }
+function lt { lsd --tree --depth 3 $args }
+function ltd { lsd --tree $args }
+function cds {
+    Set-Location $args[0]
+    lsd
+}
+
+function exp {
+    param(
+        [string]$Path = "."
+    )
+    Explorer++.exe $Path
+}
+function y {
+    $tmp = [System.IO.Path]::GetTempFileName()
+    yazi $args --cwd-file="$tmp"
+    $cwd = Get-Content -Path $tmp -Encoding UTF8
+    if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path) {
+        Set-Location -LiteralPath ([System.IO.Path]::GetFullPath($cwd))
+    }
+    Remove-Item -Path $tmp
+}
+function es { & $env:USERPROFILE\bin\void\es.exe -instance "1.5a" $args }
+function rgn { rg -NI --color never $args }
+
+# dev
+
+function code { codium $args }
+
+function pipreset { pip freeze | xargs pip uninstall -y }
+function acvenv { .\.venv\Scripts\activate }
+function createvenv {
+    python -m venv .venv
+    acvenv
+}
+function createvenvi {
+    python -m venv .venv
+    acvenv
+    pip install -r .\requirements.txt
+}
+
+# git
+function gitcom {
+    # hopes and prayers
+    git checkout main
+    git checkout master
+}
 function gitscommit {
     git add .
     git commit -a -m $args
@@ -114,69 +148,39 @@ function gitresetback {
     git reset --hard ("HEAD~" + $count)
 }
 
-function exp {
-    param(
-        [string]$Path = "."
-    )
-    Explorer++.exe $Path
-}
+# misc
 
-function code { codium $args }
-
-function clip { win32yank -i }
-
-function pipreset { pip freeze | xargs pip uninstall -y }
-function acvenv { .\.venv\Scripts\activate }
-function createvenv {
-    python -m venv .venv
-    acvenv
-}
-function createvenvi {
-    python -m venv .venv
-    acvenv
-    pip install -r .\requirements.txt
-}
-
-function cbuild {
-    mkdir build
-    Set-Location build
-    cmake ..
-}
+function editprofile { edit $env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 }
+function markhidden { attrib +h /d .\.* }
 function msbuild { & "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" $args }
-
-function office2pdf { & 'C:\Program Files\LibreOffice\program\soffice.exe' --headless --convert-to pdf @args }
-
 function pkill { taskkill /F /IM @args }
 function whr { & "C:\Windows\System32\where.exe" @args }
 
-function win { winget install $args }
-function wse { winget search $args }
+function clipw { win32yank -i $args }
+function office2pdf { & 'C:\Program Files\LibreOffice\program\soffice.exe' --headless --convert-to pdf @args }
 
-function rgn { rg -NI --color never $args }
+function ucrt64 { & "C:/msys64/msys2_shell.cmd" -defterm -here -no-start -ucrt64 -shell bash }
+function mingw64 { & "C:/msys64/msys2_shell.cmd" -defterm -here -no-start -mingw64 -shell bash }
+function msys2 { & "C:/msys64/msys2_shell.cmd" -defterm -here -no-start -msys2 -shell bash }
 
-function y {
-    $tmp = [System.IO.Path]::GetTempFileName()
-    yazi $args --cwd-file="$tmp"
-    $cwd = Get-Content -Path $tmp -Encoding UTF8
-    if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path) {
-        Set-Location -LiteralPath ([System.IO.Path]::GetFullPath($cwd))
-    }
-    Remove-Item -Path $tmp
-}
 
 function yt { yt-dlp @args }
-function yt144 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=144]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
-function yt240 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=240]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
-function yt360 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=360]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
-function yt480 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=480]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
-function yt720 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=720]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
-function yt144ns { Set-Location ~\Videos && yt-dlp -f "bv*[height<=144]+ba/b" @args }
-function yt240ns { Set-Location ~\Videos && yt-dlp -f "bv*[height<=240]+ba/b" @args }
-function yt360ns { Set-Location ~\Videos && yt-dlp -f "bv*[height<=360]+ba/b" @args }
-function yt480ns { Set-Location ~\Videos && yt-dlp -f "bv*[height<=480]+ba/b" @args }
-function yt720ns { Set-Location ~\Videos && yt-dlp -f "bv*[height<=720]+ba/b" @args }
-
+function yt144 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=144]+ba/b" @args }
+function yt240 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=240]+ba/b" @args }
+function yt360 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=360]+ba/b" @args }
+function yt480 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=480]+ba/b" @args }
+function yt720 { Set-Location ~\Videos && yt-dlp -f "bv*[height<=720]+ba/b" @args }
+function yt144s { Set-Location ~\Videos && yt-dlp -f "bv*[height<=144]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
+function yt240s { Set-Location ~\Videos && yt-dlp -f "bv*[height<=240]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
+function yt360s { Set-Location ~\Videos && yt-dlp -f "bv*[height<=360]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
+function yt480s { Set-Location ~\Videos && yt-dlp -f "bv*[height<=480]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
+function yt720s { Set-Location ~\Videos && yt-dlp -f "bv*[height<=720]+ba/b" --write-sub --write-auto-sub --sub-lang "en.*" @args }
 function ytx { Set-Location ~\Music && yt-dlp -x @args }
+
+function steams { & 'C:\Program Files (x86)\Steam\steam.exe' -silent }
+function steamc { & 'C:\Program Files (x86)\Steam\steam.exe' -userchooser }
+function steamq { & 'C:\Program Files (x86)\Steam\steam.exe' -exitsteam }
+function steamqq { pkill steam.exe && sleep 1 && pkill steamerrorreporter64.exe }
 
 function cppyhere { python copyparty-en.py }
 function cppyhered {
@@ -188,7 +192,3 @@ function cppyhered {
     Invoke-WebRequest -Uri $url -OutFile $fileName
     python $fileName
 }
-
-function steams { & 'C:\Program Files (x86)\Steam\steam.exe' -silent }
-function steamc { & 'C:\Program Files (x86)\Steam\steam.exe' -userchooser }
-function steamq { & 'C:\Program Files (x86)\Steam\steam.exe' -exitsteam }

@@ -3,6 +3,7 @@ a[href="https://support.discord.com"],
 /* remove paid stuff */
 a[href="/store"],
 a[href="/shop"],
+a[href="/quest-home"],
 div[class*="colorPremium"],
 div[aria-controls="discord-nitro-tab"],
 div[aria-label="Gift Inventory"],
@@ -18,8 +19,8 @@ div[data-list-item-id^="channels___boosts"],
 /* activity */
 div[class^="container"][class*="openOnHover"],
 /* guild tags */
-span[class^="chipletContainer"],
-span[class^="clanTagChiplet"],
+span[class*="chipletContainer"],
+span[class*="clanTagChiplet"],
 /* avatar decos */
 img[class^="avatarDecoration"],
 svg[class^="avatarDecoration"],
@@ -28,14 +29,15 @@ img[aria-label^="Role icon"],
 div[class^="newMemberBadge"],
 /* nitro */
 svg[aria-label^="Server boosting"],
+svg[class*="premiumIcon"],
 div[class^="profileEffects"],
 header>svg>foreignObject,
 /* oh so special badges */
 div[aria-label="User Badges"],
 /* statuses */
-div[class^="memberInner"]>div[class^="content"]>div[class^="subText"],
+div[class*="memberInner"]>div[class*="content"]>div[class*="subText"],
 /* backgrounds */
-div[class^="member"]>div[class*="nameplated"]>div[style],
+div[class*="member"]>div[class*="nameplated"]>div[style],
 div.app-launcher-entrypoint,
 /* chat buttons */
 button[aria-label="Open sticker picker"],
@@ -93,6 +95,14 @@ div[class^="chat"][data-has-border] > div[class^="content"] > div[class^="contai
 div[role="list"][aria-label="Members"],
 div[class^="sidebarList"][class*="sidebarListRounded"] {
   width: 175px;
+}
+
+div[class*="members"][data-list-id*="members"] {
+  width: fit-content !important;
+}
+
+aside[class*="membersWrap"] {
+  min-width: 0 !important;
 }
 
 /* remove headers */

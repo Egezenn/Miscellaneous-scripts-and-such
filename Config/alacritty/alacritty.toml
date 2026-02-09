@@ -1,0 +1,48 @@
+[window]
+decorations = "None"
+[font]
+normal = { family = "MesloLGM Nerd Font Mono", style = "Regular" }
+[terminal]
+shell = "pwsh -NoLogo"
+[[keyboard.bindings]]
+key = "Back"
+mods = "Control"
+chars = "\u0017" # Ctrl+Backspace: delete word backward
+
+# fluff
+
+[[keyboard.bindings]]
+key = "L"
+mods = "Control"
+chars = "\u000c" # Ctrl+L: clear screen
+
+[[keyboard.bindings]]
+key = "*"
+mods = "Control"
+action = "IncreaseFontSize"
+
+[[keyboard.bindings]]
+key = "Space"
+mods = "Control|Shift"
+action = "ToggleViMode"
+
+[[keyboard.bindings]]
+key = "V"
+mods = "Control|Shift"
+mode = "Vi"
+action = "ToggleViMode" # Visual mode toggle
+
+[[keyboard.bindings]]
+mode = "Vi"
+key = "H"
+mods = "Control|Shift"
+action = "Left"
+
+[[keyboard.bindings]]
+mode = "Vi"
+key = "L"
+mods = "Control|Shift"
+action = "Right"
+
+[mouse]
+bindings = [{ mouse = "Right", mods = "Control", action = "Paste" }]

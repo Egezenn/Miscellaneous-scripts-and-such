@@ -2,8 +2,8 @@
 
 format = "$all"
 add_newline = false
-scan_timeout = 10
-command_timeout = 300
+scan_timeout = 1000
+command_timeout = 1000
 
 [battery]
 disabled = true
@@ -14,7 +14,7 @@ format = '[$duration](bold yellow)'
 
 [directory]
 disabled = false
-format = '@[$read_only]($read_only_style)[$path]($style) '
+format = '[$read_only]($read_only_style)[$path]($style) '
 home_symbol = '~'
 read_only = "┇"
 repo_root_format = '[$before_root_path]($before_repo_root_style)[$read_only]($read_only_style)[$repo_root]($repo_root_style)[$path]($style)'
@@ -47,10 +47,10 @@ disabled = true
 
 [username]
 style_user = 'white bold'
-style_root = 'black bold'
+style_root = 'red bold'
 format = '[$user]($style)'
 disabled = false
-show_always = true
+show_always = false
 
 # ----------------------------------
 

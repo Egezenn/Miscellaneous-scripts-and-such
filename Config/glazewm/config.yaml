@@ -16,7 +16,7 @@ general:
 gaps:
   scale_with_dpi: false
 
-  inner_gap: "2px"
+  inner_gap: "0px"
   outer_gap:
     top: "0px"
     right: "0px"
@@ -27,7 +27,7 @@ window_effects:
   focused_window:
     border:
       enabled: true
-      color: "#004000"
+      color: "#005000"
 
     hide_title_bar:
       enabled: false
@@ -42,7 +42,7 @@ window_effects:
 
   other_windows:
     border:
-      enabled: true
+      enabled: false
       color: "#400000"
     hide_title_bar:
       enabled: false
@@ -119,6 +119,7 @@ window_rules:
   - commands: ["move --workspace br1wser"]
     match:
       - window_process: { equals: "chrome" }
+        window_class: { equals: "Chrome_WidgetWin_1" }
 
   - commands: ["move --workspace media"]
     match:
@@ -130,6 +131,7 @@ window_rules:
     match:
       - window_process: { equals: "WhatsApp" }
       - window_process: { equals: "Discord" }
+      - window_process: { equals: "vesktop" }
       - window_process: { equals: "Telegram" }
       - window_process: { equals: "thunderbird" }
 
@@ -142,21 +144,33 @@ window_rules:
   - commands: [
         "move --workspace game",
         # "shell-exec --hide-window setresolution.exe -w 1280 -h 720 -o 0 -noprompt -nopersist",
+        "set-floating --centered --width 1280 --height 720",
         "set-title-bar-visibility hidden",
         "set-fullscreen --maximized=true",
       ]
     match:
       - window_process: { equals: "dota2" }
+
+  - commands: ["set-floating --centered --width 1280 --height 720"]
+    match:
+      - window_title: { equals: "Panorama Debugger" }
+
+  - commands:
+      ["move --workspace game", "set-title-bar-visibility hidden", "set-floating --centered --width 1280 --height 720"]
+    match:
       - window_process: { equals: "javaw" }
         window_class: { regex: "GLFW30|LWJGL" }
 
+  - commands: ["set-tiling", "size --width 550"]
+    match:
+      - window_class: { regex: "Minify 1.\\d+\\.?\\d+(rc\\d+)?" }
   #################################################################
 
   - commands: ["set-floating --centered"]
     match:
       - window_process: { equals: "devenv" }
-      - window_process: { equals: "qView" }
       - window_process: { equals: "ProtonVPN" }
+      - window_process: { equals: "qView" }
 
   - commands: ["set-floating --centered --shown-on-top=true"]
     match:
@@ -167,32 +181,12 @@ window_rules:
       - window_process: { equals: "devenv" }
         window_title: { regex: ".* - Microsoft Visual Studio" }
 
-  # throw any setup windows & unnecessary dialogs away
-  - commands:
-      ["move --workspace dialog", "set-floating --centered --shown-on-top=true", "set-transparency --opacity 0.4"]
-    match:
-      - window_process: { regex: "msiexec" }
-      - window_process: { regex: ".*[Ss][Ee][Tt][Uu][Pp].*" }
-      - window_process: { regex: ".*[Ww][Ii][Zz][Aa][Rr][Dd].*" }
-      - window_class: { regex: ".*[Ss][Ee][Tt][Uu][Pp].*" }
-      - window_class: { regex: ".*[Ww][Ii][Zz][Aa][Rr][Dd].*" }
-      - window_process: { equals: "VSIXInstaller" }
-      # - window_title: { regex: ".*[Ss][Ee][Tt][Uu][Pp].*" }
-      # - window_process: { equals: "explorer" }
-      #   window_class: { equals: "OperationStatusWindow" }
-      # - window_process: { equals: "ProtonVPN" }
-      - window_process: { equals: "steam" }
-        window_class: { equals: "BootstrapUpdateUIClass" }
-      - window_process: { equals: "v2rayN" }
-        window_title: { regex: "v2rayN - .*" }
-      - window_process: { equals: "gimp-3" }
-        window_title: { equals: "GIMP Startup" }
-
   # contextual dialogs
   - commands: ["set-floating --centered --shown-on-top=true", "set-transparency --opacity 0.75"]
     match:
       - window_process: { equals: "AutoHotkeyUX" }
         window_title: { equals: "Window Spy for AHKv2" }
+      - window_process: { equals: "Everything" }
       - window_process: { equals: "explorer" }
         window_class: { equals: "OperationStatusWindow" }
       - window_process: { equals: "DllHost" }
@@ -211,20 +205,33 @@ window_rules:
       - window_process: { equals: "qalculate-qt" }
       - window_process: { equals: "Taskmgr" }
 
+  # throw any setup windows & unnecessary dialogs away
+  - commands:
+      ["move --workspace dialog", "set-floating --centered --shown-on-top=true", "set-transparency --opacity 0.4"]
+    match:
+      - window_process: { regex: ".*[Ss][Ee][Tt][Uu][Pp].*" }
+      - window_class: { regex: ".*[Ss][Ee][Tt][Uu][Pp].*" }
+      - window_process: { regex: ".*[Ww][Ii][Zz][Aa][Rr][Dd].*" }
+      - window_class: { regex: ".*[Ww][Ii][Zz][Aa][Rr][Dd].*" }
+      - window_process: { regex: ".*[Uu][Pp][Dd][Aa][Tt][Ee][Rr].*" }
+      - window_class: { regex: ".*[Uu][Pp][Dd][Aa][Tt][Ee][Rr].*" }
+      - window_process: { regex: "msiexec" }
+      - window_process: { equals: "VSIXInstaller" }
+      - window_process: { equals: "steam" }
+        window_class: { equals: "BootstrapUpdateUIClass" }
+      - window_process: { equals: "v2rayN" }
+        window_title: { regex: "v2rayN - .*" }
+      - window_process: { equals: "gimp-3" }
+        window_title: { equals: "GIMP Startup" }
+
   - commands:
       [
         "set-floating",
         "set-transparency --opacity 0.75",
-        "resize --width 385 --height 175",
-        "set-floating --centered --shown-on-top=true",
+        "set-floating --centered --shown-on-top=true --width 385 --height 175",
       ]
     match:
       - window_process: { equals: "pinentry" }
-
-  - commands: ["set-title-bar-visibility hidden"]
-    match:
-      - window_process: { equals: "okular" }
-      - window_process: { equals: "quodlibet" }
 
   - commands: ["set-transparency --opacity 0.9"]
     match:
@@ -274,13 +281,13 @@ keybindings:
     bindings: ["ctrl+alt+shift+p"]
 
   - commands: ["toggle-tiling-direction"]
-    bindings: ["alt+shift+t"]
+    bindings: ['alt+shift+"']
 
   - commands: ["toggle-floating --centered"]
     bindings: ["ctrl+alt+shift+space"]
 
   - commands: ["toggle-tiling"]
-    bindings: ['alt+shift+"']
+    bindings: ["alt+shift+q"]
 
   - commands: ["toggle-fullscreen"]
     bindings: ['ctrl+alt+shift+"']

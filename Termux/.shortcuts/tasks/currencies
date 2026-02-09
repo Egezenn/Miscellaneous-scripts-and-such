@@ -1,3 +1,0 @@
-termux-api-start
-termux-toast $(qalc -e "eur to try" | rg --color never "\d+\.\d+")
-termux-toast $(qalc -e "usd to try" | rg --color never "\d+\.\d+")

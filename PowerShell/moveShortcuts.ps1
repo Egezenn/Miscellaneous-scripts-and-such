@@ -1,7 +1,10 @@
 $destination = "$env:USERPROFILE\Desktop\Shortcuts"
-if (-not (Test-Path -Path $destination)) {
-    New-Item -Path $destination -ItemType Directory | Out-Null
-}
+$shortcuts = Get-ChildItem -Path "$env:USERPROFILE\Desktop", "C:\Users\Public\Desktop" -Filter "*.lnk" -ErrorAction SilentlyContinue
 
-Move-Item -Force "$env:USERPROFILE\Desktop\*.lnk" $destination
-Move-Item -Force "C:\Users\Public\Desktop\*.lnk" $destination
+foreach ($shortcut in $shortcuts) {
+    $targetPath = Join-Path -Path $destination -ChildPath $shortcut.Name
+    if (Test-Path -Path $targetPath) {
+        Remove-Item -Path $targetPath -Force
+    }
+    Move-Item -Path $shortcut.FullName -Destination $destination -Force
+}
