@@ -146,7 +146,7 @@ window_rules:
         # "shell-exec --hide-window setresolution.exe -w 1280 -h 720 -o 0 -noprompt -nopersist",
         "set-floating --centered --width 1280 --height 720",
         "set-title-bar-visibility hidden",
-        "set-fullscreen --maximized=true",
+        # "set-fullscreen --maximized=true",
       ]
     match:
       - window_process: { equals: "dota2" }
@@ -165,6 +165,9 @@ window_rules:
     match:
       - window_class: { regex: "Minify 1.\\d+\\.?\\d+(rc\\d+)?" }
   #################################################################
+
+  # - commands: ["set-tiling"]
+  #   match:
 
   - commands: ["set-floating --centered"]
     match:

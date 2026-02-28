@@ -1011,17 +1011,29 @@ async function handleSelectionReverseTranslate() {
 
 async function handleReverseTranslation(provider, possibleSourceLangs, text) {
   const targetCode = "tr";
-  // We want to try translating FROM each candidate language TO Turkish
-  // If the result is different from original text (and valid), we display it.
 
   // De-duplicate languages
   const candidateLangs = [...new Set(possibleSourceLangs)];
+  const results = [];
 
   for (const sourceLang of candidateLangs) {
     const translation = await translateText(provider, sourceLang, targetCode, text);
 
     if (translation && translation !== "OPENED_TAB" && translation.toLowerCase() !== text.toLowerCase()) {
-      saveTranslation(text, targetCode, `${translation} (from ${languages[sourceLang] || sourceLang})`, provider);
+      results.push({ sourceLang, translation });
+    }
+  }
+
+  if (results.length === 0) return;
+
+  const firstTranslation = results[0].translation;
+  const allSame = results.length > 1 && results.every(r => r.translation === firstTranslation);
+
+  if (allSame) {
+    saveTranslation(text, "tr-from-?", firstTranslation, provider);
+  } else {
+    for (const r of results) {
+      saveTranslation(text, `tr-from-${r.sourceLang}`, r.translation, provider);
     }
   }
 }
@@ -1277,20 +1289,6 @@ async function performSecondaryTranslation(provider, targetLang, text) {
   }
 }
 
-async function handleReverseTranslation(provider, possibleSourceLangs, text) {
-  const targetCode = "tr";
-
-  // De-duplicate languages
-  const candidateLangs = [...new Set(possibleSourceLangs)];
-
-  for (const sourceLang of candidateLangs) {
-    const translation = await translateText(provider, sourceLang, targetCode, text);
-
-    if (translation && translation !== "OPENED_TAB" && translation.toLowerCase() !== text.toLowerCase()) {
-      saveTranslation(text, `tr-from-${sourceLang}`, translation, provider);
-    }
-  }
-}
 
 function handleExportData() {
   const data = {};

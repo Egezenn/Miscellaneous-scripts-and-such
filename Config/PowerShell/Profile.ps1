@@ -63,10 +63,10 @@ function updateallx {
     # dotnet tool update --all -g
 }
 
-function win { winget install $args }
-function wun { winget uninstall $args }
-function wup { winget update $args }
-function wse { winget search $args }
+function win { winget install @args }
+function wun { winget uninstall @args }
+function wup { winget update @args }
+function wse { winget search @args }
 
 # Filesystem exploration
 Remove-Item Alias:ls -Force

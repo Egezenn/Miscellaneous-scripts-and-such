@@ -1,5 +1,5 @@
-const CACHE_NAME = "sozeviri-cache-v1";
-const urlsToCache = ["/", "/index.html", "/style.css", "/script.js", "/favicon.ico"];
+const CACHE_NAME = "sozeviri-cache-v2";
+const urlsToCache = ["./", "./index.html", "./style.css", "./script.js", "./favicon.ico", "./manifest.json"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
