@@ -4,6 +4,7 @@ body {
   color: rgb(255 255 255 / 90%);
   font-family: "MesloLGM Nerd Font Mono", ui-monospace, monospace;
   font-size: 9px;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -15,36 +16,50 @@ p {
 }
 
 html,
-body,
 #root {
   height: 100%;
 }
 
 #root {
-  /* border-bottom: 1px solid rgb(255 255 255 / 5%); */
   background: #202020;
 }
 
-.app {
-  align-items: center;
-  display: flex;
-  height: 100%;
-  justify-content: space-between;
-}
-
+.app,
 .left,
 .left > div,
 .right,
-.right > div {
+.right > div,
+.workspaces,
+.workspace,
+.binding-mode,
+.tiling-direction,
+.paused-button,
+.date,
+.media,
+.media > *,
+.network > div,
+.network .received,
+.network .transmitted,
+.cpu,
+.memory,
+.audio,
+.battery > div,
+.disk > div,
+.ip {
   align-items: center;
   display: flex;
   height: 100%;
+}
+
+.app {
+  justify-content: space-between;
 }
 
 .right {
   justify-self: end;
 }
 
+/* Group common spacing and behavior for right-side items */
 .binding-mode,
 .tiling-direction,
 .paused-button,
@@ -53,191 +68,163 @@ body,
 .memory,
 .cpu,
 .battery,
-.audio {
-  margin-right: 4px;
-}
-
-.workspaces {
-  align-items: center;
-  display: flex;
-  height: 100%;
-}
-
+.audio,
 .workspace {
-  align-items: center;
-  background: inherit;
-  border: 1px solid rgb(255 255 255 / 15%);
-  color: rgb(255 255 255 / 90%);
-  cursor: pointer;
-  display: flex;
-  height: 100%;
   margin-right: 4px;
-  padding: 0 6px;
 }
 
-.workspace.displayed {
-  background: rgb(255 255 255 / 15%);
+/* Base styles for all status bar components/containers */
+.workspace,
+.binding-mode,
+.tiling-direction,
+.paused-button,
+.date,
+.media,
+.media > *,
+.network > .status,
+.network .received,
+.network .transmitted,
+.cpu,
+.memory,
+.audio,
+.battery > div,
+.disk > div,
+.ip {
+  align-items: center;
+  background: linear-gradient(to right, var(--fill-color) var(--fill), transparent var(--fill));
   border: 1px solid rgb(255 255 255 / 15%);
+  color: inherit;
+  display: flex;
+  font-family: inherit;
+  font-size: inherit;
+  height: 100%;
+  padding: 0 8px;
+}
+
+.workspace,
+.binding-mode,
+.paused-button,
+.network > .status,
+.tiling-direction {
+  cursor: pointer;
+}
+
+.workspace *,
+.binding-mode *,
+.paused-button *,
+.network > .status *,
+.tiling-direction * {
+  cursor: inherit;
 }
 
 .workspace.focused,
-.workspace:hover {
-  background: rgb(75 115 255 / 50%);
-  border: 1px solid rgb(75 115 255 / 50%);
+.workspace.displayed {
+  background-color: rgb(75 115 255 / 100%);
+  border-color: rgb(75 115 255 / 80%);
+  transition: none;
 }
 
-.binding-mode,
-.tiling-direction,
-.paused-button {
-  align-items: center;
-  background: inherit;
-  border: 1px solid rgb(255 255 255 / 15%);
-  color: rgb(255 255 255 / 90%);
-  cursor: pointer;
-  display: flex;
-  height: 100%;
-  padding: 0 8px;
-}
-
-.binding-mode {
+.nf {
   margin-right: 4px;
 }
 
-.date {
-  align-items: center;
-  border: 1px solid rgb(255 255 255 / 15%);
-  color: rgb(255 255 255 / 90%);
-  display: flex;
-  height: 100%;
-  margin-right: 4px;
-  padding: 0 8px;
-}
-
+/* Specialized Colors */
 .media {
-  align-items: center;
-  border: 1px solid rgb(203 211 94 / 30%);
+  border-color: rgb(203 211 94 / 30%);
   color: #cbd35e;
-  display: flex;
-  height: 100%;
-  padding: 0 6px;
 }
 
 .media > * {
-  align-items: center;
   border-right: 1px solid rgb(203 211 94 / 30%);
-  display: flex;
-  height: 100%;
   padding: 0 6px;
-}
-
-.media > *:first-child {
-  padding-left: 0;
 }
 
 .media > *:last-child {
   border: none;
-  padding-right: 0;
 }
 
-.network > .received {
-  align-items: center;
-  border: 1px solid rgb(168 101 231 / 30%);
+.network .received {
+  border-color: rgb(168 101 231 / 30%);
   color: #a865e7;
-  display: flex;
-  height: 100%;
   margin-right: 1px;
-  padding: 0 6px;
 }
 
-.network > .transmitted {
-  align-items: center;
-  border: 1px solid rgb(74 197 74 / 30%);
+.network .transmitted {
+  border-color: rgb(74 197 74 / 30%);
   color: #4ac54a;
-  display: flex;
-  height: 100%;
-  padding: 0 6px;
+}
+
+.network .received .nf,
+.network .transmitted .nf {
+  margin-right: 2px;
 }
 
 .cpu {
-  align-items: center;
-  border: 1px solid rgb(226 103 59 / 30%);
+  border-color: rgb(226 103 59 / 30%);
   color: #e2673b;
-  display: flex;
-  height: 100%;
-  padding: 0 6px;
+  transition:
+    border-color 0.3s,
+    color 0.3s;
 }
 
-.cpu .high-usage {
+.cpu.high-usage {
+  border-color: #f00;
   color: #f00;
 }
 
 .memory {
-  align-items: center;
-  border: 1px solid rgb(221 160 221 / 30%);
+  border-color: rgb(221 160 221 / 30%);
   color: #dda0dd;
-  display: flex;
-  height: 100%;
-  padding: 0 6px;
 }
 
 .audio {
-  align-items: center;
-  border: 1px solid rgb(127 255 212 / 30%);
+  border-color: rgb(127 255 212 / 30%);
   color: #7fffd4;
-  display: flex;
-  height: 100%;
-  padding: 0 6px;
 }
 
-.battery > .percentage {
-  align-items: center;
-  border: 1px solid rgb(240 70 155 / 30%);
+.battery > div {
+  border-color: rgb(240 70 155 / 30%);
   color: #f0469b;
-  display: flex;
-  height: 100%;
-  padding: 0 6px;
-}
-
-.battery > .state {
-  align-items: center;
-  border: 1px solid rgb(240 70 155 / 30%);
-  color: #f0469b;
-  display: flex;
-  height: 100%;
-  padding: 0 6px;
 }
 
 .disk > .first {
-  align-items: center;
-  border: 1px solid rgb(100 149 237 / 30%);
+  border-color: rgb(100 149 237 / 30%);
   color: #6495ed;
-  display: flex;
-  height: 100%;
   margin-right: 1px;
-  padding: 0 6px;
 }
 
 .disk > .second {
-  align-items: center;
-  border: 1px solid rgb(65 105 225 / 30%);
+  border-color: rgb(65 105 225 / 30%);
   color: #4169e1;
-  display: flex;
-  height: 100%;
-  padding: 0 6px;
 }
 
-.network > .received,
-.network > .transmitted,
+/* Widths and Alignment */
 .cpu,
 .memory,
 .audio,
-.battery > .percentage {
+.battery > .percentage,
+.network .received,
+.network .transmitted {
   justify-content: center;
-  text-align: center;
   width: 4rem;
 }
 
-.network > .received,
-.network > .transmitted {
-  width: 5rem;
+.network > .status,
+.tiling-direction {
+  justify-content: center;
+  min-width: 2rem;
+  width: fit-content;
+}
+
+.network .status .nf {
+  font-size: 11px;
+  margin-right: 6px;
+}
+
+.network .status .ssid {
+  flex: 1;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

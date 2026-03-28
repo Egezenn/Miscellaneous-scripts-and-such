@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -26,9 +26,9 @@
         disk: { type: "disk", refreshInterval: 60000 },
         glazewm: { type: "glazewm" },
         media: { type: "media" },
-        /* ip: { type: "ip", refreshInterval: 3600000 }, */
+        ip: { type: "ip", refreshInterval: 3600000 },
         memory: { type: "memory", refreshInterval: 5000 },
-        network: { type: "network", refreshInterval: 1000 },
+        network: { type: "network", refreshInterval: 2000 },
       });
 
       createRoot(document.getElementById("root")).render(<App />);
@@ -37,13 +37,90 @@
         if (str.length >= num) return str.substring(0, num).trimEnd() + "..";
         else return str;
       }
+      function getNetworkIcon(networkOutput) {
+        if (!networkOutput) return <i className="nf nf-md-wifi_strength_off_outline"></i>;
+        switch (networkOutput.defaultInterface?.type) {
+          case "ethernet":
+            return <i className="nf nf-md-ethernet_cable"></i>;
+          case "wifi":
+            if (networkOutput.defaultGateway?.signalStrength >= 80) return <i className="nf nf-md-wifi_strength_4"></i>;
+            else if (networkOutput.defaultGateway?.signalStrength >= 65) return <i className="nf nf-md-wifi_strength_3"></i>;
+            else if (networkOutput.defaultGateway?.signalStrength >= 40) return <i className="nf nf-md-wifi_strength_2"></i>;
+            else if (networkOutput.defaultGateway?.signalStrength >= 25) return <i className="nf nf-md-wifi_strength_1"></i>;
+            else return <i className="nf nf-md-wifi_strength_outline"></i>;
+          default:
+            return <i className="nf nf-md-wifi_strength_off_outline"></i>;
+        }
+      }
+
+      function getBatteryIcon(batteryOutput) {
+        const { chargePercent, isCharging, state } = batteryOutput;
+        const level = Math.floor(chargePercent / 10) * 10;
+        const charging = isCharging || state === "charging" || chargePercent === 100;
+
+        if (charging) {
+          if (level === 100) return <i className="nf nf-md-battery_charging_100"></i>;
+          if (level >= 10) return <i className={`nf nf-md-battery_charging_${level}`}></i>;
+          return <i className="nf nf-md-battery_charging_outline"></i>;
+        } else {
+          if (level === 100) return <i className="nf nf-md-battery"></i>;
+          if (level >= 10) return <i className={`nf nf-md-battery_${level}`}></i>;
+          return <i className="nf nf-md-battery_outline"></i>;
+        }
+      }
+
+      function getAudioIcon(audioOutput) {
+        const volume = audioOutput.defaultPlaybackDevice?.volume ?? 0;
+        if (audioOutput.defaultPlaybackDevice?.isMuted || volume === 0) return <i className="nf nf-md-volume_off"></i>;
+        if (volume >= 67) return <i className="nf nf-md-volume_high"></i>;
+        if (volume >= 34) return <i className="nf nf-md-volume_medium"></i>;
+        return <i className="nf nf-md-volume_low"></i>;
+      }
 
       function App() {
         const [output, setOutput] = useState(providers.outputMap);
+        const [showIp, setShowIp] = useState(false);
+
+        // Keep track of the last 10 seconds of traffic.
+        const [trafficHistory, setTrafficHistory] = useState([]);
 
         useEffect(() => {
-          providers.onOutput(() => setOutput(providers.outputMap));
+          providers.onOutput(() => {
+            const newOutputMap = { ...providers.outputMap };
+            setOutput(newOutputMap);
+
+            if (newOutputMap.network?.traffic) {
+              setTrafficHistory((prev) => {
+                const newHistory = [
+                  ...prev,
+                  {
+                    received: newOutputMap.network.traffic.received.bytes,
+                    transmitted: newOutputMap.network.traffic.transmitted.bytes,
+                  },
+                ];
+                return newHistory.slice(-10);
+              });
+            }
+          });
         }, []);
+
+        // --- Network Constants ---
+        const BYTES_PER_MB = 1024 * 1024;
+        // Thresholds to switch between low and high sensitivity
+        const RECV_THRESHOLD = 1 * BYTES_PER_MB;
+        const XMIT_THRESHOLD = 512;
+        // Sensitivity limits
+        const RECV_LIMIT_LOW = 1 * BYTES_PER_MB;
+        const RECV_LIMIT_HIGH = 10 * BYTES_PER_MB;
+        const XMIT_LIMIT_LOW = 0.02 * 1024;
+        const XMIT_LIMIT_HIGH = 5 * BYTES_PER_MB;
+
+        // Calculate dynamic limits based on the last 10 seconds of traffic.
+        const isHighReceived = trafficHistory.some((s) => s.received > RECV_THRESHOLD);
+        const isHighTransmitted = trafficHistory.some((s) => s.transmitted > XMIT_THRESHOLD);
+
+        const receivedLimit = isHighReceived ? RECV_LIMIT_HIGH : RECV_LIMIT_LOW;
+        const transmittedLimit = isHighTransmitted ? XMIT_LIMIT_HIGH : XMIT_LIMIT_LOW;
 
         return (
           <div className="app">
@@ -86,39 +163,105 @@
             <div className="right">
               {output.network && (
                 <div className="network">
-                  <div className="received">
-                    REC:{output.network?.traffic?.received.siValue}
-                    {output.network?.traffic?.received.siUnit}
+                  <div className="status" onClick={() => setShowIp(!showIp)}>
+                    {getNetworkIcon(output.network)}
+                    <span className="ssid">
+                      {output.network.defaultGateway?.ssid}
+                      {showIp && (output.ip ? ` ${output.ip.address}` : " ...")}
+                    </span>
                   </div>
-                  <div className="transmitted">
-                    TRA:{output.network.traffic?.transmitted.siValue}
-                    {output.network.traffic?.transmitted.siUnit}
+                  <div className="traffic">
+                    <div
+                      className="received"
+                      style={{
+                        "--fill": `${Math.min(100, (output.network?.traffic?.received.bytes / receivedLimit) * 100)}%`,
+                        "--fill-color": "rgba(168, 101, 231, 0.2)",
+                      }}
+                    >
+                      <i className="nf nf-md-arrow_down"></i>
+                      {output.network?.traffic?.received.siValue}
+                      {output.network?.traffic?.received.siUnit}
+                    </div>
+                    <div
+                      className="transmitted"
+                      style={{
+                        "--fill": `${Math.min(100, (output.network.traffic?.transmitted.bytes / transmittedLimit) * 100)}%`,
+                        "--fill-color": "rgba(74, 197, 74, 0.2)",
+                      }}
+                    >
+                      <i className="nf nf-md-arrow_up"></i>
+                      {output.network.traffic?.transmitted.siValue}
+                      {output.network.traffic?.transmitted.siUnit}
+                    </div>
                   </div>
                 </div>
               )}
-              {output.cpu && <div className={output.cpu.usage > 85 ? "high-usage cpu" : "cpu"}>CPU:{Math.round(output.cpu.usage)}%</div>}
-              {output.memory && <div className="memory">MEM:{Math.round(output.memory.usage)}%</div>}
+              {output.cpu && (
+                <div
+                  className={output.cpu.usage > 85 ? "high-usage cpu" : "cpu"}
+                  style={{
+                    "--fill": `${output.cpu.usage}%`,
+                    "--fill-color": output.cpu.usage > 85 ? "rgba(255, 0, 0, 0.25)" : "rgba(226, 103, 59, 0.2)",
+                  }}
+                >
+                  <i className="nf nf-oct-cpu"></i>
+                  {Math.round(output.cpu.usage)}%
+                </div>
+              )}
+              {output.memory && (
+                <div className="memory" style={{ "--fill": `${output.memory.usage}%`, "--fill-color": "rgba(221, 160, 221, 0.2)" }}>
+                  <i className="nf nf-fae-chip"></i>
+                  {Math.round(output.memory.usage)}%
+                </div>
+              )}
               {output.audio?.defaultPlaybackDevice && (
-                <div className="audio">
-                  {/* output.audio.defaultPlaybackDevice.name*/}
-                  VOL:{output.audio.defaultPlaybackDevice.volume}%
+                <div
+                  className="audio"
+                  style={{
+                    "--fill": `${output.audio.defaultPlaybackDevice.volume}%`,
+                    "--fill-color": "rgba(127, 255, 212, 0.2)",
+                  }}
+                >
+                  {getAudioIcon(output.audio)}
+                  {output.audio.defaultPlaybackDevice.volume}%
                 </div>
               )}
               {output.battery && (
-                <div className="battery">
-                  <div className="percentage">BAT:{Math.round(output.battery.chargePercent)}%</div>
-                  <div className="state">{output.battery.state}</div>
+                <div
+                  className="battery"
+                  style={{
+                    "--fill": `${output.battery.chargePercent}%`,
+                    "--fill-color": "rgba(240, 70, 155, 0.2)",
+                  }}
+                >
+                  <div className="percentage">
+                    {getBatteryIcon(output.battery)}
+                    {Math.round(output.battery.chargePercent)}%
+                  </div>
                 </div>
               )}
-              {/* output.ip && <div className="ip">IP:{output.ip?.address}&nbsp;</div> */}
               {output.disk && (
                 <div className="disk">
-                  <div className="first">
+                  <div
+                    className="first"
+                    style={{
+                      "--fill": `${((output.disk.disks[1].totalSpace.bytes - output.disk.disks[1].availableSpace.bytes) / output.disk.disks[1].totalSpace.bytes) * 100}%`,
+                      "--fill-color": "rgba(100, 149, 237, 0.2)",
+                    }}
+                  >
+                    <i className="nf nf-md-harddisk"></i>
                     {output.disk.disks[1].mountPoint.slice(0, -1)}
                     {Math.round(output.disk.disks[1].totalSpace.iecValue - output.disk.disks[1].availableSpace.iecValue)}/{Math.round(output.disk.disks[1].totalSpace.iecValue)}
                     {output.disk.disks[1].totalSpace.iecUnit}
                   </div>
-                  <div className="second">
+                  <div
+                    className="second"
+                    style={{
+                      "--fill": `${((output.disk.disks[0].totalSpace.bytes - output.disk.disks[0].availableSpace.bytes) / output.disk.disks[0].totalSpace.bytes) * 100}%`,
+                      "--fill-color": "rgba(65, 105, 225, 0.2)",
+                    }}
+                  >
+                    <i className="nf nf-md-harddisk"></i>
                     {output.disk.disks[0].mountPoint.slice(0, -1)}
                     {Math.round(output.disk.disks[0].totalSpace.iecValue - output.disk.disks[0].availableSpace.iecValue)}/{Math.round(output.disk.disks[0].totalSpace.iecValue)}
                     {output.disk.disks[0].totalSpace.iecUnit}

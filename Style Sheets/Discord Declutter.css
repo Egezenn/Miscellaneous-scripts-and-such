@@ -22,8 +22,8 @@ div[class^="container"][class*="openOnHover"],
 span[class*="chipletContainer"],
 span[class*="clanTagChiplet"],
 /* avatar decos */
-img[class^="avatarDecoration"],
-svg[class^="avatarDecoration"],
+img[class*="avatarDecoration"],
+svg[class*="avatarDecoration"],
 /* role images */
 img[aria-label^="Role icon"],
 div[class^="newMemberBadge"],
@@ -150,4 +150,19 @@ span[class*="username"] {
 span[class*="usernameGradient"] {
   background: none !important;
   -webkit-text-fill-color: #d0d0d0 !important;
+}
+
+span[class*="dnsFont"] {
+  font-family: "gg sans", "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+}
+
+/* whatever these are */
+ul[aria-label="Channels"] > li:has(> div[class^="containerDefault"] > div[aria-label="Events"]),
+li:has([aria-label="Server Boosts"]),
+ul[aria-label="Channels"] > div:has(> div[class^="contentContainer"]) {
+  display: none !important;
+}
+
+li[id^="chat-messages-"]:hover {
+  background-color: #2C2D32 !important;
 }

@@ -27,7 +27,7 @@ function history {
 }
 function histfile { Invoke-Item $historyPath }
 function hpure { Get-Content $historyPath }
-function hgrep { Get-Content $historyPath | rg $args }
+function hgrep { Get-Content $historyPath | rg -i $args }
 function cdm {
     param (
         [Parameter(Mandatory = $true)]
@@ -155,6 +155,8 @@ function markhidden { attrib +h /d .\.* }
 function msbuild { & "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" $args }
 function pkill { taskkill /F /IM @args }
 function whr { & "C:\Windows\System32\where.exe" @args }
+function elevateA { takeown /f @args /a && icacls @args /grant Administrators:F }
+function elevate { takeown /f @args && icacls @args /grant "${env:USERNAME}:F" }
 
 function clipw { win32yank -i $args }
 function office2pdf { & 'C:\Program Files\LibreOffice\program\soffice.exe' --headless --convert-to pdf @args }

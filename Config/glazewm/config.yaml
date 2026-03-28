@@ -113,8 +113,8 @@ window_rules:
 
   - commands: ["move --workspace br0wser"]
     match:
-      - window_process: { equals: "Hollama" }
       - window_process: { equals: "librewolf" }
+        window_title: { regex: "LibreWolf|.* - LibreWolf " }
 
   - commands: ["move --workspace br1wser"]
     match:
@@ -124,6 +124,7 @@ window_rules:
   - commands: ["move --workspace media"]
     match:
       - window_process: { equals: "mpc-hc64" }
+        window_class: { equals: "MediaPlayerClassicW" }
       - window_process: { equals: "mpv" }
       - window_process: { equals: "quodlibet" }
 
@@ -141,33 +142,7 @@ window_rules:
       - window_process: { equals: "prismlauncher" }
       - window_process: { equals: "steamwebhelper" }
 
-  - commands: [
-        "move --workspace game",
-        # "shell-exec --hide-window setresolution.exe -w 1280 -h 720 -o 0 -noprompt -nopersist",
-        "set-floating --centered --width 1280 --height 720",
-        "set-title-bar-visibility hidden",
-        # "set-fullscreen --maximized=true",
-      ]
-    match:
-      - window_process: { equals: "dota2" }
-
-  - commands: ["set-floating --centered --width 1280 --height 720"]
-    match:
-      - window_title: { equals: "Panorama Debugger" }
-
-  - commands:
-      ["move --workspace game", "set-title-bar-visibility hidden", "set-floating --centered --width 1280 --height 720"]
-    match:
-      - window_process: { equals: "javaw" }
-        window_class: { regex: "GLFW30|LWJGL" }
-
-  - commands: ["set-tiling", "size --width 550"]
-    match:
-      - window_class: { regex: "Minify 1.\\d+\\.?\\d+(rc\\d+)?" }
   #################################################################
-
-  # - commands: ["set-tiling"]
-  #   match:
 
   - commands: ["set-floating --centered"]
     match:
@@ -207,6 +182,25 @@ window_rules:
         window_title: { regex: "Please wait.*" }
       - window_process: { equals: "qalculate-qt" }
       - window_process: { equals: "Taskmgr" }
+      - window_process: { equals: "obs64" }
+
+  - commands: ["set-tiling", "set-transparency --opacity 1"]
+    match:
+      - window_process: { equals: "obs64" }
+        window_title: { regex: "^OBS (\\d+.)+.*" }
+
+  - commands:
+      [
+        "set-floating",
+        "set-transparency --opacity 0.75",
+        "set-floating --centered --shown-on-top=true --width 385 --height 175",
+      ]
+    match:
+      - window_process: { equals: "pinentry" }
+
+  - commands: ["set-transparency --opacity 0.9"]
+    match:
+      - window_process: { equals: "explorer" }
 
   # throw any setup windows & unnecessary dialogs away
   - commands:
@@ -226,31 +220,9 @@ window_rules:
         window_title: { regex: "v2rayN - .*" }
       - window_process: { equals: "gimp-3" }
         window_title: { equals: "GIMP Startup" }
+      - window_class: { equals: "ConsoleWindowClass" }
 
-  - commands:
-      [
-        "set-floating",
-        "set-transparency --opacity 0.75",
-        "set-floating --centered --shown-on-top=true --width 385 --height 175",
-      ]
-    match:
-      - window_process: { equals: "pinentry" }
-
-  - commands: ["set-transparency --opacity 0.9"]
-    match:
-      - window_process: { equals: "explorer" }
-
-  # for windows that resize themselves/don't respect initial states
-  - commands: ["wm-redraw"]
-    match:
-      - window_process: { equals: "javaw" }
-      - window_process: { equals: "librewolf" }
-        window_class: { equals: "MozillaWindowClass" }
-      - window_process: { equals: "soffice" }
-        window_class: { regex: "GLFW30|LWJGL" }
-      - window_process: { equals: "qView" }
-
-#################################################################
+  #################################################################
 
 keybindings:
   - commands: ["focus --direction left"]
